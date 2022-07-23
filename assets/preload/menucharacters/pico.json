@@ -1,0 +1,11 @@
+{
+	"confirm_anim": "Pico Idle Dance",
+	"idle_anim": "Pico Idle Dance",
+	"isGF": false,
+	"position": [
+		110,
+		50
+	],
+	"scale": 0.55,
+	"image": "Menu_Pico"
+}

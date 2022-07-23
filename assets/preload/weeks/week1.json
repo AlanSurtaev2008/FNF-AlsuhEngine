@@ -1,0 +1,60 @@
+{
+	"weekID": "week1",
+	"weekName": "Week 1",
+	"startUnlocked": true,
+	"hiddenUntilUnlocked": false,
+	"songs": [
+		{
+			"songID": "bopeebo",
+			"songName": "Bopeebo",
+			"character": "dad",
+			
+			"color": [146, 113, 253],
+			"difficulties": [
+				["Easy", "Normal", "Hard"],
+				["easy", "normal", "hard"],
+				["-easy", "",     "-hard"]
+			],
+			"defaultDifficulty": "normal"
+		},
+		{
+			"songID": "fresh",
+			"songName": "Fresh",
+			"character": "dad",
+			
+			"color": [146, 113, 253],
+			"difficulties": [
+				["Easy", "Normal", "Hard"],
+				["easy", "normal", "hard"],
+				["-easy", "",     "-hard"]
+			],
+			"defaultDifficulty": "normal"
+		},
+		{
+			"songID": "dad-battle",
+			"songName": "Dad Battle",
+			"character": "dad",
+			
+			"color": [146, 113, 253],
+			"difficulties": [
+				["Easy", "Normal", "Hard"],
+				["easy", "normal", "hard"],
+				["-easy", "",     "-hard"]
+			],
+			"defaultDifficulty": "normal"
+		}
+	],
+	"difficulties": [
+		["Easy", "Normal", "Hard"],
+		["easy", "normal", "hard"],
+		["-easy", "",     "-hard"]
+	],
+	"weekCharacters": ["dad", "bf", "gf"],
+	"weekBackground": "stage",
+	"weekBefore": "tutorial",
+	"defaultDifficulty": "normal",
+	"storyName": "Daddy Dearest",
+	"itemFile": "week1",
+	"hideStoryMode": false,
+	"hideFreeplay": false
+}

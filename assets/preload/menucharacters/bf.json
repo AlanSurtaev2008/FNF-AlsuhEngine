@@ -1,0 +1,12 @@
+{
+	"idle_anim": "BF idle dance white",
+	"confirm_anim": "BF HEY!!",
+	"position": [
+		50,
+		25
+	],
+	"isGF": false,
+	"scale": 0.81,
+	"image": "Menu_Boyfriend",
+	"flipX": false
+}

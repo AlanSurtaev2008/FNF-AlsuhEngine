@@ -1,0 +1,12 @@
+{
+	"idle_anim": "Dad idle dance BLACK LINE",
+	"image": "Menu_Dad",
+	"position": [
+		115,
+		205
+	],
+	"flipX": false,
+	"isGF": false,
+	"scale": 0.47,
+	"confirm_anim": "Dad idle dance BLACK LINE"
+}

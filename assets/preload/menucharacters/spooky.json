@@ -1,0 +1,23 @@
+{
+	"confirm_anim": "spooky dance idle BLACK LINES",
+	"idle_anim": "spooky dance idle BLACK LINES",
+	"idle_animAlt": "spooky dance idle BLACK LINES",
+	"isGF": false,
+	"position": [
+		130,
+		95
+	],
+	"indices": [
+		0,
+		2,
+		6
+	],
+	"indicesAlt": [
+		8,
+		10,
+		12,
+		14
+	],
+	"scale": 0.5,
+	"image": "Menu_Spooky"
+}

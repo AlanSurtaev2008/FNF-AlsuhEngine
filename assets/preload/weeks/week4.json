@@ -1,0 +1,60 @@
+{
+	"weekID": "week4",
+	"weekName": "Week 4",
+	"startUnlocked": true,
+	"defaultDifficulty": "normal",
+	"hiddenUntilUnlocked": false,
+	"songs": [
+		{
+			"songID": "satin-panties",
+			"songName": "Satin Panties",
+			"character": "mom",
+			
+			"color": [252, 150, 215],
+			"difficulties": [
+				["Easy", "Normal", "Hard"],
+				["easy", "normal", "hard"],
+				["-easy", "",     "-hard"]
+			],
+			"defaultDifficulty": "normal"
+		},
+		{
+			"songID": "high",
+			"songName": "High",
+			"character": "mom",
+			
+			"color": [252, 150, 215],
+			"difficulties": [
+				["Easy", "Normal", "Hard"],
+				["easy", "normal", "hard"],
+				["-easy", "",     "-hard"]
+			],
+			"defaultDifficulty": "normal"
+		},
+		{
+			"songID": "milf",
+			"songName": "M.I.L.F",
+			"character": "mom",
+			
+			"color": [252, 150, 215],
+			"difficulties": [
+				["Easy", "Normal", "Hard"],
+				["easy", "normal", "hard"],
+				["-easy", "",     "-hard"]
+			],
+			"defaultDifficulty": "normal"
+		}
+	],
+	"difficulties": [
+		["Easy", "Normal", "Hard"],
+		["easy", "normal", "hard"],
+		["-easy", "",     "-hard"]
+	],
+	"weekCharacters": ["mom", "bf", "gf"],
+	"weekBackground": "limo",
+	"weekBefore": "week3",
+	"storyName": "MOMMY MUST MURDER",
+	"itemFile": "week4",
+	"hideStoryMode": false,
+	"hideFreeplay": false
+}

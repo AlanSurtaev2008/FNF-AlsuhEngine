@@ -1,0 +1,11 @@
+{
+	"idle_anim": "SENPAI idle Black Lines",
+	"confirm_anim": "SENPAI idle Black Lines",
+	"isGF": false,
+	"position": [
+		60,
+		-40
+	],
+	"scale": 1,
+	"image": "Menu_Senpai"
+}

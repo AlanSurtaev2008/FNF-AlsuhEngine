@@ -1,0 +1,11 @@
+{
+	"confirm_anim": "Mom Idle BLACK LINES",
+	"idle_anim": "Mom Idle BLACK LINES",
+	"isGF": false,
+	"position": [
+		85,
+		235
+	],
+	"scale": 0.45,
+	"image": "Menu_Mom"
+}
