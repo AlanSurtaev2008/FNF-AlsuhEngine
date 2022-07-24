@@ -18,6 +18,8 @@
 ### How to make week?
 - Everything is the same as in Psych Engine, but with some changes, which are shown below:
 
+- Songs Names - they need to be written first, otherwise the game will crash.
+
 - Week ID - makes it easy to find weeks in modcharts.
 - Difficulties IDs, names and suffixes - can do custom difficulties. They must have the same length by the number of texts of difficulty.Between them should be the default difficulty. In Freeplay, the songs are the same.
 
