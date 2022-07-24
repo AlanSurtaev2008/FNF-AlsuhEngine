@@ -234,7 +234,7 @@ class WeekEditorState extends MusicBeatState
 		};
 
 		tab_group.add(new FlxText(songsIDsInputText.x, songsIDsInputText.y - 18, 0, 'Songs\'s IDs (must be lower case):'));
-		tab_group.add(new FlxText(songsNamesInputText.x, songsNamesInputText.y - 18, 0, 'Songs\'s Names:'));
+		tab_group.add(new FlxText(songsNamesInputText.x, songsNamesInputText.y - 18, 0, 'Songs\'s Names: (type this first, else it will crash)'));
 		tab_group.add(new FlxText(opponentInputText.x, opponentInputText.y - 18, 0, 'Characters:'));
 		tab_group.add(new FlxText(backgroundInputText.x, backgroundInputText.y - 18, 0, 'Background Asset:'));
 		tab_group.add(new FlxText(displayNameInputText.x, displayNameInputText.y - 18, 0, 'Display Name:'));
@@ -303,7 +303,7 @@ class WeekEditorState extends MusicBeatState
 		blockPressWhileTypingOn.push(difficultiesSuffixesInputText);
 
 		tab_group.add(new FlxText(weekBeforeInputText.x, weekBeforeInputText.y - 28, 0, 'Week File name of the Week you have\nto finish for Unlocking:'));
-		tab_group.add(new FlxText(defaultDiffInputText.x, defaultDiffInputText.y - 20, 0, 'Default Difficulty\'s ID'));
+		tab_group.add(new FlxText(defaultDiffInputText.x, defaultDiffInputText.y - 20, 0, 'Default Difficulty\'s ID:'));
 		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y - 20, 0, 'Difficulties\'s IDs (must be lower case):'));
 		tab_group.add(new FlxText(difficultiesNamesInputText.x, difficultiesNamesInputText.y - 20, 0, 'Difficulties\'s Names:'));
 		tab_group.add(new FlxText(difficultiesSuffixesInputText.x, difficultiesSuffixesInputText.y - 20, 0, 'Difficulties\'s Suffixes:'));
@@ -358,9 +358,26 @@ class WeekEditorState extends MusicBeatState
 
 		if (weekFile.difficulties != null)
 		{
-			difficultiesInputText.text = weekFile.difficulties[1].join(', ');
-			difficultiesNamesInputText.text = weekFile.difficulties[0].join(', ');
-			difficultiesSuffixesInputText.text = weekFile.difficulties[2].join(', ');
+			var diffNames:String = weekFile.difficulties[0][0];
+
+			for (i in 1...weekFile.difficulties[0].length) {
+				diffNames += ', ' + weekFile.difficulties[0][i];
+			}
+			difficultiesNamesInputText.text = diffNames;
+
+			var diffIDs:String = weekFile.difficulties[1][0];
+
+			for (i in 1...weekFile.difficulties[1].length) {
+				diffIDs += ', ' + weekFile.difficulties[1][i];
+			}
+			difficultiesInputText.text = diffIDs;
+
+			var diffSuffixes:String = weekFile.difficulties[2][0];
+
+			for (i in 1...weekFile.difficulties[2].length) {
+				diffSuffixes += ', ' + weekFile.difficulties[2][i];
+			}
+			difficultiesSuffixesInputText.text = diffSuffixes;
 		}
 
 		if (weekFile.defaultDifficulty != null)
@@ -434,7 +451,7 @@ class WeekEditorState extends MusicBeatState
 		weekThing.visible = true;
 		missingFileText.visible = false;
 
-		var assetName:String = weekFileInputText.text.trim();
+		var assetName:String = weekFileInputText.text;
 		
 		var isMissing:Bool = true;
 
@@ -468,41 +485,41 @@ class WeekEditorState extends MusicBeatState
 		{
 			if (sender == weekFileInputText)
 			{
-				weekFile.itemFile = weekFileInputText.text.trim();
+				weekFile.itemFile = weekFileInputText.text;
 				reloadWeekThing();
 			}
 			else if (sender == opponentInputText || sender == boyfriendInputText || sender == girlfriendInputText)
 			{
-				weekFile.weekCharacters[0] = opponentInputText.text.trim();
-				weekFile.weekCharacters[1] = boyfriendInputText.text.trim();
-				weekFile.weekCharacters[2] = girlfriendInputText.text.trim();
+				weekFile.weekCharacters[0] = opponentInputText.text;
+				weekFile.weekCharacters[1] = boyfriendInputText.text;
+				weekFile.weekCharacters[2] = girlfriendInputText.text;
 
 				updateText();
 			}
 			else if (sender == backgroundInputText)
 			{
-				weekFile.weekBackground = backgroundInputText.text.trim();
+				weekFile.weekBackground = backgroundInputText.text;
 				reloadBG();
 			}
 			else if (sender == displayNameInputText)
 			{
-				weekFile.storyName = displayNameInputText.text.trim();
+				weekFile.storyName = displayNameInputText.text;
 				updateText();
 			}
 			else if (sender == weekNameInputText)
 			{
-				weekFile.weekName = weekNameInputText.text.trim();
+				weekFile.weekName = weekNameInputText.text;
 			}
 			else if (sender == weekIDInputText)
 			{
-				weekFile.weekID = weekIDInputText.text.trim();
+				weekFile.weekID = weekIDInputText.text;
 			}
 			else if (sender == songsIDsInputText)
 			{
-				var splittedText:Array<String> = songsIDsInputText.text.trim().split(',');
+				var splittedText:Array<String> = songsIDsInputText.text.split(', ');
 
 				for (i in 0...splittedText.length) {
-					splittedText[i] = splittedText[i].trim();
+					splittedText[i] = splittedText[i];
 				}
 
 				while (splittedText.length < weekFile.songs.length) {
@@ -546,37 +563,37 @@ class WeekEditorState extends MusicBeatState
 			}
 			else if (sender == songsNamesInputText)
 			{
-				var splittedText:Array<String> = songsNamesInputText.text.trim().split(',');
+				var splittedText:Array<String> = songsNamesInputText.text.split(', ');
 
 				for (i in 0...splittedText.length) {
-					weekFile.songs[i].songName = splittedText[i].trim();
+					weekFile.songs[i].songName = splittedText[i];
 				}
 
 				updateText();
 			}
 			else if (sender == weekBeforeInputText)
 			{
-				weekFile.weekBefore = weekBeforeInputText.text.trim();
+				weekFile.weekBefore = weekBeforeInputText.text;
 			}
 			else if (sender == difficultiesInputText)
 			{
-				weekFile.difficulties[1] = difficultiesInputText.text.trim().split(',');
+				weekFile.difficulties[1] = difficultiesInputText.text.split(', ');
 			}
 			else if (sender == difficultiesNamesInputText)
 			{
-				weekFile.difficulties[0] = difficultiesNamesInputText.text.trim().split(',');
+				weekFile.difficulties[0] = difficultiesNamesInputText.text.split(', ');
 			}
 			else if (sender == difficultiesSuffixesInputText)
 			{
-				weekFile.difficulties[2] = difficultiesSuffixesInputText.text.trim().split(',');
+				weekFile.difficulties[2] = difficultiesSuffixesInputText.text.split(', ');
 			}
 			else if (sender == defaultDiffInputText)
 			{
-				weekFile.defaultDifficulty = defaultDiffInputText.text.trim();
+				weekFile.defaultDifficulty = defaultDiffInputText.text;
 			}
 		}
 	}
-	
+
 	override function update(elapsed:Float):Void
 	{
 		if (loadedWeek != null)
@@ -881,11 +898,11 @@ class WeekEditorFreeplayState extends MusicBeatState
 			weekFile.songs[curSelected].character = iconInputText.text;
 			grpIcons.members[curSelected].changeIcon(iconInputText.text);
 
-			weekFile.songs[curSelected].defaultDifficulty = defaultDiffInputText.text.trim();
+			weekFile.songs[curSelected].defaultDifficulty = defaultDiffInputText.text;
 
-			weekFile.songs[curSelected].difficulties[1] = difficultiesInputText.text.trim().split(',');
-			weekFile.songs[curSelected].difficulties[0] = difficultiesNamesInputText.text.trim().split(',');
-			weekFile.songs[curSelected].difficulties[2] = difficultiesSuffixesInputText.text.trim().split(',');
+			weekFile.songs[curSelected].difficulties[1] = difficultiesInputText.text.split(', ');
+			weekFile.songs[curSelected].difficulties[0] = difficultiesNamesInputText.text.split(', ');
+			weekFile.songs[curSelected].difficulties[2] = difficultiesSuffixesInputText.text.split(', ');
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
 		{
@@ -906,6 +923,9 @@ class WeekEditorFreeplayState extends MusicBeatState
 	var difficultiesNamesInputText:FlxUIInputText;
 	var difficultiesSuffixesInputText:FlxUIInputText;
 
+	static var difficultiesCopy:Array<Array<String>> = null;
+	static var defaultDifficultyCopy:String = null;
+
 	function addFreeplayUI():Void
 	{
 		var tab_group = new FlxUI(null, UI_box);
@@ -925,7 +945,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 			if (Clipboard.text != null)
 			{
 				var leColor:Array<Int> = [];
-				var splitted:Array<String> = Clipboard.text.trim().split(',');
+				var splitted:Array<String> = Clipboard.text.split(', ');
 
 				for (i in 0...splitted.length)
 				{
@@ -955,6 +975,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		});
 
 		iconInputText = new FlxUIInputText(10, bgColorStepperR.y + 70, 100, '', 8);
+		blockPressWhileTypingOn.push(iconInputText);
 
 		defaultDiffInputText = new FlxUIInputText(10, iconInputText.y + 40, 200, '', 8);
 		blockPressWhileTypingOn.push(defaultDiffInputText);
@@ -968,7 +989,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		difficultiesSuffixesInputText = new FlxUIInputText(10, difficultiesNamesInputText.y + 40, 200, '', 8);
 		blockPressWhileTypingOn.push(difficultiesSuffixesInputText);
 
-		tab_group.add(new FlxText(defaultDiffInputText.x, defaultDiffInputText.y - 20, 0, 'Default Difficulty\'s ID'));
+		tab_group.add(new FlxText(defaultDiffInputText.x, defaultDiffInputText.y - 20, 0, 'Default Difficulty\'s ID:'));
 		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y - 20, 0, 'Difficulties\'s IDs:'));
 		tab_group.add(new FlxText(difficultiesNamesInputText.x, difficultiesNamesInputText.y - 20, 0, 'Difficulties\'s Names:'));
 		tab_group.add(new FlxText(difficultiesSuffixesInputText.x, difficultiesSuffixesInputText.y - 20, 0, 'Difficulties\'s Suffixes:'));
@@ -981,6 +1002,59 @@ class WeekEditorFreeplayState extends MusicBeatState
 			weekFile.hideFreeplay = hideFreeplayCheckbox.checked;
 		};
 		
+		var copyDiffs:FlxButton = new FlxButton(150, difficultiesSuffixesInputText.y + 40, "Copy Diffs", function()
+		{
+			difficultiesCopy = weekFile.songs[curSelected].difficulties;
+			defaultDifficultyCopy = weekFile.songs[curSelected].defaultDifficulty;
+		});
+
+		var pasteDiffs:FlxButton = new FlxButton(150, copyDiffs.y + 25, "Paste Diffs", function()
+		{
+			if (difficultiesCopy != null)
+			{
+				weekFile.songs[curSelected].difficulties = difficultiesCopy;
+			}
+
+			if (defaultDifficultyCopy != null)
+			{
+				weekFile.songs[curSelected].defaultDifficulty = defaultDifficultyCopy;
+			}
+
+			defaultDiffInputText.text = '';
+			difficultiesInputText.text = '';
+			difficultiesNamesInputText.text = '';
+			difficultiesSuffixesInputText.text = '';
+	
+			if (weekFile.songs[curSelected].difficulties != null)
+			{
+				var diffNames:String = weekFile.songs[curSelected].difficulties[0][0];
+
+				for (i in 1...weekFile.songs[curSelected].difficulties[0].length) {
+					diffNames += ', ' + weekFile.songs[curSelected].difficulties[0][i];
+				}
+				difficultiesNamesInputText.text = diffNames;
+
+				var diffIDs:String = weekFile.songs[curSelected].difficulties[1][0];
+
+				for (i in 1...weekFile.songs[curSelected].difficulties[1].length) {
+					diffIDs += ', ' + weekFile.songs[curSelected].difficulties[1][i];
+				}
+				difficultiesInputText.text = diffIDs;
+
+				var diffSuffixes:String = weekFile.songs[curSelected].difficulties[2][0];
+
+				for (i in 1...weekFile.songs[curSelected].difficulties[2].length) {
+					diffSuffixes += ', ' + weekFile.songs[curSelected].difficulties[2][i];
+				}
+				difficultiesSuffixesInputText.text = diffSuffixes;
+			}
+	
+			if (weekFile.defaultDifficulty != null)
+			{
+				defaultDiffInputText.text = weekFile.defaultDifficulty;
+			}
+		});
+
 		tab_group.add(new FlxText(10, bgColorStepperR.y - 18, 0, 'Selected background Color R/G/B:'));
 		tab_group.add(new FlxText(10, iconInputText.y - 18, 0, 'Selected icon:'));
 		tab_group.add(bgColorStepperR);
@@ -988,6 +1062,8 @@ class WeekEditorFreeplayState extends MusicBeatState
 		tab_group.add(bgColorStepperB);
 		tab_group.add(copyColor);
 		tab_group.add(pasteColor);
+		tab_group.add(copyDiffs);
+		tab_group.add(pasteDiffs);
 		tab_group.add(iconInputText);
 		tab_group.add(defaultDiffInputText);
 		tab_group.add(difficultiesInputText);
@@ -1054,11 +1130,28 @@ class WeekEditorFreeplayState extends MusicBeatState
 		difficultiesNamesInputText.text = '';
 		difficultiesSuffixesInputText.text = '';
 
-		if (weekFile.difficulties != null)
+		if (weekFile.songs[curSelected].difficulties != null)
 		{
-			difficultiesInputText.text = weekFile.songs[curSelected].difficulties[1].join(', ');
-			difficultiesNamesInputText.text = weekFile.songs[curSelected].difficulties[0].join(', ');
-			difficultiesSuffixesInputText.text = weekFile.songs[curSelected].difficulties[2].join(', ');
+			var diffNames:String = weekFile.songs[curSelected].difficulties[0][0];
+
+			for (i in 1...weekFile.songs[curSelected].difficulties[0].length) {
+				diffNames += ', ' + weekFile.songs[curSelected].difficulties[0][i];
+			}
+			difficultiesNamesInputText.text = diffNames;
+
+			var diffIDs:String = weekFile.songs[curSelected].difficulties[1][0];
+
+			for (i in 1...weekFile.songs[curSelected].difficulties[1].length) {
+				diffIDs += ', ' + weekFile.songs[curSelected].difficulties[1][i];
+			}
+			difficultiesInputText.text = diffIDs;
+
+			var diffSuffixes:String = weekFile.songs[curSelected].difficulties[2][0];
+
+			for (i in 1...weekFile.songs[curSelected].difficulties[2].length) {
+				diffSuffixes += ', ' + weekFile.songs[curSelected].difficulties[2][i];
+			}
+			difficultiesSuffixesInputText.text = diffSuffixes;
 		}
 
 		if (weekFile.defaultDifficulty != null)
@@ -1094,18 +1187,25 @@ class WeekEditorFreeplayState extends MusicBeatState
 			return;
 		}
 		
-		if (iconInputText.hasFocus)
-		{
-			FlxG.sound.muteKeys = [];
-			FlxG.sound.volumeDownKeys = [];
-			FlxG.sound.volumeUpKeys = [];
+		var blockInput:Bool = false;
 
-			if (FlxG.keys.justPressed.ENTER)
+		for (inputText in blockPressWhileTypingOn)
+		{
+			if (inputText.hasFocus)
 			{
-				iconInputText.hasFocus = false;
+				FlxG.sound.muteKeys = [];
+				FlxG.sound.volumeDownKeys = [];
+				FlxG.sound.volumeUpKeys = [];
+
+				blockInput = true;
+
+				if (FlxG.keys.justPressed.ENTER) inputText.hasFocus = false;
+
+				break;
 			}
 		}
-		else
+
+		if (!blockInput)
 		{
 			FlxG.sound.muteKeys = TitleState.muteKeys;
 			FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
@@ -1113,6 +1213,9 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.ESCAPE)
 			{
+				difficultiesCopy = null;
+				defaultDifficultyCopy = null;
+
 				MusicBeatState.switchState(new EditorsMenuState());
 			}
 

@@ -21,8 +21,6 @@
 - Week ID - makes it easy to find weeks in modcharts.
 - Difficulties IDs, names and suffixes - can do custom difficulties. They must have the same length by the number of texts of difficulty.Between them should be the default difficulty. In Freeplay, the songs are the same.
 
-![difficulties](art/screenshorts/difficultiesEditor.png)
-
 ## Installation:
 You must have [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/), seriously, stop using 4.1.5, it misses some stuff.
 

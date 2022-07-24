@@ -102,7 +102,7 @@ class WeekData
 					difficulties: [
 						['Easy',	'Normal',	'Hard'],
 						['easy',	'normal',	'hard'],
-						['-easy',	'',			'hard']
+						['-easy',	'',			'-hard']
 					],
 					defaultDifficulty: 'normal',
 				},
@@ -114,7 +114,7 @@ class WeekData
 					difficulties: [
 						['Easy',	'Normal',	'Hard'],
 						['easy',	'normal',	'hard'],
-						['-easy',	'',			'hard']
+						['-easy',	'',			'-hard']
 					],
 					defaultDifficulty: 'normal',
 				},
@@ -126,7 +126,7 @@ class WeekData
 					difficulties: [
 						['Easy',	'Normal',	'Hard'],
 						['easy',	'normal',	'hard'],
-						['-easy',	'',			'hard']
+						['-easy',	'',			'-hard']
 					],
 					defaultDifficulty: 'normal',
 				}
@@ -145,7 +145,7 @@ class WeekData
 			difficulties: [
 				['Easy',	'Normal',	'Hard'],
 				['easy',	'normal',	'hard'],
-				['-easy',	'',			'hard']
+				['-easy',	'',			'-hard']
 			],
 			defaultDifficulty: 'normal'
 		};
