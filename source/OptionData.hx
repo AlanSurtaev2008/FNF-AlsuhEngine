@@ -115,7 +115,11 @@ class OptionData
 
 		if (FlxG.save.data.fullScreen != null) {
 			fullScreen = FlxG.save.data.fullScreen;
+			FlxG.fullscreen = fullScreen;
+		} else {
+			FlxG.fullscreen = fullScreen;
 		}
+
 		if (FlxG.save.data.lowQuality != null) {
 			lowQuality = FlxG.save.data.lowQuality;
 		}
@@ -124,7 +128,14 @@ class OptionData
 		}
 		if (FlxG.save.data.framerate != null) {
 			framerate = FlxG.save.data.framerate;
-
+			if (framerate > FlxG.drawFramerate) {
+				FlxG.updateFramerate = framerate;
+				FlxG.drawFramerate = framerate;
+			} else {
+				FlxG.drawFramerate = framerate;
+				FlxG.updateFramerate = framerate;
+			}
+		} else {
 			if (framerate > FlxG.drawFramerate) {
 				FlxG.updateFramerate = framerate;
 				FlxG.drawFramerate = framerate;
@@ -245,9 +256,14 @@ class OptionData
 		if (FlxG.save.data.watermarks != null) {
 			watermarks = FlxG.save.data.watermarks;
 		}
+
 		if (FlxG.save.data.autoPause != null) {
 			autoPause = FlxG.save.data.autoPause;
+			FlxG.autoPause = autoPause;
+		} else {
+			FlxG.autoPause = autoPause;
 		}
+
 		if (FlxG.save.data.flashingLights != null) {
 			flashingLights = FlxG.save.data.flashingLights;
 		}
@@ -268,8 +284,6 @@ class OptionData
 		{
 			FlxG.sound.muted = FlxG.save.data.mute;
 		}
-
-		FlxG.autoPause = autoPause;
 	}
 
 	public static function fromString(variable:String):Dynamic

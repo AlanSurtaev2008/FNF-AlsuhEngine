@@ -33,6 +33,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'fullScreen', //Save data variable name
 			'bool', // Variable type
 			false); // Default value
+		option.onChange = onChangeFullScreen;
 		addOption(option);
 
 		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
@@ -117,6 +118,15 @@ class PreferencesSubState extends MusicBeatSubState
 			'string',
 			'Lighting Up',
 			['Lighting Up', 'Normal', 'Disabled']);
+
+		if (isPause) {
+			option.options = ['Lighting Up', 'Normal'];
+
+			if (option.getValue() == 'Disabled') {
+				option.isPause = isPause;
+			}
+		}
+
 		addOption(option);
 
 		var option:Option = new Option('Disable Reset Button',
@@ -366,7 +376,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'If unchecked, hides FPS Counter.',
 			'fpsCounter',
 			'bool',
-			true);
+			false);
 		addOption(option);
 		option.onChange = onChangeFPSCounter;
 
@@ -375,7 +385,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'If checked, FPS Counter becomes colorful.',
 			'rainFPS',
 			'bool',
-			true);
+			false);
 		addOption(option);
 
 		var option:Option = new Option('Memory Counter',
@@ -383,7 +393,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'If unchecked, hides Memory Counter.',
 			'memoryCounter',
 			'bool',
-			true);
+			false);
 		addOption(option);
 		option.onChange = onChangeMemoryCounter;
 
@@ -392,7 +402,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'If checked, Memory counter becomes colorful.',
 			'rainMemory',
 			'bool',
-			true);
+			false);
 		addOption(option);
 		#end
 
@@ -464,6 +474,11 @@ class PreferencesSubState extends MusicBeatSubState
 		super.create();
 
 		getOptions();
+
+		if (!isPause)
+		{
+			Conductor.changeBPM(102);
+		}
 
 		var bg:FlxSprite = new FlxSprite();
 
@@ -618,6 +633,11 @@ class PreferencesSubState extends MusicBeatSubState
 	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+
+		if (FlxG.sound.music != null && !isPause)
+		{
+			Conductor.songPosition = FlxG.sound.music.time;
+		}
 
 		if (controls.BACK)
 		{
@@ -978,11 +998,11 @@ class PreferencesSubState extends MusicBeatSubState
 
 	function onChangeCameraZoom():Void
 	{
-		lastZoom = FlxG.camera.zoom;
-		lastZoomHUD = PlayState.instance.camHUD.zoom;
-
 		if (isPause)
 		{
+			lastZoom = FlxG.camera.zoom;
+			lastZoomHUD = PlayState.instance.camHUD.zoom;
+
 			if (OptionData.camZooms)
 			{
 				FlxG.camera.zoom = 0;
@@ -1109,6 +1129,15 @@ class PreferencesSubState extends MusicBeatSubState
 		if (changedMusic) FlxG.sound.playMusic(Paths.music('freakyMenu'));
 	}
 
+	override function beatHit():Void
+	{
+		super.beatHit();
+
+		if (boyfriend != null && curBeat % 2 == 0) {
+			boyfriend.dance();
+		}
+	}
+
 	function changeSelection(change:Int = 0):Void
 	{
 		do
@@ -1180,7 +1209,7 @@ class PreferencesSubState extends MusicBeatSubState
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 
-	public function reloadBoyfriend()
+	public function reloadBoyfriend():Void
 	{
 		var wasVisible:Bool = false;
 

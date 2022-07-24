@@ -1,6 +1,27 @@
-# Friday Night Funkin' Alush Engine
+# Friday Night Funkin' Alsuh Engine
 
-**Alush Engine** - This is modified connecting version of Psych Engine and Kade Engine by AlanSurtaev2008.
+**Alsuh Engine** - This is modified connecting version of Psych Engine and Kade Engine by AlanSurtaev2008.
+
+## Tutorials:
+### How to make a song's chart on Chart Editor?
+- Everything is the same as in Psych Engine, but with some changes, which are shown below:
+
+- Song ID - The internal name of the song, as used in the file system.
+- Song Name - The readable name of the song, as displayed to the user. Can be any string.
+- Assets - there are indications of characters, stages, and note styles.
+
+### How to make character?
+- Everything is the same as in Psych Engine, but with some changes, which are shown below:
+
+- Character's Name - Needed to determine the name of the opponent. When you added a game to Discord by "Registered Games".
+
+### How to make week?
+- Everything is the same as in Psych Engine, but with some changes, which are shown below:
+
+- Week ID - makes it easy to find weeks in modcharts.
+- Difficulties IDs, names and suffixes - can do custom difficulties. They must have the same length by the number of texts of difficulty.Between them should be the default difficulty. In Freeplay, the songs are the same.
+
+![difficulties](art/screenshorts/difficultiesEditor.png)
 
 ## Installation:
 You must have [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/), seriously, stop using 4.1.5, it misses some stuff.
@@ -14,7 +35,7 @@ If you want video support on your mod, simply do `haxelib git hxCodec https://gi
 otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ## Credits:
-### Alush Engine by
+### Alsuh Engine by
 - AlanSurtaev2008 - Programmer
 
 ### Psych Engine Team

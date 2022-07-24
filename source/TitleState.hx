@@ -92,7 +92,7 @@ class TitleState extends MusicBeatState
 
 		titleJSON = Json.parse(File.getContent(path));
 		#else
-		var path = Paths.getPreloadPath("images/gfDanceTitle.json");
+		var path = Paths.getPreloadPath("title/gfDanceTitle.json");
 		titleJSON = Json.parse(Assets.getText(path)); 
 		#end
 
@@ -522,7 +522,11 @@ class TitleState extends MusicBeatState
 		if (!skippedIntro)
 		{
 			remove(ngSpr);
+
+			blackScreen.visible = false;
+			blackScreen.alpha = 0;
 			remove(blackScreen);
+
 			remove(textGroup);
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);

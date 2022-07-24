@@ -162,6 +162,12 @@ class NotesSubState extends MusicBeatSubState
 		{
 			if (changingNote)
 			{
+				if (controls.BACK || controls.ACCEPT)
+				{
+					changingNote = false;
+					changeSelection();
+				}
+
 				if (holdTimeValue < 0.5)
 				{
 					if (controls.UI_LEFT_P)
@@ -250,12 +256,16 @@ class NotesSubState extends MusicBeatSubState
 
 				if (controls.UI_LEFT_P)
 				{
+					FlxG.sound.play(Paths.sound('scrollMenu'));
+
 					changeType(-1);
 					holdTime = 0;
 				}
 
 				if (controls.UI_RIGHT_P)
 				{
+					FlxG.sound.play(Paths.sound('scrollMenu'));
+
 					changeType(1);
 					holdTime = 0;
 				}
@@ -268,6 +278,7 @@ class NotesSubState extends MusicBeatSubState
 
 					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 					{
+						FlxG.sound.play(Paths.sound('scrollMenu'));
 						changeType((checkNewHold - checkLastHold) * (controls.UI_LEFT ? -1 : 1));
 					}
 				}
@@ -301,18 +312,17 @@ class NotesSubState extends MusicBeatSubState
 						selectType();
 					}
 				}
-			}
 
-			if (controls.BACK || (changingNote && controls.ACCEPT))
-			{
-				if (!changingNote)
+				if (controls.BACK)
 				{
+					FlxG.sound.play(Paths.sound('cancelMenu'));
+	
 					if (isPause)
 					{
 						OptionData.savePrefs();
-		
+	
 						PlayState.isNextSubState = true;
-		
+	
 						FlxG.state.closeSubState();
 						FlxG.state.openSubState(new OptionsSubState());
 					}
@@ -320,13 +330,6 @@ class NotesSubState extends MusicBeatSubState
 					{
 						close();
 					}
-				}
-				else
-				{
-					FlxG.sound.play(Paths.sound('cancelMenu'));
-
-					changingNote = false;
-					changeSelection();
 				}
 			}
 		}

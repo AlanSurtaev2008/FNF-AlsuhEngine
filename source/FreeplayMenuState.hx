@@ -352,6 +352,7 @@ class FreeplayMenuState extends MusicBeatState
 
 			PlayState.SONG = Song.loadFromJson(curSong.songID + diffic, curSong.songID);
 			PlayState.gameMode = 'freeplay';
+			PlayState.difficulties = curSong.difficulties.copy();
 			PlayState.storyDifficulty = curDifficultyString;
 			PlayState.lastDifficulty = curDifficultyString;
 			PlayState.storyWeek = curSong.weekID;

@@ -29,7 +29,7 @@ class MainMenuState extends MusicBeatState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.0';
+	public static var engineVersion:String = '1.0.1';
 	public static var gameVersion:String = '0.2.8';
 
 	override function create():Void
@@ -246,7 +246,7 @@ class MainMenuState extends MusicBeatState
 			case 'freeplay':
 				MusicBeatState.switchState(new FreeplayMenuState());
 			case 'options':
-				MusicBeatState.switchState(new options.OptionsMenuState());
+				LoadingState.loadAndSwitchState(new options.OptionsMenuState());
 		}
 	}
 

@@ -157,7 +157,6 @@ class PauseSubState extends MusicBeatSubState
 			levelInfo.alpha = 0;
 			levelDifficulty.alpha = 0;
 			blueballedTxt.alpha = 0;
-			practiceText.alpha = 0;
 
 			FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 
@@ -235,6 +234,7 @@ class PauseSubState extends MusicBeatSubState
 
 				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 				{
+					FlxG.sound.play(Paths.sound('scrollMenu'));
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 				}
 			}
@@ -255,7 +255,7 @@ class PauseSubState extends MusicBeatSubState
 			{
 				if (menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected))
 				{
-					var difficulty:String = CoolUtil.getDifficultyName(daSelected, PlayState.difficulties);
+					var difficulty:String = CoolUtil.getDifficultySuffix(daSelected, true, PlayState.difficulties.copy());
 
 					PlayState.SONG = Song.loadFromJson(PlayState.SONG.songID + difficulty, PlayState.SONG.songID);
 					PlayState.lastDifficulty = CoolUtil.getDifficultyID(daSelected);
@@ -265,6 +265,11 @@ class PauseSubState extends MusicBeatSubState
 					MusicBeatState.resetState();
 
 					return;
+				}
+				else
+				{
+					menuItems = menuItemsOG;
+					regenMenu();
 				}
 			}
 
@@ -281,7 +286,6 @@ class PauseSubState extends MusicBeatSubState
 				case 'Change Difficulty':
 				{
 					menuItems = difficultyChoices;
-
 					regenMenu();
 				}
 				case 'Toggle Practice Mode':

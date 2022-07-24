@@ -100,8 +100,6 @@ class Character extends FlxSprite
 
 		antialiasing = OptionData.globalAntialiasing;
 
-		var library:String = null;
-
 		switch (character)
 		{
 			// case 'your character name in case you want to hardcode them instead':

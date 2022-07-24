@@ -538,7 +538,5 @@ class ControlsSubState extends MusicBeatSubState
 				}
 			}
 		}
-
-		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 }

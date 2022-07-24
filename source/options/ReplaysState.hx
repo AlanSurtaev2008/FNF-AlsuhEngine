@@ -59,6 +59,7 @@ class ReplaysState extends MusicBeatState
 			var replayText:Alphabet = new Alphabet(0, (100 * i) + 210, replaysArray[i], false, false);
 			replayText.isMenuItem = true;
 			replayText.targetY = i;
+			replayText.yAdd - 70;
 			grpReplays.add(replayText);
 		}
 

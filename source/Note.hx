@@ -72,13 +72,17 @@ class Note extends FlxSprite
 	public var hitHealth:Float = 0.023;
 	public var missHealth:Float = 0.0475;
 
+	public var animSuffix:String = '';
+	public var gfNote:Bool = false;
+	public var noAnimation:Bool = false;
+	public var noMissAnimation:Bool = false;
+
 	public var lowPriority:Bool = false;
 
 	public var texture(default, set):String = null;
 
 	public var hitsoundDisabled:Bool = false;
 
-	public var noAnimation:Bool = false;
 	public var hitCausesMiss:Bool = false;
 
 	private function set_texture(value:String):String
@@ -96,21 +100,28 @@ class Note extends FlxSprite
 	{
 		noteSplashTexture = PlayState.SONG.splashSkin;
 
+		if (noteData > -1)
+		{
+			colorSwap.hue = OptionData.arrowHSV[noteData % 4][0] / 360;
+			colorSwap.saturation = OptionData.arrowHSV[noteData % 4][1] / 100;
+			colorSwap.brightness = OptionData.arrowHSV[noteData % 4][2] / 100;
+		}
+
 		if (noteData > -1 && noteType != value)
 		{
 			switch (value)
 			{
 				case 'Hurt Note':
 				{
-					ignoreNote = true;
-
+					ignoreNote = mustPress;
 					reloadNote('HURT');
 
-					noteSplashTexture = 'HURTnoteSplashes';
+					noteSplashTexture = 'HURTNOTE_splashes';
 
 					colorSwap.hue = 0;
 					colorSwap.saturation = 0;
 					colorSwap.brightness = 0;
+
 					lowPriority = true;
 
 					if (isSustainNote) {
@@ -121,9 +132,18 @@ class Note extends FlxSprite
 
 					hitCausesMiss = true;
 				}
+				case 'Alt Animation':
+				{
+					animSuffix = '-alt';
+				}
 				case 'No Animation':
 				{
 					noAnimation = true;
+					noMissAnimation = true;
+				}
+				case 'GF Sing':
+				{
+					gfNote = true;
 				}
 			}
 
@@ -192,6 +212,7 @@ class Note extends FlxSprite
 		{
 			alpha = 0.6;
 			multAlpha = 0.6;
+
 			hitsoundDisabled = true;
 
 			if (OptionData.downScroll) flipY = true;
@@ -389,9 +410,12 @@ class Note extends FlxSprite
 	{
 		super.update(elapsed);
 
-		colorSwap.hue = OptionData.arrowHSV[noteData % 4][0] / 360;
-		colorSwap.saturation = OptionData.arrowHSV[noteData % 4][1] / 100;
-		colorSwap.brightness = OptionData.arrowHSV[noteData % 4][2] / 100;
+		if (noteData > -1)
+		{
+			colorSwap.hue = OptionData.arrowHSV[noteData % 4][0] / 360;
+			colorSwap.saturation = OptionData.arrowHSV[noteData % 4][1] / 100;
+			colorSwap.brightness = OptionData.arrowHSV[noteData % 4][2] / 100;
+		}
 
 		if (mustPress)
 		{

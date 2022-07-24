@@ -16,7 +16,7 @@ class CreditsMenuState extends MusicBeatState
 
 	var creditsArray:Array<Credit> =
 	[
-		new Credit('Alush Engine by'),
+		new Credit('Alsuh Engine by'),
 		new Credit('AlanSurtaev2008',			true,		'assrj',			'Main Programmer of Akayo Engine and General Director of Afford-Set', 			'',																						0xFF6300AF),
 		new Credit('Psych Engine Team'),
 		new Credit('Shadow Mario',				true,		'shadowmario',		'Main Programmer of Psych Engine',												'https://twitter.com/Shadow_Mario_',													0xFF444444),
@@ -218,7 +218,7 @@ class CreditsMenuState extends MusicBeatState
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			if(!unselectableCheck(bullShit-1))
+			if (!unselectableCheck(bullShit - 1))
 			{
 				item.alpha = 0.6;
 

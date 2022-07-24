@@ -157,17 +157,24 @@ class OptionsMenuState extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				flickering = true;
+				if (OptionData.flashingLights)
+				{
+					flickering = true;
 
-				FlxFlicker.flicker(selectorLeft, 1, 0.04, true);
-				FlxFlicker.flicker(selectorRight, 1, 0.04, true);
-
-				FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.04, true, false, function(flick:FlxFlicker)
+					FlxFlicker.flicker(selectorLeft, 1, 0.04, true);
+					FlxFlicker.flicker(selectorRight, 1, 0.04, true);
+	
+					FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.04, true, false, function(flick:FlxFlicker)
+					{
+						openSelectedSubstate(options[curSelected]);
+					});
+	
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+				}
+				else
 				{
 					openSelectedSubstate(options[curSelected]);
-				});
-
-				FlxG.sound.play(Paths.sound('confirmMenu'));
+				}
 			}
 		}
 	}
@@ -390,17 +397,24 @@ class OptionsSubState extends MusicBeatSubState
 
 			if (controls.ACCEPT)
 			{
-				flickering = true;
+				if (OptionData.flashingLights)
+				{
+					flickering = true;
 
-				FlxFlicker.flicker(selectorLeft, 1, 0.04, true);
-				FlxFlicker.flicker(selectorRight, 1, 0.04, true);
-
-				FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.04, true, false, function(flick:FlxFlicker)
+					FlxFlicker.flicker(selectorLeft, 1, 0.04, true);
+					FlxFlicker.flicker(selectorRight, 1, 0.04, true);
+	
+					FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.04, true, false, function(flick:FlxFlicker)
+					{
+						openSelectedSubstate(options[curSelected]);
+					});
+	
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+				}
+				else
 				{
 					openSelectedSubstate(options[curSelected]);
-				});
-
-				FlxG.sound.play(Paths.sound('confirmMenu'));
+				}
 			}
 		}
 	}

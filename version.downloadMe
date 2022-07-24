@@ -1,2 +1,12 @@
-1.0;
-- nothing lol
+1.0.1;
+- Fixed function addLuaSprite() on Modcharts
+- Fixed Title Screen
+- Fixed Position Girlfriend on Tutorial
+- Fixed Engine name
+- Fixed Difficulties on Pause Menu
+- Fixed Boyfriend on Prefrerences Menu
+- Fixed Accept Button on Notes Menu while no Flashing Lights
+- Fixed Middlescroll
+- Fixed Controller Mode
+- Fixed Start of Song with Сutscenes
+- Fixed Waveform on Chart Editor

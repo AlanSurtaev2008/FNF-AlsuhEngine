@@ -1689,11 +1689,26 @@ class FunkinLua
 			}
 		});
 
-		Lua_helper.add_callback(lua, "addLuaSprite", function(tag:String) {
+		Lua_helper.add_callback(lua, "addLuaSprite", function(tag:String, behindWhom:Dynamic = 'gf') {
 			if (PlayState.instance.modchartSprites.exists(tag)) {
 				var shit:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
 				if (!shit.wasAdded) {
-					getInstance().add(shit);
+					switch (behindWhom) {
+						case 'before' | 'in front of' | 'afore' | 'ere' | 'front' | 'head' | true:
+							getInstance().add(shit);
+						case 'dad' | 'opponent':
+							PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.dadGroup), shit);
+						case 'bf' | 'boyfriend':
+							PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup), shit);
+						default:
+						{
+							if (PlayState.instance.isDead) {
+								GameOverSubState.instance.insert(PlayState.instance.members.indexOf(GameOverSubState.instance.boyfriend), shit);
+							} else {
+								PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.gfGroup), shit);
+							}
+						}
+					}
 
 					shit.wasAdded = true;
 				}
@@ -1820,60 +1835,6 @@ class FunkinLua
 
 			PlayState.instance.healthBar.createFilledBar(left, right);
 			PlayState.instance.healthBar.updateBar();
-		});
-
-		Lua_helper.add_callback(lua, "addBoyfriend", function()
-		{
-			if (PlayState.instance.isDead)
-			{
-				if (GameOverSubState.instance.members.contains(GameOverSubState.instance.boyfriend))
-				{
-					GameOverSubState.instance.remove(GameOverSubState.instance.boyfriend);
-				}
-	
-				if (!GameOverSubState.instance.members.contains(GameOverSubState.instance.boyfriend))
-				{
-					GameOverSubState.instance.add(GameOverSubState.instance.boyfriend);
-				}
-			}
-			else
-			{
-				if (PlayState.instance.members.contains(PlayState.instance.boyfriendGroup))
-				{
-					PlayState.instance.remove(PlayState.instance.boyfriendGroup);
-				}
-	
-				if (!PlayState.instance.members.contains(PlayState.instance.boyfriendGroup))
-				{
-					PlayState.instance.add(PlayState.instance.boyfriendGroup);
-				}
-			}
-		});
-
-		Lua_helper.add_callback(lua, "addDad", function()
-		{
-			if (PlayState.instance.members.contains(PlayState.instance.dadGroup))
-			{
-				PlayState.instance.remove(PlayState.instance.dadGroup);
-			}
-
-			if (!PlayState.instance.members.contains(PlayState.instance.dadGroup))
-			{
-				PlayState.instance.add(PlayState.instance.dadGroup);
-			}
-		});
-
-		Lua_helper.add_callback(lua, "addGF", function()
-		{
-			if (PlayState.instance.members.contains(PlayState.instance.gfGroup))
-			{
-				PlayState.instance.remove(PlayState.instance.gfGroup);
-			}
-
-			if (!PlayState.instance.members.contains(PlayState.instance.gfGroup))
-			{
-				PlayState.instance.add(PlayState.instance.gfGroup);
-			}
 		});
 
 		Lua_helper.add_callback(lua, "setObjectCamera", function(obj:String, camera:String = '') {

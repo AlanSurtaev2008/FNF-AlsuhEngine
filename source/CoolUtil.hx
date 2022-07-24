@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.display.FlxPieDial;
 import flixel.FlxG;
 import lime.utils.Assets;
 import flixel.math.FlxMath;
@@ -8,34 +9,34 @@ using StringTools;
 
 class CoolUtil
 {
-	public static function getDifficultyName(diff:String, ?difficulties:Array<Array<String>> = null):String
+	public static function getDifficultyName(diff:String, isSuffix:Bool = false, ?difficulties:Array<Array<String>> = null):String
 	{
 		if (difficulties == null)
 		{
-			difficulties = PlayState.difficulties;
+			difficulties = PlayState.difficulties.copy();
 		}
 
-		return difficulties[0][difficulties[1].indexOf(diff.toLowerCase())];
+		return difficulties[0][difficulties[isSuffix ? 2 : 1].indexOf(diff)];
 	}
 
-	public static function getDifficultyID(diff:String, ?isPrefix:Bool = false, ?difficulties:Array<Array<String>> = null):String
+	public static function getDifficultyID(diff:String, ?isSuffix:Bool = false, ?difficulties:Array<Array<String>> = null):String
 	{
 		if (difficulties == null)
 		{
-			difficulties = PlayState.difficulties;
+			difficulties = PlayState.difficulties.copy();
 		}
 
-		return difficulties[1][difficulties[isPrefix ? 2 : 0].indexOf(diff.toLowerCase())];
+		return difficulties[1][difficulties[isSuffix ? 2 : 0].indexOf(diff)];
 	}
 
-	public static function getDifficultySuffix(diff:String, ?difficulties:Array<Array<String>> = null):String
+	public static function getDifficultySuffix(diff:String, ?isName:Bool = false, ?difficulties:Array<Array<String>> = null):String
 	{
 		if (difficulties == null)
 		{
-			difficulties = PlayState.difficulties;
+			difficulties = PlayState.difficulties.copy();
 		}
 
-		return difficulties[2][difficulties[1].indexOf(diff.toLowerCase())];
+		return difficulties[2][difficulties[isName ? 0 : 1].indexOf(diff)];
 	}
 
 	public static function formatSong(song:String, diff:String):String
