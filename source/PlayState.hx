@@ -2998,7 +2998,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (SONG.notes[Std.int(curStep / 16)] != null && !startingSong && !endingSong)
+		if (SONG.notes[Std.int(curStep / 16)] != null && !startingSong && !endingSong && !isCameraOnForcedPos)
 		{
 			moveCameraSection();
 		}

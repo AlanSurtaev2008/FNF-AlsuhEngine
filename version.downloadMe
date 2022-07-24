@@ -1,4 +1,5 @@
 1.0.2h;
+- Fixed Event "Camera Follow Pos"
 - Fixed Difficulty Choice on Chart Editor
 - Fixed Week Editor (Maybe)
 - Fixed function addLuaSprite() on Modcharts
