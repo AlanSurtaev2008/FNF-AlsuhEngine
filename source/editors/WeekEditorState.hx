@@ -549,9 +549,7 @@ class WeekEditorState extends MusicBeatState
 				var splittedText:Array<String> = songsNamesInputText.text.trim().split(',');
 
 				for (i in 0...splittedText.length) {
-					splittedText[i] = splittedText[i].trim();
-
-					weekFile.songs[i].songName = splittedText[i];
+					weekFile.songs[i].songName = splittedText[i].trim();
 				}
 
 				updateText();
