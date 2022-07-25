@@ -42,12 +42,12 @@ class Song
 	{
 		if (songJson.songID == null)
 		{
-			songJson.songID = StringTools.replace(' ', '-', songJson.song.toLowerCase());
+			songJson.songID = StringTools.replace(songJson.song.toLowerCase(), ' ', '-');
 		}
 
 		if (songJson.songName == null)
 		{
-			songJson.songName = StringTools.replace('-', ' ', songJson.song);
+			songJson.songName = StringTools.replace(songJson.song, '-', ' ');
 		}
 
 		if (songJson.gfVersion == null) // from Psych Chars
