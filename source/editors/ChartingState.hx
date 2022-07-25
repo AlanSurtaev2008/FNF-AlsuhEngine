@@ -754,7 +754,7 @@ class ChartingState extends MusicBeatState
 		var tab_group_section = new FlxUI(null, UI_box);
 		tab_group_section.name = 'Section';
 
-		check_mustHitSection = new FlxUICheckBox(10, 15, null, null, "Camera Points on P1?", 100);
+		check_mustHitSection = new FlxUICheckBox(10, 15, null, null, "Camera Points to P1?", 100);
 		check_mustHitSection.name = 'check_mustHit';
 		check_mustHitSection.checked = _song.notes[curSec].mustHitSection;
 
@@ -2652,6 +2652,8 @@ class ChartingState extends MusicBeatState
 		check_altAnim.checked = sec.altAnim;
 		check_changeBPM.checked = sec.changeBPM;
 		stepperSectionBPM.value = sec.bpm;
+
+		updateHeads();
 	}
 
 	function updateHeads():Void
