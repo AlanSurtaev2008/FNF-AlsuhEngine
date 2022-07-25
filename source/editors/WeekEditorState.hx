@@ -540,7 +540,7 @@ class WeekEditorState extends MusicBeatState
 							difficulties: [
 								['Easy',	'Normal',	'Hard'],
 								['easy',	'normal',	'hard'],
-								['-easy',	'',			'hard']
+								['-easy',	'',			'-hard']
 							],
 							defaultDifficulty: 'normal',
 						});

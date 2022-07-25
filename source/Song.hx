@@ -1,6 +1,6 @@
 package;
 
-#if MODS_ALLOWED
+#if sys
 import sys.io.File;
 import sys.FileSystem;
 #end
@@ -99,7 +99,6 @@ class Song
 			rawJson = File.getContent(moddyFile).trim();
 		}
 		#end
-
 		if (rawJson == null)
 		{
 			#if sys
