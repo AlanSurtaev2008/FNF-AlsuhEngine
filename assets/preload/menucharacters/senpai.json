@@ -7,5 +7,8 @@
 		-40
 	],
 	"scale": 1,
+	"fps": 24,
+	"fpsAlt": 24,
+	"fpsConfirm": 24,
 	"image": "Menu_Senpai"
 }

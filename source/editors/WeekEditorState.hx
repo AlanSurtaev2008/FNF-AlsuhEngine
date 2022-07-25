@@ -62,6 +62,8 @@ class WeekEditorState extends MusicBeatState
 	{
 		super.create();
 
+		Conductor.changeBPM(102);
+
 		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
 		txtWeekTitle.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, RIGHT);
 		txtWeekTitle.alpha = 0.7;
@@ -451,7 +453,7 @@ class WeekEditorState extends MusicBeatState
 		weekThing.visible = true;
 		missingFileText.visible = false;
 
-		var assetName:String = weekFileInputText.text;
+		var assetName:String = weekFileInputText.text.trim();
 		
 		var isMissing:Bool = true;
 
@@ -485,14 +487,14 @@ class WeekEditorState extends MusicBeatState
 		{
 			if (sender == weekFileInputText)
 			{
-				weekFile.itemFile = weekFileInputText.text;
+				weekFile.itemFile = weekFileInputText.text.trim();
 				reloadWeekThing();
 			}
 			else if (sender == opponentInputText || sender == boyfriendInputText || sender == girlfriendInputText)
 			{
-				weekFile.weekCharacters[0] = opponentInputText.text;
-				weekFile.weekCharacters[1] = boyfriendInputText.text;
-				weekFile.weekCharacters[2] = girlfriendInputText.text;
+				weekFile.weekCharacters[0] = opponentInputText.text.trim();
+				weekFile.weekCharacters[1] = boyfriendInputText.text.trim();
+				weekFile.weekCharacters[2] = girlfriendInputText.text.trim();
 
 				updateText();
 			}
@@ -503,20 +505,20 @@ class WeekEditorState extends MusicBeatState
 			}
 			else if (sender == displayNameInputText)
 			{
-				weekFile.storyName = displayNameInputText.text;
+				weekFile.storyName = displayNameInputText.text.trim();
 				updateText();
 			}
 			else if (sender == weekNameInputText)
 			{
-				weekFile.weekName = weekNameInputText.text;
+				weekFile.weekName = weekNameInputText.text.trim();
 			}
 			else if (sender == weekIDInputText)
 			{
-				weekFile.weekID = weekIDInputText.text;
+				weekFile.weekID = weekIDInputText.text.trim();
 			}
 			else if (sender == songsIDsInputText)
 			{
-				var splittedText:Array<String> = songsIDsInputText.text.split(', ');
+				var splittedText:Array<String> = songsIDsInputText.text.trim().split(',');
 
 				for (i in 0...splittedText.length) {
 					splittedText[i] = splittedText[i];
@@ -563,7 +565,7 @@ class WeekEditorState extends MusicBeatState
 			}
 			else if (sender == songsNamesInputText)
 			{
-				var splittedText:Array<String> = songsNamesInputText.text.split(', ');
+				var splittedText:Array<String> = songsNamesInputText.text.trim().split(',');
 
 				for (i in 0...splittedText.length) {
 					weekFile.songs[i].songName = splittedText[i];
@@ -573,29 +575,51 @@ class WeekEditorState extends MusicBeatState
 			}
 			else if (sender == weekBeforeInputText)
 			{
-				weekFile.weekBefore = weekBeforeInputText.text;
+				weekFile.weekBefore = weekBeforeInputText.text.trim();
 			}
 			else if (sender == difficultiesInputText)
 			{
-				weekFile.difficulties[1] = difficultiesInputText.text.split(', ');
+				var splittedText:Array<String> = difficultiesInputText.text.trim().split(',');
+				for (i in 0...splittedText.length) {
+					splittedText[i] = splittedText[i].trim();
+				}
+
+				weekFile.difficulties[1] = splittedText;
 			}
 			else if (sender == difficultiesNamesInputText)
 			{
-				weekFile.difficulties[0] = difficultiesNamesInputText.text.split(', ');
+				var splittedText:Array<String> = difficultiesNamesInputText.text.trim().split(',');
+				for (i in 0...splittedText.length) {
+					splittedText[i] = splittedText[i].trim();
+				}
+
+				weekFile.difficulties[0] = splittedText;
 			}
 			else if (sender == difficultiesSuffixesInputText)
 			{
-				weekFile.difficulties[2] = difficultiesSuffixesInputText.text.split(', ');
+				var splittedText:Array<String> = difficultiesSuffixesInputText.text.trim().split(',');
+				for (i in 0...splittedText.length) {
+					splittedText[i] = splittedText[i].trim();
+				}
+
+				weekFile.difficulties[2] = splittedText;
 			}
 			else if (sender == defaultDiffInputText)
 			{
-				weekFile.defaultDifficulty = defaultDiffInputText.text;
+				weekFile.defaultDifficulty = defaultDiffInputText.text.trim();
 			}
 		}
 	}
 
 	override function update(elapsed:Float):Void
 	{
+		super.update(elapsed);
+
+		if (FlxG.sound.music != null)
+		{
+			Conductor.songPosition = FlxG.sound.music.time;
+		}
+
 		if (loadedWeek != null)
 		{
 			weekFile = loadedWeek;
@@ -634,10 +658,30 @@ class WeekEditorState extends MusicBeatState
 			}
 		}
 
-		super.update(elapsed);
-
 		lock.y = weekThing.y;
 		missingFileText.y = weekThing.y + 36;
+	}
+
+	override function beatHit():Void
+	{
+		super.beatHit();
+
+		for (i in 0...grpWeekCharacters.length)
+		{
+			var leChar:MenuCharacter = grpWeekCharacters.members[i];
+
+			if (leChar.isDanced && !leChar.heyed)
+			{
+				leChar.dance();
+			}
+			else
+			{
+				if (curBeat % 2 == 0 && !leChar.heyed)
+				{
+					leChar.dance();
+				}
+			}
+		}
 	}
 
 	function recalculateStuffPosition():Void
@@ -895,14 +939,42 @@ class WeekEditorFreeplayState extends MusicBeatState
 	{
 		if (id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText))
 		{
-			weekFile.songs[curSelected].character = iconInputText.text;
-			grpIcons.members[curSelected].changeIcon(iconInputText.text);
+			if (sender == iconInputText)
+			{
+				weekFile.songs[curSelected].character = iconInputText.text;
+				grpIcons.members[curSelected].changeIcon(iconInputText.text);
+			}
+			else if (sender == defaultDiffInputText)
+			{
+				weekFile.songs[curSelected].defaultDifficulty = defaultDiffInputText.text;
+			}
+			else if (sender == difficultiesInputText)
+			{
+				var splittedText:Array<String> = difficultiesInputText.text.trim().split(',');
+				for (i in 0...splittedText.length) {
+					splittedText[i] = splittedText[i].trim();
+				}
 
-			weekFile.songs[curSelected].defaultDifficulty = defaultDiffInputText.text;
+				weekFile.songs[curSelected].difficulties[1] = splittedText;
+			}
+			else if (sender == difficultiesNamesInputText)
+			{
+				var splittedText:Array<String> = difficultiesNamesInputText.text.trim().split(',');
+				for (i in 0...splittedText.length) {
+					splittedText[i] = splittedText[i].trim();
+				}
 
-			weekFile.songs[curSelected].difficulties[1] = difficultiesInputText.text.split(', ');
-			weekFile.songs[curSelected].difficulties[0] = difficultiesNamesInputText.text.split(', ');
-			weekFile.songs[curSelected].difficulties[2] = difficultiesSuffixesInputText.text.split(', ');
+				weekFile.songs[curSelected].difficulties[0] = splittedText;
+			}
+			else if (sender == difficultiesSuffixesInputText)
+			{
+				var splittedText:Array<String> = difficultiesSuffixesInputText.text.trim().split(',');
+				for (i in 0...splittedText.length) {
+					splittedText[i] = splittedText[i].trim();
+				}
+
+				weekFile.songs[curSelected].difficulties[2] = splittedText;
+			}
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
 		{
@@ -945,7 +1017,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 			if (Clipboard.text != null)
 			{
 				var leColor:Array<Int> = [];
-				var splitted:Array<String> = Clipboard.text.split(', ');
+				var splitted:Array<String> = Clipboard.text.trim().split(',');
 
 				for (i in 0...splitted.length)
 				{

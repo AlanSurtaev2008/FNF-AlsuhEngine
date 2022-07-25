@@ -1,15 +1,3 @@
-1.0.2h;
-- Fixed Event "Camera Follow Pos"
-- Fixed Difficulty Choice on Chart Editor
-- Fixed Week Editor (Maybe)
-- Fixed function addLuaSprite() on Modcharts
-- Fixed Title Screen
-- Fixed Position Girlfriend on Tutorial
-- Fixed Engine name
-- Fixed Difficulties on Pause Menu
-- Fixed Boyfriend on Prefrerences Menu
-- Fixed Accept Button on Notes Menu while no Flashing Lights
-- Fixed Middlescroll
-- Fixed Controller Mode
-- Fixed Start of Song with Сutscenes
-- Fixed Chart Editor
+1.1;
+- Added support to softcoded credits
+- Fixed Week Editor

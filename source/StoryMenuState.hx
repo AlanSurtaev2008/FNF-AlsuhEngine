@@ -310,8 +310,7 @@ class StoryMenuState extends MusicBeatState
 
 					if (char.character != '' && char.hasConfirmAnimation)
 					{
-						char.animation.play('confirm');
-						char.heyed = true;
+						char.hey();
 					}
 				}
 

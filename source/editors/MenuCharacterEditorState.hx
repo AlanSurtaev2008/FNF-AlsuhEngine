@@ -39,13 +39,18 @@ class MenuCharacterEditorState extends MusicBeatState
 	{
 		super.create();
 
+		Conductor.changeBPM(102);
+
 		characterFile = {
 			image: 'Menu_Dad',
 			scale: 0.47,
-			position: [125, 205],
+			position: [115, 205],
 			idle_anim: 'Dad idle dance BLACK LINE',
 			idle_animAlt: '',
 			confirm_anim: 'Dad idle dance BLACK LINE',
+			fps: 24,
+			fpsAlt: 24,
+			fpsConfirm: 24,
 			indices: [],
 			indicesAlt: [],
 			isGF: false,
@@ -63,7 +68,7 @@ class MenuCharacterEditorState extends MusicBeatState
 
 		for (char in 0...3)
 		{
-			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, defaultCharacters[char], true);
+			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, defaultCharacters[char]);
 			weekCharacterThing.y += 70;
 			grpWeekCharacters.add(weekCharacterThing);
 		}
@@ -184,6 +189,11 @@ class MenuCharacterEditorState extends MusicBeatState
 	var confirmDescText:FlxText;
 	var scaleStepper:FlxUINumericStepper;
 	var flipXCheckbox:FlxUICheckBox;
+	var isGfCheckbox:FlxUICheckBox;
+
+	var fpsStepper:FlxUINumericStepper;
+	var fpsAltStepper:FlxUINumericStepper;
+	var fpsConfirmStepper:FlxUINumericStepper;
 
 	function addCharacterUI():Void
 	{
@@ -221,6 +231,13 @@ class MenuCharacterEditorState extends MusicBeatState
 			characterFile.flipX = flipXCheckbox.checked;
 		};
 
+		isGfCheckbox = new FlxUICheckBox(100, confirmInputText.y + 95, null, null, "Is GF?", 100);
+		isGfCheckbox.callback = function()
+		{
+			grpWeekCharacters.members[curTypeSelected].isDanced = isGfCheckbox.checked;
+			characterFile.isGF = isGfCheckbox.checked;
+		};
+
 		var reloadImageButton:FlxButton = new FlxButton(180, confirmInputText.y + 95, "Reload Char", function()
 		{
 			reloadSelectedCharacter();
@@ -228,14 +245,23 @@ class MenuCharacterEditorState extends MusicBeatState
 		
 		scaleStepper = new FlxUINumericStepper(190, imageInputText.y, 0.05, 1, 0.1, 30, 2);
 
+		fpsStepper = new FlxUINumericStepper(190, scaleStepper.y + 100, 1, 24, 1, 120, 2);
+		fpsAltStepper = new FlxUINumericStepper(190, fpsStepper.y + 40, 1, 24, 1, 120, 2);
+
+		fpsConfirmStepper = new FlxUINumericStepper(190, fpsAltStepper.y + 40, 1, 24, 1, 120, 2);
+
 		confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Start Press animation on the .XML:');
 		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
 		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
-		tab_group.add(new FlxText(10, idleAltInputText.y - 26, 0, 'Alternative idle animation on the .XML\n(you can use normal animation):'));
+		tab_group.add(new FlxText(10, idleAltInputText.y - 26, 0, 'Alternative idle animation on the .XML\n(type this first, if "Is GF?" checked):'));
 		tab_group.add(new FlxText(scaleStepper.x, scaleStepper.y - 18, 0, 'Scale:'));
 		tab_group.add(new FlxText(10, animationIndicesInputText.y - 18, 0, 'Animation Indices:'));
 		tab_group.add(new FlxText(10, animationAltIndicesInputText.y - 18, 0, 'Alternative Animation Indices:'));
+		tab_group.add(new FlxText(fpsStepper.x, fpsStepper.y - 18, 0, 'Anim FPS:'));
+		tab_group.add(new FlxText(fpsAltStepper.x - 5, fpsAltStepper.y - 18, 0, 'Alt Anim FPS:'));
+		tab_group.add(new FlxText(fpsConfirmStepper.x - 15, fpsConfirmStepper.y - 18, 0, 'Confirm Anim FPS:'));
 		tab_group.add(flipXCheckbox);
+		tab_group.add(isGfCheckbox);
 		tab_group.add(reloadImageButton);
 		tab_group.add(confirmDescText);
 		tab_group.add(imageInputText);
@@ -245,6 +271,9 @@ class MenuCharacterEditorState extends MusicBeatState
 		tab_group.add(animationIndicesInputText);
 		tab_group.add(animationAltIndicesInputText);
 		tab_group.add(scaleStepper);
+		tab_group.add(fpsStepper);
+		tab_group.add(fpsAltStepper);
+		tab_group.add(fpsConfirmStepper);
 
 		UI_mainbox.addGroup(tab_group);
 	}
@@ -293,20 +322,20 @@ class MenuCharacterEditorState extends MusicBeatState
 		{
 			if (characterFile.indicesAlt != null && characterFile.indicesAlt.length > 0 && characterFile.idle_animAlt != null)
 			{
-				char.animation.addByIndices('danceRight', characterFile.idle_animAlt, characterFile.indicesAlt, '', false);
+				char.animation.addByIndices('danceRight', characterFile.idle_animAlt, characterFile.indicesAlt, '', characterFile.fps, false);
 			}
 
 			if (characterFile.indices != null && characterFile.indices.length > 0)
 			{
-				char.animation.addByIndices('danceLeft', characterFile.idle_anim, characterFile.indices, '', false);
+				char.animation.addByIndices('danceLeft', characterFile.idle_anim, characterFile.indices, '', characterFile.fps, false);
 			}
 		}
 		else
 		{
-			char.animation.addByPrefix('idle', characterFile.idle_anim, 24);
+			char.animation.addByPrefix('idle', characterFile.idle_anim, characterFile.fps, false);
 		}
 
-		char.animation.addByPrefix('confirm', characterFile.confirm_anim, 24, false);
+		char.animation.addByPrefix('confirm', characterFile.confirm_anim, characterFile.fpsConfirm, false);
 		char.flipX = (characterFile.flipX == true);
 		char.scale.set(characterFile.scale, characterFile.scale);
 		char.updateHitbox();
@@ -387,12 +416,32 @@ class MenuCharacterEditorState extends MusicBeatState
 				characterFile.scale = scaleStepper.value;
 				reloadSelectedCharacter();
 			}
+			else if (sender == fpsStepper)
+			{
+				characterFile.fps = Math.round(fpsStepper.value);
+				reloadSelectedCharacter();
+			}
+			else if (sender == fpsAltStepper)
+			{
+				characterFile.fpsAlt = Math.round(fpsAltStepper.value);
+				reloadSelectedCharacter();
+			}
+			else if (sender == fpsConfirmStepper)
+			{
+				characterFile.fpsConfirm = Math.round(fpsConfirmStepper.value);
+				reloadSelectedCharacter();
+			}
 		}
 	}
 
 	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+
+		if (FlxG.sound.music != null)
+		{
+			Conductor.songPosition = FlxG.sound.music.time;
+		}
 
 		var blockInput:Bool = false;
 
@@ -449,17 +498,38 @@ class MenuCharacterEditorState extends MusicBeatState
 				updateOffset();
 			}
 
-			if (FlxG.keys.justPressed.SPACE && curTypeSelected == 1)
+			if (FlxG.keys.justPressed.SPACE && grpWeekCharacters.members[curTypeSelected].hasConfirmAnimation)
 			{
-				grpWeekCharacters.members[curTypeSelected].animation.play('confirm', true);
+				grpWeekCharacters.members[curTypeSelected].hey();
+
+				grpWeekCharacters.members[curTypeSelected].animation.finishCallback = function(name:String)
+				{
+					grpWeekCharacters.members[curTypeSelected].heyed = false;
+					grpWeekCharacters.members[curTypeSelected].animation.finishCallback = null;
+				};
 			}
 		}
+	}
 
-		var char:MenuCharacter = grpWeekCharacters.members[1];
+	override function beatHit():Void
+	{
+		super.beatHit();
 
-		if (char.animation.curAnim != null && char.animation.curAnim.name == 'confirm' && char.animation.curAnim.finished)
+		for (i in 0...grpWeekCharacters.length)
 		{
-			char.dance();
+			var leChar:MenuCharacter = grpWeekCharacters.members[i];
+
+			if (leChar.isDanced && !leChar.heyed)
+			{
+				leChar.dance();
+			}
+			else
+			{
+				if (curBeat % 2 == 0 && !leChar.heyed)
+				{
+					leChar.dance();
+				}
+			}
 		}
 	}
 
@@ -512,11 +582,20 @@ class MenuCharacterEditorState extends MusicBeatState
 
 					reloadSelectedCharacter();
 
+					isGfCheckbox.checked = characterFile.isGF;
 					imageInputText.text = characterFile.image;
 					idleInputText.text = characterFile.idle_anim;
 					idleAltInputText.text = characterFile.idle_animAlt;
 					confirmInputText.text = characterFile.confirm_anim;
 					scaleStepper.value = characterFile.scale;
+
+					if (characterFile.fps == null) characterFile.fps = 24;
+					if (characterFile.fpsAlt == null) characterFile.fpsAlt = 24;
+					if (characterFile.fpsConfirm == null) characterFile.fpsConfirm = 24;
+
+					fpsStepper.value = characterFile.fps;
+					fpsAltStepper.value = characterFile.fpsAlt;
+					fpsConfirmStepper.value = characterFile.fpsConfirm;
 
 					if (characterFile.indices != null && characterFile.indices.length > 0)
 					{

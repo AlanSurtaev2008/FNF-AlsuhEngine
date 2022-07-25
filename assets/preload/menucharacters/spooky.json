@@ -2,7 +2,7 @@
 	"confirm_anim": "spooky dance idle BLACK LINES",
 	"idle_anim": "spooky dance idle BLACK LINES",
 	"idle_animAlt": "spooky dance idle BLACK LINES",
-	"isGF": false,
+	"isGF": true,
 	"position": [
 		130,
 		95
@@ -18,6 +18,9 @@
 		12,
 		14
 	],
+	"fps": 12,
+	"fpsAlt": 12,
 	"scale": 0.5,
+	"fpsConfirm": 24,
 	"image": "Menu_Spooky"
 }

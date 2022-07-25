@@ -43,6 +43,9 @@
 		145
 	],
 	"scale": 0.49,
+	"fps": 24,
+	"fpsAlt": 24,
+	"fpsConfirm": 24,
 	"flipX": false,
 	"image": "Menu_Girlfriend"
 }

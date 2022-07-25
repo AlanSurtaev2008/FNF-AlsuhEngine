@@ -1,5 +1,10 @@
 package options;
 
+#if MODS_ALLOWED
+import sys.io.File;
+import sys.FileSystem;
+#end
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
@@ -14,35 +19,7 @@ class CreditsMenuState extends MusicBeatState
 {
 	private static var curSelected:Int = -1;
 
-	var creditsArray:Array<Credit> =
-	[
-		new Credit('Alsuh Engine by'),
-		new Credit('AlanSurtaev2008',			true,		'assrj',			'Main Programmer of Akayo Engine and General Director of Afford-Set', 			'',																						0xFF6300AF),
-		new Credit('Psych Engine Team'),
-		new Credit('Shadow Mario',				true,		'shadowmario',		'Main Programmer of Psych Engine',												'https://twitter.com/Shadow_Mario_',													0xFF444444),
-		new Credit('RiverOaken',				true,		'riveroaken',		'Main Artist/Animator of Psych Engine',											'https://twitter.com/RiverOaken',														0xFFB42F71),
-		new Credit('shubs',						true,		'shubs',			'Additional Programmer of Psych Engine and Main Programmer of Forever Engine',	'https://twitter.com/yoshubs',															0xFF5E99DF),
-		new Credit('Former Psych Engine Members'),
-		new Credit('bb-panzu',					true,		'bb-panzu',			'Ex-Programmer of Psych Engine',												'https://twitter.com/bbsub3',															0xFF3E813A),
-		new Credit('Psych Engine Contributors'),
-		new Credit('iFlicky',					true,		'iflicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',						'https://twitter.com/flicky_i',															0xFF9E29CF),
-		new Credit('SqirraRNG',					true,		'gedehari',			'Chart Editor\'s Sound Waveform base',											'https://twitter.com/gedehari',															0xFFE1843A),
-		new Credit('PolybiusProxy',				true,		'polybiusproxy',	".MP4 Video Loader Extension (hxCodec)",									'https://twitter.com/polybiusproxy',													0xFFDCD294),
-		new Credit('Keoiki',					true,		'keoiki',			'Note Splash Animations',														'https://twitter.com/Keoiki_',															0xFFFFFFFF),
-		new Credit('Smokey',					true,		'smokey',			'Spritemap Texture Support',													'https://twitter.com/Smokey_5_',														0xFF483D92),
-		new Credit('Kade Engine by'),
-		new Credit('KadeDev',					true,		'kade',				'Main Programmer of Kade Engine',												'https://twitter.com/kade0912',															0xFF64A250),
-		new Credit('Kade Engine Contributors'),
-		new Credit('puyoxyz',					true,		'puyo',				'Additional Programmer of Kade Engine',											'https://twitter.com/puyoxyz',															0xFF4A2916),
-		new Credit('Spel0',						true,		'spel0',			'Additional Programmer of Kade Engine',											'https://www.reddit.com/user/Spel0/',													0xFFE5E5E5),
-		new Credit('Special thanks'),
-		new Credit('AngelDTF',					true,		'angeldtf',			"For Week 7's (Newgrounds exclusive preview) Source Code Leak",					'',																						0xFF909090),
-		new Credit("Funkin' Crew"),
-		new Credit('ninjamuffin99',				true,		'ninjamuffin99',	"Programmer of Friday Night Funkin'",											'https://twitter.com/ninja_muffin99',													0xFFCF2D2D),
-		new Credit('PhantomArcade',				true,		'phantomarcade',	"Animator of Friday Night Funkin'",												'https://twitter.com/PhantomArcade3K',													0xFFFADC45),
-		new Credit('evilsk8r',					true,		'evilsk8r',			"Artist of Friday Night Funkin'",												'https://twitter.com/evilsk8r',															0xFF5ABD4B),
-		new Credit('kawaisprite',				true,		'kawaisprite',		"Composer of Friday Night Funkin'",												'https://twitter.com/kawaisprite',														0xFF378FC7)
-	];
+	var creditsArray:Array<Credit> = [];
 	var curCredit:Credit;
 
 	var bg:FlxSprite;
@@ -68,6 +45,55 @@ class CreditsMenuState extends MusicBeatState
 		bg.scrollFactor.set();
 		bg.antialiasing = OptionData.globalAntialiasing;
 		add(bg);
+
+		#if MODS_ALLOWED
+		var creditsFile:String = Paths.mods('data/credits.txt');
+
+		if (FileSystem.exists(creditsFile))
+		{
+			var firstarray:Array<String> = File.getContent(creditsFile).split('\n');
+
+			for (i in firstarray)
+			{
+				var arr:Array<String> = i.replace('\\n', '\n').split("::");
+				creditsArray.push(new Credit(arr[0], arr[1] == 'true' ? true : false, arr[2], arr[3], FlxColor.fromString(arr[4])));
+			}
+		}
+		#end
+
+		var pisspoop:Array<Credit> =
+		[
+			new Credit('Alsuh Engine by'),
+			new Credit('AlanSurtaev2008',				true,		'assrj',			'Main Programmer of Akayo Engine and General Director of Afford-Set', 			'',																						0xFF6300AF),
+			new Credit('Psych Engine Team'),
+			new Credit('Shadow Mario',					true,		'shadowmario',		'Main Programmer of Psych Engine',												'https://twitter.com/Shadow_Mario_',													0xFF444444),
+			new Credit('RiverOaken',					true,		'riveroaken',		'Main Artist/Animator of Psych Engine',											'https://twitter.com/RiverOaken',														0xFFB42F71),
+			new Credit('shubs',							true,		'shubs',			'Additional Programmer of Psych Engine and Main Programmer of Forever Engine',	'https://twitter.com/yoshubs',															0xFF5E99DF),
+			new Credit('Former Psych Engine Members'),
+			new Credit('bb-panzu',						true,		'bb-panzu',			'Ex-Programmer of Psych Engine',												'https://twitter.com/bbsub3',															0xFF3E813A),
+			new Credit('Psych Engine Contributors'),
+			new Credit('iFlicky',						true,		'iflicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',						'https://twitter.com/flicky_i',															0xFF9E29CF),
+			new Credit('SqirraRNG',						true,		'gedehari',			'Chart Editor\'s Sound Waveform base',											'https://twitter.com/gedehari',															0xFFE1843A),
+			new Credit('PolybiusProxy',					true,		'polybiusproxy',	".MP4 Video Loader Extension (hxCodec)",									'https://twitter.com/polybiusproxy',														0xFFDCD294),
+			new Credit('Keoiki',						true,		'keoiki',			'Note Splash Animations',														'https://twitter.com/Keoiki_',															0xFFFFFFFF),
+			new Credit('Smokey',						true,		'smokey',			'Spritemap Texture Support',													'https://twitter.com/Smokey_5_',														0xFF483D92),
+			new Credit('Kade Engine by'),
+			new Credit('KadeDev',						true,		'kade',				'Main Programmer of Kade Engine',												'https://twitter.com/kade0912',															0xFF64A250),
+			new Credit('Kade Engine Contributors'),
+			new Credit('puyoxyz',						true,		'puyo',				'Additional Programmer of Kade Engine',											'https://twitter.com/puyoxyz',															0xFF4A2916),
+			new Credit('Spel0',							true,		'spel0',			'Additional Programmer of Kade Engine',											'https://www.reddit.com/user/Spel0/',													0xFFE5E5E5),
+			new Credit('Special thanks'),
+			new Credit('AngelDTF',						true,		'angeldtf',			"For Week 7's (Newgrounds exclusive preview) Source Code Leak",					'',																						0xFF909090),
+			new Credit("Funkin' Crew"),
+			new Credit('ninjamuffin99',					true,		'ninjamuffin99',	"Programmer of Friday Night Funkin'",											'https://twitter.com/ninja_muffin99',													0xFFCF2D2D),
+			new Credit('PhantomArcade',					true,		'phantomarcade',	"Animator of Friday Night Funkin'",												'https://twitter.com/PhantomArcade3K',													0xFFFADC45),
+			new Credit('evilsk8r',						true,		'evilsk8r',			"Artist of Friday Night Funkin'",												'https://twitter.com/evilsk8r',															0xFF5ABD4B),
+			new Credit('kawaisprite',					true,		'kawaisprite',		"Composer of Friday Night Funkin'",												'https://twitter.com/kawaisprite',														0xFF378FC7)
+		];
+
+		for (i in pisspoop) {
+			creditsArray.push(i);
+		}
 
 		grpCredits = new FlxTypedGroup<Alphabet>();
 		add(grpCredits);

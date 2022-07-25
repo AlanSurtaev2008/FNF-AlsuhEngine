@@ -2648,7 +2648,7 @@ class PlayState extends MusicBeatState
 
 		if (ret != FunkinLua.Function_Stop)
 		{
-			if (songScore <= 0 && songMisses <= 0 && songAccuracy <= 0)
+			if (songScore == 0 && songMisses == 0 && songAccuracy == 0)
 			{
 				ratingString = 'N/A';
 			}

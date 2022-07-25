@@ -40,6 +40,16 @@ class Song
 {
 	public static function onLoadJson(songJson:Dynamic):Void
 	{
+		if (songJson.songID == null)
+		{
+			songJson.songID = StringTools.replace(' ', '-', songJson.song.toLowerCase());
+		}
+
+		if (songJson.songName == null)
+		{
+			songJson.songName = StringTools.replace('-', ' ', songJson.song);
+		}
+
 		if (songJson.gfVersion == null) // from Psych Chars
 		{
 			songJson.gfVersion = songJson.player3;
