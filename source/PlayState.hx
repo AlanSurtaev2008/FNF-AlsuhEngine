@@ -4765,6 +4765,12 @@ class PlayState extends MusicBeatState
 					note.destroy();
 				}
 
+				var isSus:Bool = note.isSustainNote; // GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
+				var leData:Int = Math.round(Math.abs(note.noteData));
+				var leType:String = note.noteType;
+
+				callOnLuas('onHitCauses', [notes.members.indexOf(note), leData, leType, isSus]);
+
 				return;
 			}
 			else
