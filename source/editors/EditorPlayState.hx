@@ -13,6 +13,7 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxSort;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
 import flixel.system.FlxSound;
@@ -24,6 +25,8 @@ using StringTools;
 
 class EditorPlayState extends MusicBeatState
 {
+	public static var instance:EditorPlayState;
+
 	var generatedMusic:Bool = false;
 	var vocals:FlxSound;
 
@@ -56,15 +59,20 @@ class EditorPlayState extends MusicBeatState
 	var scoreTxt:FlxText;
 	var stepTxt:FlxText;
 	var beatTxt:FlxText;
+	var sectionTxt:FlxText;
 
 	var songHits:Int = 0;
 	var songMisses:Int = 0;
 
 	private var keysArray:Array<Dynamic>;
 
+	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
+
 	override function create():Void
 	{
 		super.create();
+
+		instance = this;
 
 		keysArray = [
 			OptionData.copyKey(OptionData.keyBinds.get('note_left')),
@@ -115,6 +123,27 @@ class EditorPlayState extends MusicBeatState
 
 		generateSong(PlayState.SONG);
 
+		#if (LUA_ALLOWED && MODS_ALLOWED)
+		for (notetype in noteTypeMap.keys())
+		{
+			var luaToLoad:String = Paths.modFolders('custom_notetypes/' + notetype + '.lua');
+
+			if (sys.FileSystem.exists(luaToLoad))
+			{
+				var lua:editors.EditorLua = new editors.EditorLua(luaToLoad);
+
+				new FlxTimer().start(0.1, function(tmr:FlxTimer)
+				{
+					lua.stop();
+					lua = null;
+				});
+			}
+		}
+		#end
+
+		noteTypeMap.clear();
+		noteTypeMap = null;
+
 		scoreTxt = new FlxText(0, FlxG.height - 50, FlxG.width, "Hits: 0 | Misses: 0", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
@@ -122,13 +151,19 @@ class EditorPlayState extends MusicBeatState
 		scoreTxt.visible = OptionData.scoreText;
 		add(scoreTxt);
 		
-		beatTxt = new FlxText(10, 610, FlxG.width, "Beat: 0", 20);
+		sectionTxt = new FlxText(10, 580, FlxG.width - 20, "Section: 0", 20);
+		sectionTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		sectionTxt.scrollFactor.set();
+		sectionTxt.borderSize = 1.25;
+		add(sectionTxt);
+		
+		beatTxt = new FlxText(10, sectionTxt.y + 30, FlxG.width - 20, "Beat: 0", 20);
 		beatTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		beatTxt.scrollFactor.set();
 		beatTxt.borderSize = 1.25;
 		add(beatTxt);
 
-		stepTxt = new FlxText(10, 640, FlxG.width, "Step: 0", 20);
+		stepTxt = new FlxText(10, beatTxt.y + 30, FlxG.width - 20, "Step: 0", 20);
 		stepTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		stepTxt.scrollFactor.set();
 		stepTxt.borderSize = 1.25;
@@ -139,20 +174,6 @@ class EditorPlayState extends MusicBeatState
 		tipText.borderSize = 2;
 		tipText.scrollFactor.set();
 		add(tipText);
-
-		notes.forEachAlive(function(note:Note) 
-		{
-			if (OptionData.cpuStrumsType != 'Disabled' || note.mustPress)
-			{
-				note.copyAlpha = false;
-				note.alpha = note.multAlpha;
-
-				if (OptionData.middleScroll && !note.mustPress)
-				{
-					note.alpha *= 0.35;
-				}
-			}
-		});
 	}
 
 	private function generateSong(songData:SwagSong):Void
@@ -215,6 +236,15 @@ class EditorPlayState extends MusicBeatState
 					{
 						sustainNote.x += FlxG.width / 2; // general offset
 					}
+					else if (OptionData.middleScroll)
+					{
+						sustainNote.x += 310;
+	
+						if (daNoteData > 1) // Up and Right
+						{
+							sustainNote.x += FlxG.width / 2 + 25;
+						}
+					}
 				}
 
 				swagNote.mustPress = gottaHitNote;
@@ -222,6 +252,20 @@ class EditorPlayState extends MusicBeatState
 				if (swagNote.mustPress)
 				{
 					swagNote.x += FlxG.width / 2; // general offset
+				}
+				else if (OptionData.middleScroll)
+				{
+					swagNote.x += 310;
+
+					if (daNoteData > 1) // Up and Right
+					{
+						swagNote.x += FlxG.width / 2 + 25;
+					}
+				}
+
+				if (!noteTypeMap.exists(swagNote.noteType))
+				{
+					noteTypeMap.set(swagNote.noteType, true);
 				}
 			}
 		}
@@ -368,6 +412,17 @@ class EditorPlayState extends MusicBeatState
 				strumAngle += daNote.offsetAngle;
 				strumAlpha *= daNote.multAlpha;
 
+				if (OptionData.cpuStrumsType != 'Disabled' || daNote.mustPress)
+				{
+					daNote.copyAlpha = false;
+					daNote.alpha = daNote.multAlpha;
+	
+					if (OptionData.middleScroll && !daNote.mustPress)
+					{
+						daNote.alpha *= 0.35;
+					}
+				}
+
 				var center:Float = strumY + Note.swagWidth / 2;
 
 				if (daNote.copyX) {
@@ -407,6 +462,7 @@ class EditorPlayState extends MusicBeatState
 		}
 
 		scoreTxt.text = 'Hits: ' + songHits + ' | Combo Breaks: ' + songMisses;
+		sectionTxt.text = 'Section: ' + curSection;
 		beatTxt.text = 'Beat: ' + curBeat;
 		stepTxt.text = 'Step: ' + curStep;
 	}

@@ -2924,10 +2924,12 @@ class PlayState extends MusicBeatState
 			openChartEditor();
 		}
 
+		#if MODS_ALLOWED
 		if (FlxG.keys.justPressed.EIGHT && !endingSong && !inCutscene)
 		{
 			openCharacterEditor();
 		}
+		#end
 
 		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, CoolUtil.boundTo(1 - (elapsed * 9.5), 0, 1))));
 		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, CoolUtil.boundTo(1 - (elapsed * 9.5), 0, 1))));
@@ -3335,7 +3337,7 @@ class PlayState extends MusicBeatState
 		cancelMusicFadeTween();
 
 		CustomFadeTransition.nextCamera = camOther;
-		MusicBeatState.switchState(new editors.CharacterEditorState(SONG.player2));
+		MusicBeatState.switchState(new editors.CharacterEditorState(SONG.player2, true));
 	}
 
 	public function checkEventNote():Void

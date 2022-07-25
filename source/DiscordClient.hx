@@ -1,5 +1,10 @@
 package;
 
+#if LUA_ALLOWED
+import llua.Lua;
+import llua.State;
+#end
+
 import Sys.sleep;
 import discord_rpc.DiscordRpc;
 
@@ -84,4 +89,14 @@ class DiscordClient
 			endTimestamp : Std.int(endTimestamp / 1000)
 		});
 	}
+
+	#if LUA_ALLOWED
+	public static function addLuaCallbacks(lua:State):Void
+	{
+		Lua_helper.add_callback(lua, "changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float)
+		{
+			changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
+		});
+	}
+	#end
 }

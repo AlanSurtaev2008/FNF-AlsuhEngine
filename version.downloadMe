@@ -1,5 +1,7 @@
 1.1;
+- Added Winning Icons Support
 - Added Stuff Lua Functions
 - Added support to softcoded credits
+- Added function sectionHit() from Psych Engine
 - Fixed crashes on HTML5 while begining the song
 - Fixed Week Editor

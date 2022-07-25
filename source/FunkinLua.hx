@@ -145,6 +145,7 @@ class FunkinLua
 
 		set('curBeat', 0);
 		set('curStep', 0);
+		set('curSection', 0);
 
 		set('score', 0);
 		set('misses', 0);
