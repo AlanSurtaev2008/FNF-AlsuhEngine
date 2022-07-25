@@ -300,50 +300,57 @@ class StoryMenuState extends MusicBeatState
 				openSubState(new ResetScoreSubState('story', curWeek.weekName, curWeek.weekID, CoolUtil.getDifficultyName(curDifficultyString,
 					curWeek.difficulties), curDifficultyString));
 			}
-			else if (controls.ACCEPT && !WeekData.weekIsLocked(curWeek.weekID))
+			else if (controls.ACCEPT)
 			{
-				selectedWeek = true;
-
-				for (i in 0...grpWeekCharacters.length)
+				if (!WeekData.weekIsLocked(curWeek.weekID))
 				{
-					var char:MenuCharacter = grpWeekCharacters.members[i];
+					selectedWeek = true;
 
-					if (char.character != '' && char.hasConfirmAnimation)
+					for (i in 0...grpWeekCharacters.length)
 					{
-						char.hey();
+						var char:MenuCharacter = grpWeekCharacters.members[i];
+
+						if (char.character != '' && char.hasConfirmAnimation)
+						{
+							char.hey();
+						}
 					}
+
+					grpWeeks.members[curSelected].isFlashing = true;
+
+					var diffic:String = CoolUtil.getDifficultySuffix(curDifficultyString, curWeek.difficulties);
+
+					PlayState.SONG = Song.loadFromJson(curWeek.songs[0].songID + diffic, curWeek.songs[0].songID);
+					PlayState.gameMode = 'story';
+
+					var songArray:Array<String> = [];
+
+					for (i in 0...curWeek.songs.length)
+					{
+						songArray.push(curWeek.songs[i].songID);
+					}
+
+					PlayState.storyPlaylist = songArray;
+					PlayState.storyDifficulty = curDifficultyString;
+					PlayState.lastDifficulty = curDifficultyString;
+					PlayState.storyWeek = curWeek.weekID;
+					PlayState.storyWeekName = curWeek.weekName;
+					PlayState.difficulties = curWeek.difficulties;
+					PlayState.campaignScore = 0;
+					PlayState.seenCutscene = false;
+
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					
+					new FlxTimer().start(1, function(tmr:FlxTimer)
+					{
+						LoadingState.loadAndSwitchState(new PlayState(), true);
+						FreeplayMenuState.destroyFreeplayVocals();
+					});
 				}
-
-				grpWeeks.members[curSelected].isFlashing = true;
-
-				var diffic:String = CoolUtil.getDifficultySuffix(curDifficultyString, curWeek.difficulties);
-
-				PlayState.SONG = Song.loadFromJson(curWeek.songs[0].songID + diffic, curWeek.songs[0].songID);
-				PlayState.gameMode = 'story';
-
-				var songArray:Array<String> = [];
-
-				for (i in 0...curWeek.songs.length)
+				else
 				{
-					songArray.push(curWeek.songs[i].songID);
+					FlxG.sound.play(Paths.sound('cancelMenu'));
 				}
-
-				PlayState.storyPlaylist = songArray;
-				PlayState.storyDifficulty = curDifficultyString;
-				PlayState.lastDifficulty = curDifficultyString;
-				PlayState.storyWeek = curWeek.weekID;
-				PlayState.storyWeekName = curWeek.weekName;
-				PlayState.difficulties = curWeek.difficulties;
-				PlayState.campaignScore = 0;
-				PlayState.seenCutscene = false;
-
-				FlxG.sound.play(Paths.sound('confirmMenu'));
-				
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					LoadingState.loadAndSwitchState(new PlayState(), true);
-					FreeplayMenuState.destroyFreeplayVocals();
-				});
 			}
 		}
 	}

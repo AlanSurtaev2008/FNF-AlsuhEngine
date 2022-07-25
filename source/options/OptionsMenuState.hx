@@ -35,11 +35,13 @@ class OptionsMenuState extends MusicBeatState
 			{
 				openSubState(new NotesSubState(false));
 			}
+			#if sys
 			case 'Replays':
 			{
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new ReplaysState());
 			}
+			#end
 			case 'Credits':
 			{
 				FlxG.sound.play(Paths.sound('cancelMenu'));

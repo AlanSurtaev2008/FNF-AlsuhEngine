@@ -231,6 +231,7 @@ class PreferencesSubState extends MusicBeatSubState
 		option.minValue = 2;
 		option.maxValue = 10;
 		option.changeValue = 0.1;
+		option.onChange = onChangeSafeFrames;
 		addOption(option);
 
 		var option:Option = new Option('Scroll Speed',
@@ -991,6 +992,11 @@ class PreferencesSubState extends MusicBeatSubState
 				FlxG.sound.play(Paths.sound('hitsound', 'shared'), OptionData.hitsoundVolume);
 			}
 		}
+	}
+
+	function onChangeSafeFrames():Void
+	{
+		Conductor.safeZoneOffset = (OptionData.safeFrames / 60) * 1000;
 	}
 
 	var lastZoom:Float = 0;

@@ -96,6 +96,8 @@ class PlayState extends MusicBeatState
 	public static var botPlay:Bool = false;
 	public static var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 
+	private var iconsZooming:Bool = false;
+
 	public var boyfriendGroup:FlxSpriteGroup;
 	public var boyfriend:Boyfriend;
 
@@ -797,6 +799,8 @@ class PlayState extends MusicBeatState
 	public var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 
 	public var camZooming:Bool = false;
+	public var camZoomingMult:Float = 1;
+	public var camZoomingDecay:Float = 1;
 	public var cameraSpeed:Float = 1;
 
 	public var camHUD:FlxCamera;
@@ -2125,6 +2129,7 @@ class PlayState extends MusicBeatState
 	function startSong():Void
 	{
 		startingSong = false;
+		iconsZooming = true;
 
 		previousFrameTime = FlxG.game.ticks;
 
@@ -2142,9 +2147,9 @@ class PlayState extends MusicBeatState
 		FlxTween.tween(songPosBar, {alpha: 1}, 0.4);
 		FlxTween.tween(songPosName, {alpha: 1}, 0.4);
 
-		#if desktop
 		songLength = FlxG.sound.music.length; // Song duration in a float, useful for the time left feature
-		
+
+		#if desktop		
 		DiscordClient.changePresence(detailsText, SONG.songName + " - " + storyDifficultyText, iconRPC, true, songLength); // Updating Discord Rich Presence (with Time Left)
 		#end
 
@@ -2200,8 +2205,6 @@ class PlayState extends MusicBeatState
 
 		for (section in noteData)
 		{
-			var coolSection:Int = Std.int(section.lengthInSteps / 4);
-
 			for (songNotes in section.sectionNotes)
 			{
 				var daStrumTime:Float = songNotes[0];
@@ -2905,7 +2908,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (controls.RESET && !OptionData.noReset && canReset)
+		if (controls.RESET && !OptionData.noReset && canReset && !inCutscene && startedCountdown && !endingSong)
 		{
 			health = 0;
 		}
@@ -2942,14 +2945,27 @@ class PlayState extends MusicBeatState
 		}
 
 		if (healthBar.percent < 20)
+		{
 			iconP1.animation.curAnim.curFrame = 1;
-		else
-			iconP1.animation.curAnim.curFrame = 0;
-
-		if (healthBar.percent > 80)
+	
+			if (iconP2.animation.curAnim.numFrames == 3) {
+				iconP2.animation.curAnim.curFrame = 2;
+			}
+		}
+		else if (healthBar.percent > 80)
+		{
 			iconP2.animation.curAnim.curFrame = 1;
+	
+			if (iconP1.animation.curAnim.numFrames == 3) {
+				iconP1.animation.curAnim.curFrame = 2;
+			}
+		}
 		else
+		{
+			iconP1.animation.curAnim.curFrame = 0;
 			iconP2.animation.curAnim.curFrame = 0;
+		}
+
 
 		if (startingSong)
 		{
@@ -2998,16 +3014,20 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (SONG.notes[Std.int(curStep / 16)] != null && !startingSong && !endingSong && !isCameraOnForcedPos)
+		if (SONG.notes[curSection] != null && !startingSong && !endingSong && !isCameraOnForcedPos)
 		{
 			moveCameraSection();
 		}
 
 		if (camZooming)
 		{
-			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125), 0, 1));
-			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125), 0, 1));
+			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
+			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
 		}
+
+		FlxG.watch.addQuick("secShit", curSection);
+		FlxG.watch.addQuick("beatShit", curBeat);
+		FlxG.watch.addQuick("stepShit", curStep);
 
 		var roundedSpeed:Float = FlxMath.roundDecimal(SONG.speed, 2);
 
@@ -3845,9 +3865,9 @@ class PlayState extends MusicBeatState
 
 	function moveCameraSection():Void
 	{
-		if (SONG.notes[Std.int(curStep / 16)] == null) return;
+		if (SONG.notes[curSection] == null) return;
 
-		if (gf != null && SONG.notes[Std.int(curStep / 16)].gfSection)
+		if (gf != null && SONG.notes[curSection].gfSection)
 		{
 			camFollow.set(gf.getMidpoint().x, gf.getMidpoint().y);
 
@@ -3860,7 +3880,7 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		if (!SONG.notes[Std.int(curStep / 16)].mustHitSection)
+		if (!SONG.notes[curSection].mustHitSection)
 		{
 			cameraMovement(true);
 			callOnLuas('onMoveCamera', ['dad']);
@@ -3963,6 +3983,7 @@ class PlayState extends MusicBeatState
 		endingSong = true;
 		updateTime = false;
 		camZooming = false;
+		iconsZooming = false;
 
 		songPosBG.visible = false;
 		songPosBar.visible = false;
@@ -4584,9 +4605,9 @@ class PlayState extends MusicBeatState
 		{
 			var altAnim:String = daNote.animSuffix;
 
-			if (SONG.notes[Math.floor(curStep / 16)] != null)
+			if (SONG.notes[curSection] != null)
 			{
-				if (SONG.notes[Math.floor(curStep / 16)].altAnim && !SONG.notes[Math.floor(curStep / 16)].gfSection) {
+				if (SONG.notes[curSection].altAnim && !SONG.notes[curSection].gfSection) {
 					altAnim = '-alt';
 				}
 			}
@@ -5024,6 +5045,40 @@ class PlayState extends MusicBeatState
 		callOnLuas('onStepHit', []);
 	}
 
+	override function sectionHit():Void
+	{
+		super.sectionHit();
+
+		if (SONG.notes[curSection] != null)
+		{
+			if (generatedMusic && !endingSong && !isCameraOnForcedPos)
+			{
+				moveCameraSection();
+			}
+
+			if (camZooming && FlxG.camera.zoom < 1.35 && OptionData.camZooms)
+			{
+				FlxG.camera.zoom += 0.015 * camZoomingMult;
+				camHUD.zoom += 0.03 * camZoomingMult;
+			}
+
+			if (SONG.notes[curSection].changeBPM)
+			{
+				Conductor.changeBPM(SONG.notes[curSection].bpm);
+				setOnLuas('curBpm', Conductor.bpm);
+				setOnLuas('crochet', Conductor.crochet);
+				setOnLuas('stepCrochet', Conductor.stepCrochet);
+			}
+
+			setOnLuas('mustHitSection', SONG.notes[curSection].mustHitSection);
+			setOnLuas('altAnim', SONG.notes[curSection].altAnim);
+			setOnLuas('gfSection', SONG.notes[curSection].gfSection);
+		}
+		
+		setOnLuas('curSection', curSection);
+		callOnLuas('onSectionHit', []);
+	}
+
 	var lastBeatHit:Int = -1;
 
 	override function beatHit():Void
@@ -5040,22 +5095,19 @@ class PlayState extends MusicBeatState
 			notes.sort(FlxSort.byY, OptionData.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		}
 
-		if (SONG.notes[Math.floor(curStep / 16)] != null && SONG.notes[Math.floor(curStep / 16)].changeBPM)
+		if (SONG.notes[curSection] != null && SONG.notes[curSection].changeBPM)
 		{
-			Conductor.changeBPM(SONG.notes[Math.floor(curStep / 16)].bpm);
+			Conductor.changeBPM(SONG.notes[curSection].bpm);
 		}
 
-		if (camZooming && FlxG.camera.zoom < 1.35 && OptionData.camZooms && curBeat % 4 == 0)
+		if (iconsZooming)
 		{
-			FlxG.camera.zoom += 0.015;
-			camHUD.zoom += 0.03;
+			iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+			iconP1.updateHitbox();
+	
+			iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+			iconP2.updateHitbox();
 		}
-
-		iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-		iconP1.updateHitbox();
-
-		iconP2.setGraphicSize(Std.int(iconP2.width + 30));
-		iconP2.updateHitbox();
 
 		if (curBeat % gfSpeed == 0 && gf != null)
 		{

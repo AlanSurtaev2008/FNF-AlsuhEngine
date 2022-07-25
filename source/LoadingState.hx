@@ -54,6 +54,7 @@ class LoadingState extends MusicBeatState
 
 		loadBar = new FlxSprite(0, FlxG.height - 20);
 		loadBar.makeGraphic(FlxG.width, 10, 0xFFFF16D2);
+		loadBar.antialiasing = OptionData.globalAntialiasing;
 		loadBar.screenCenter(X);
 		add(loadBar);
 		
@@ -175,8 +176,9 @@ class LoadingState extends MusicBeatState
 		}
 		#end
 
-		if (stopMusic && FlxG.sound.music != null)
+		if (stopMusic && FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
+		}
 		
 		return target;
 	}

@@ -9,16 +9,15 @@ using StringTools;
 
 class MusicBeatSubState extends FlxSubState
 {
-	public function new():Void
-	{
-		super();
-	}
-
-	private var lastBeat:Float = 0;
-	private var lastStep:Float = 0;
+	private var curSection:Int = 0;
+	private var stepsToDo:Int = 0;
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
+
+	private var curDecStep:Float = 0;
+	private var curDecBeat:Float = 0;
+
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
@@ -54,11 +53,21 @@ class MusicBeatSubState extends FlxSubState
 		var oldStep:Int = curStep;
 
 		updateCurStep();
-		curBeat = Math.floor(curStep / 4);
+		updateBeat();
 
-		if (oldStep != curStep && curStep > 0)
+		if (oldStep != curStep)
 		{
-			stepHit();
+			if (curStep > 0) {
+				stepHit();
+			}
+
+			if (PlayState.SONG != null)
+			{
+				if (oldStep < curStep)
+					updateSection();
+				else
+					rollbackSection();
+			}
 		}
 
 		if (OptionData.rainFPS && skippedFrames >= 6)
@@ -94,23 +103,57 @@ class MusicBeatSubState extends FlxSubState
 		}
 	}
 
-	private function updateCurStep():Void
+	private function updateSection():Void
 	{
-		var lastChange:BPMChangeEvent = {
-			stepTime: 0,
-			songTime: 0,
-			bpm: 0
-		}
+		if (stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);
 
-		for (i in 0...Conductor.bpmChangeMap.length)
+		while (curStep >= stepsToDo)
 		{
-			if (Conductor.songPosition > Conductor.bpmChangeMap[i].songTime)
+			curSection++;
+
+			var beats:Float = getBeatsOnSection();
+			stepsToDo += Math.round(beats * 4);
+
+			sectionHit();
+		}
+	}
+
+	private function rollbackSection():Void
+	{
+		if (curStep < 0) return;
+
+		var lastSection:Int = curSection;
+
+		curSection = 0;
+		stepsToDo = 0;
+
+		for (i in 0...PlayState.SONG.notes.length)
+		{
+			if (PlayState.SONG.notes[i] != null)
 			{
-				lastChange = Conductor.bpmChangeMap[i];
+				stepsToDo += Math.round(getBeatsOnSection() * 4);
+				if (stepsToDo > curStep) break;
+				
+				curSection++;
 			}
 		}
 
-		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
+		if (curSection > lastSection) sectionHit();
+	}
+
+	private function updateBeat():Void
+	{
+		curBeat = Math.floor(curStep / 4);
+		curDecBeat = curDecStep / 4;
+	}
+
+	private function updateCurStep():Void
+	{
+		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
+
+		var shit = ((Conductor.songPosition - OptionData.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
+		curDecStep = lastChange.stepTime + shit;
+		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 
 	public function stepHit():Void
@@ -123,6 +166,18 @@ class MusicBeatSubState extends FlxSubState
 
 	public function beatHit():Void
 	{
-		//do literally nothing dumbass
+		// do literally nothing dumbass
+	}
+
+	public function sectionHit():Void
+	{
+		// do literally nothing dumbass
+	}
+
+	function getBeatsOnSection()
+	{
+		var val:Null<Float> = PlayState.SONG != null && PlayState.SONG.notes[curSection] != null ? PlayState.SONG.notes[curSection].sectionBeats : 4;
+
+		return val == null ? 4 : val;
 	}
 }

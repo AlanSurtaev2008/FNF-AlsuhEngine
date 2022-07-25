@@ -13,7 +13,7 @@ class CoolUtil
 	{
 		if (difficulties == null)
 		{
-			difficulties = PlayState.difficulties.copy();
+			difficulties = PlayState.difficulties;
 		}
 
 		return difficulties[0][difficulties[isSuffix ? 2 : 1].indexOf(diff)];
@@ -23,7 +23,7 @@ class CoolUtil
 	{
 		if (difficulties == null)
 		{
-			difficulties = PlayState.difficulties.copy();
+			difficulties = PlayState.difficulties;
 		}
 
 		return difficulties[1][difficulties[isSuffix ? 2 : 0].indexOf(diff)];
@@ -33,7 +33,7 @@ class CoolUtil
 	{
 		if (difficulties == null)
 		{
-			difficulties = PlayState.difficulties.copy();
+			difficulties = PlayState.difficulties;
 		}
 
 		return difficulties[2][difficulties[isName ? 0 : 1].indexOf(diff)];

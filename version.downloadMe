@@ -1,4 +1,5 @@
 1.1;
 - Added Stuff Lua Functions
 - Added support to softcoded credits
+- Fixed crashes on HTML5 while begining the song
 - Fixed Week Editor

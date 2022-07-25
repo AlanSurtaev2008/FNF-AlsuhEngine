@@ -255,11 +255,11 @@ class PauseSubState extends MusicBeatSubState
 			{
 				if (menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected))
 				{
-					var difficulty:String = CoolUtil.getDifficultySuffix(daSelected, true, PlayState.difficulties.copy());
+					var difficulty:String = CoolUtil.getDifficultySuffix(daSelected, true, PlayState.difficulties);
 
 					PlayState.SONG = Song.loadFromJson(PlayState.SONG.songID + difficulty, PlayState.SONG.songID);
 					PlayState.lastDifficulty = CoolUtil.getDifficultyID(daSelected);
-					PlayState.usedPractice = true;
+					PlayState.usedPractice = PlayState.storyDifficulty != PlayState.lastDifficulty ? true : false;
 
 					FlxG.sound.music.volume = 0;
 					MusicBeatState.resetState();

@@ -3,7 +3,9 @@
 **Alsuh Engine** - This is modified connecting version of Psych Engine and Kade Engine by AlanSurtaev2008.
 
 ## Tutorials:
-- [Week Editor](https://github.com/AlanSurtaev2008/FNF-AlsuhEngine).
+- [How can i create a Custom Credits?](https://github.com/AlanSurtaev2008/FNF-AlsuhEngine/blob/main/docs/tutorials/customcredits.md).
+- [How to make difficulties](https://github.com/AlanSurtaev2008/FNF-AlsuhEngine/blob/main/docs/tutorials/newdifficulty.md).
+- [How to make Menu Character and Week](https://github.com/AlanSurtaev2008/FNF-AlsuhEngine/blob/main/docs/tutorials/weekEditor.md).
 
 ## Installation:
 You must have [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/), seriously, stop using 4.1.5, it misses some stuff.

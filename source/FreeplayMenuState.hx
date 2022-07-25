@@ -348,11 +348,13 @@ class FreeplayMenuState extends MusicBeatState
 		}
 		else if (controls.ACCEPT)
 		{
+			persistentUpdate = false;
+
 			var diffic:String = CoolUtil.getDifficultySuffix(curDifficultyString, curSong.difficulties);
 
 			PlayState.SONG = Song.loadFromJson(curSong.songID + diffic, curSong.songID);
 			PlayState.gameMode = 'freeplay';
-			PlayState.difficulties = curSong.difficulties.copy();
+			PlayState.difficulties = curSong.difficulties;
 			PlayState.storyDifficulty = curDifficultyString;
 			PlayState.lastDifficulty = curDifficultyString;
 			PlayState.storyWeek = curSong.weekID;
@@ -361,8 +363,9 @@ class FreeplayMenuState extends MusicBeatState
 
 			#if PRELOAD_ALL
 			FlxG.sound.music.volume = 0;
-			destroyFreeplayVocals();
 			#end
+
+			destroyFreeplayVocals();
 
 			LoadingState.loadAndSwitchState(new PlayState(), true);
 		}

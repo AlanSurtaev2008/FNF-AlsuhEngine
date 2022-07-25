@@ -90,7 +90,7 @@ class Song
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
-		var rawJson = null;
+		var rawJson:String = null;
 
 		#if MODS_ALLOWED
 		var moddyFile:String = Paths.modsJson(folder + '/' + jsonInput);
