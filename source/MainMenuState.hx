@@ -29,7 +29,7 @@ class MainMenuState extends MusicBeatState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.1';
+	public static var engineVersion:String = '1.1.1';
 	public static var gameVersion:String = '0.2.8';
 
 	override function create():Void

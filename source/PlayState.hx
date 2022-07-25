@@ -3031,7 +3031,7 @@ class PlayState extends MusicBeatState
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
 
-		var roundedSpeed:Float = FlxMath.roundDecimal(SONG.speed, 2);
+		var roundedSpeed:Float = FlxMath.roundDecimal(OptionData.scrollSpeed == 1 ? SONG.speed : OptionData.scrollSpeed, 2);
 
 		if (unspawnNotes[0] != null)
 		{
