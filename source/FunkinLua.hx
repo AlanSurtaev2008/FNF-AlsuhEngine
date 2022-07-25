@@ -130,9 +130,13 @@ class FunkinLua
 		set('startedCountdown', false);
 
 		set('gameMode', PlayState.gameMode);
-		set('difficultyID', PlayState.storyDifficulty);
-		set('difficultyName', CoolUtil.getDifficultyName(PlayState.storyDifficulty, PlayState.difficulties));
-		set('difficultySuffix', CoolUtil.getDifficultySuffix(PlayState.storyDifficulty, PlayState.difficulties));
+		set('difficultyID', PlayState.lastDifficulty);
+		set('difficultyName', CoolUtil.getDifficultyName(PlayState.lastDifficulty, PlayState.difficulties));
+		set('difficultySuffix', CoolUtil.getDifficultySuffix(PlayState.lastDifficulty, PlayState.difficulties));
+
+		set('storyDifficultyID', PlayState.storyDifficulty);
+		set('storyDifficultyName', CoolUtil.getDifficultyName(PlayState.storyDifficulty, PlayState.difficulties));
+		set('storyDifficultySuffix', CoolUtil.getDifficultySuffix(PlayState.storyDifficulty, PlayState.difficulties));
 		set('weekID', PlayState.storyWeek);
 		set('weekName', PlayState.storyWeekName);
 		set('seenCutscene', PlayState.seenCutscene);
