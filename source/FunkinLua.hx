@@ -1699,7 +1699,7 @@ class FunkinLua
 				var shit:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
 				if (!shit.wasAdded) {
 					switch (behindWhom) {
-						case 'before' | 'in front of' | 'afore' | 'ere' | 'front' | 'head' | true:
+						case 'before' | 'in front of' | 'afore' | 'ere' | 'front' | 'head' | true | 'true':
 							getInstance().add(shit);
 						case 'dad' | 'opponent':
 							PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.dadGroup), shit);
