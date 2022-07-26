@@ -275,51 +275,51 @@ class PlayState extends MusicBeatState
 		healthBar.updateBar();
 	}
 
-	var defaultCamZoom:Float = 1.05;
+	public var defaultCamZoom:Float = 1.05;
 
-	var dadbattleBlack:BGSprite;
-	var dadbattleLight:BGSprite;
-	var dadbattleSmokes:FlxSpriteGroup;
+	public var dadbattleBlack:BGSprite;
+	public var dadbattleLight:BGSprite;
+	public var dadbattleSmokes:FlxSpriteGroup;
 
-	var halloweenBG:BGSprite;
-	var halloweenWhite:BGSprite;
+	public var halloweenBG:BGSprite;
+	public var halloweenWhite:BGSprite;
 
-	var curLight:Int = 0;
-	var curLightEvent:Int = 0;
+	public var curLight:Int = 0;
+	public var curLightEvent:Int = 0;
 
-	var phillyLightsColors:Array<FlxColor> = [0xFF31A2FD, 0xFF31FD8C, 0xFFFB33F5, 0xFFFD4531, 0xFFFBA633];
-	var phillyWindow:BGSprite;
-	var phillyStreet:BGSprite;
-	var phillyTrain:BGSprite;
-	var blammedLightsBlack:FlxSprite;
-	var phillyWindowEvent:BGSprite;
-	var trainSound:FlxSound;
-	var phillyGlowGradient:PhillyGlowGradient;
-	var phillyGlowParticles:FlxTypedGroup<PhillyGlowParticle>;
+	public var phillyLightsColors:Array<FlxColor> = [0xFF31A2FD, 0xFF31FD8C, 0xFFFB33F5, 0xFFFD4531, 0xFFFBA633];
+	public var phillyWindow:BGSprite;
+	public var phillyStreet:BGSprite;
+	public var phillyTrain:BGSprite;
+	public var blammedLightsBlack:FlxSprite;
+	public var phillyWindowEvent:BGSprite;
+	public var trainSound:FlxSound;
+	public var phillyGlowGradient:PhillyGlowGradient;
+	public var phillyGlowParticles:FlxTypedGroup<PhillyGlowParticle>;
 
-	var limoKillingState:Int = 0;
-	var limo:BGSprite;
-	var limoMetalPole:BGSprite;
-	var limoLight:BGSprite;
-	var limoCorpse:BGSprite;
-	var limoCorpseTwo:BGSprite;
-	var bgLimo:BGSprite;
-	var grpLimoParticles:FlxTypedGroup<BGSprite>;
-	var grpLimoDancers:FlxTypedGroup<BackgroundDancer>;
-	var fastCar:BGSprite;
+	public var limoKillingState:Int = 0;
+	public var limo:BGSprite;
+	public var limoMetalPole:BGSprite;
+	public var limoLight:BGSprite;
+	public var limoCorpse:BGSprite;
+	public var limoCorpseTwo:BGSprite;
+	public var bgLimo:BGSprite;
+	public var grpLimoParticles:FlxTypedGroup<BGSprite>;
+	public var grpLimoDancers:FlxTypedGroup<BackgroundDancer>;
+	public var fastCar:BGSprite;
 
-	var upperBoppers:BGSprite;
-	var bottomBoppers:BGSprite;
-	var santa:BGSprite;
-	var heyTimer:Float;
+	public var upperBoppers:BGSprite;
+	public var bottomBoppers:BGSprite;
+	public var santa:BGSprite;
+	public var heyTimer:Float;
 
-	var bgGirls:BackgroundGirls;
-	var bgGhouls:BGSprite;
+	public var bgGirls:BackgroundGirls;
+	public var bgGhouls:BGSprite;
 
-	var tankWatchtower:BGSprite;
-	var tankGround:BGSprite;
-	var tankmanRun:FlxTypedGroup<TankmenBG>;
-	var foregroundSprites:FlxTypedGroup<BGSprite>;
+	public var tankWatchtower:BGSprite;
+	public var tankGround:BGSprite;
+	public var tankmanRun:FlxTypedGroup<TankmenBG>;
+	public var foregroundSprites:FlxTypedGroup<BGSprite>;
 
 	public function loadStage(stage:String):Void
 	{
@@ -855,12 +855,12 @@ class PlayState extends MusicBeatState
 		['Perfect!!', 1] // The value on this one isn't used actually, since Perfect is always "1"
 	];
 
-	private var isCameraOnForcedPos:Bool = false;
+	public var isCameraOnForcedPos:Bool = false;
 
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
 	private var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
 
-	private var keysArray:Array<Dynamic>;
+	public var keysArray:Array<Dynamic>;
 
 	public var songPositionBar:Float = 0;
 

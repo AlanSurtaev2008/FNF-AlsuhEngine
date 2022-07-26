@@ -2884,7 +2884,7 @@ class ChartingState extends MusicBeatState
 		}
 		else // Event note
 		{
-			note.loadGraphic(Paths.image('eventArrow'));
+			note.loadGraphic(Paths.image('ui/eventArrow'));
 			note.eventName = getEventName(i[1]);
 			note.eventLength = i[1].length;
 
