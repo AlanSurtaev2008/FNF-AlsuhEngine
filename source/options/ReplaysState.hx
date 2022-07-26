@@ -23,6 +23,15 @@ class ReplaysState extends MusicBeatState
 	{
 		super.create();
 
+		#if desktop
+		DiscordClient.changePresence("In the Replays Menu", null); // Updating Discord Rich Presence
+		#end
+
+		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
+		{
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		}
+
 		var bg:FlxSprite = new FlxSprite();
 		bg.loadGraphic(Paths.image('bg/menuBGBlue'));
 		bg.updateHitbox();

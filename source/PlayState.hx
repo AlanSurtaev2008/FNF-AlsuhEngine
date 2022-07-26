@@ -3294,7 +3294,7 @@ class PlayState extends MusicBeatState
 
 	public function doDeathCheck():Bool
 	{
-		if (health <= 0 && !practiceMode)
+		if (health <= 0 && !practiceMode && !botPlay)
 		{
 			var ret:Dynamic = callOnLuas('onGameOver', [], false);
 
@@ -4210,7 +4210,7 @@ class PlayState extends MusicBeatState
 					spawnNoteSplashOnNote(daNote);
 				}
 
-				if (!practiceMode)
+				if (!practiceMode && !botPlay)
 				{
 					sicks++;
 					totalNotesHit += 1;
@@ -4220,7 +4220,7 @@ class PlayState extends MusicBeatState
 			}
 			case 'good':
 			{
-				if (!practiceMode)
+				if (!practiceMode && !botPlay)
 				{
 					goods++;
 					totalNotesHit += 0.75;
@@ -4230,7 +4230,7 @@ class PlayState extends MusicBeatState
 			}
 			case 'bad':
 			{
-				if (!practiceMode)
+				if (!practiceMode && !botPlay)
 				{
 					bads++;
 					totalNotesHit += 0.5;
@@ -4240,7 +4240,7 @@ class PlayState extends MusicBeatState
 			}
 			case 'shit':
 			{
-				if (!practiceMode)
+				if (!practiceMode && !botPlay)
 				{
 					shits++;
 					totalNotesHit += 0;
@@ -4250,7 +4250,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (!practiceMode)
+		if (!practiceMode && !botPlay)
 		{
 			songScore += score;
 
@@ -4348,7 +4348,9 @@ class PlayState extends MusicBeatState
 			}
 		});
 
-		recalculateRating();
+		if (!practiceMode && !botPlay) {
+			recalculateRating();
+		}
 	}
 
 	private function onKeyPress(event:KeyboardEvent):Void
@@ -4536,7 +4538,7 @@ class PlayState extends MusicBeatState
 
 			combo = 0;
 
-			if (!practiceMode)
+			if (!practiceMode && !botPlay)
 			{
 				if (!endingSong) {
 					songMisses++;
@@ -4558,7 +4560,9 @@ class PlayState extends MusicBeatState
 			vocals.volume = 0;
 		}
 
-		recalculateRating();
+		if (!practiceMode && !botPlay) {
+			recalculateRating();
+		}
 
 		callOnLuas('noteMissPress', [direction]);
 	}
@@ -4577,7 +4581,7 @@ class PlayState extends MusicBeatState
 
 		health -= daNote.missHealth; // For testing purposes
 
-		if (!practiceMode)
+		if (!practiceMode && !botPlay)
 		{
 			songScore -= 10;
 			songMisses++;
@@ -4586,7 +4590,9 @@ class PlayState extends MusicBeatState
 
 		vocals.volume = 0;
 
-		recalculateRating();
+		if (!practiceMode && !botPlay) {
+			recalculateRating();
+		}
 
 		var char:Character = boyfriend;
 
@@ -4831,7 +4837,9 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		recalculateRating();
+		if (!practiceMode && !botPlay) {
+			recalculateRating();
+		}
 	}
 
 	function spawnNoteSplashOnNote(note:Note)

@@ -59,6 +59,11 @@ class OptionsMenuState extends MusicBeatState
 	{
 		super.create();
 
+		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
+		{
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		}
+
 		OptionData.savePrefs();
 
 		#if desktop
