@@ -705,6 +705,10 @@ class PlayState extends MusicBeatState
 			}
 			case 'tank':
 			{
+				if (SONG.songID == 'stress') {
+					GameOverSubState.characterName = 'bf-holding-gf-dead';
+				}
+
 				var sky:BGSprite = new BGSprite('tankSky', -400, -400, 0, 0);
 				add(sky);
 
@@ -2635,7 +2639,7 @@ class PlayState extends MusicBeatState
 		vocals.play();
 	}
 
-	private function calculateScoreText(deaths:Int, accuracy:Float, rating:String, comboRank:String, health:Int, misses:Int, score:Int):String
+	private function calculateScoreText(deaths:Int, accuracy:Float, rating:String, comboRank:String, health:Float, misses:Int, score:Int):String
 	{
 		return 'DEATHS: ' + deaths + ' | ACCURACY: ' + CoolUtil.truncateFloat(accuracy * 100, 2) + '% | RATING: ' + rating +
 			(rating != 'N/A' ? ' (' + comboRank + ')' : '') + ' | HEALTH: ' + health + '% | COMBO BREAKS: ' + misses + ' | SCORE: ' + score;
@@ -2651,7 +2655,7 @@ class PlayState extends MusicBeatState
 
 		if (ret != FunkinLua.Function_Stop)
 		{
-			if (songScore == 0 && songMisses == 0 && songAccuracy == 0)
+			if (totalPlayed < 1)
 			{
 				ratingString = 'N/A';
 			}
@@ -4569,7 +4573,8 @@ class PlayState extends MusicBeatState
 		if (!practiceMode)
 		{
 			songScore -= 10;
-			songMisses++;	
+			songMisses++;
+			totalPlayed++;
 		}
 
 		vocals.volume = 0;

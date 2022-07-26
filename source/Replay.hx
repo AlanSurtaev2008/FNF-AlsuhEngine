@@ -34,6 +34,7 @@ typedef ReplayJSON =
 	public var songID:String;
 	public var songName:String;
 	public var songDiff:String;
+	public var difficulties:Array<Array<String>>;
 	public var songNotes:Array<Float>;
 	public var keyPresses:Array<KeyPress>;
 	public var keyReleases:Array<KeyRelease>;
@@ -55,6 +56,11 @@ class Replay
 			songID: "tutorial",
 			songName: "Tutorial", 
 			songDiff: 'normal',
+			difficulties: [
+				['Easy',	'Normal',	'Hard'],
+				['easy',	'normal',	'hard'],
+				['-easy',	'',			'-hard']
+			],
 			weekID: 'tutorial',
 			weekName: 'Tutorial',
 			noteSpeed: 1.5,
@@ -82,6 +88,7 @@ class Replay
 			"weekID": PlayState.storyWeek,
 			"weekName": PlayState.storyWeekName,
 			"songDiff": PlayState.lastDifficulty,
+			"difficulties": PlayState.difficulties,
 			"songNotes": noteArray,
 			"keyPresses": replay.keyPresses,
 			"keyReleases": replay.keyReleases,

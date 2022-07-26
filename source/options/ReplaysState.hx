@@ -59,7 +59,7 @@ class ReplaysState extends MusicBeatState
 			var replayText:Alphabet = new Alphabet(0, (100 * i) + 210, replaysArray[i], false, false);
 			replayText.isMenuItem = true;
 			replayText.targetY = i;
-			replayText.yAdd - 70;
+			replayText.yAdd = -70;
 			grpReplays.add(replayText);
 		}
 
@@ -117,8 +117,11 @@ class ReplaysState extends MusicBeatState
 			{
 				PlayState.rep = Replay.loadReplay(actualNames[curSelected]);
 
-				PlayState.SONG = Song.loadFromJson(PlayState.rep.replay.songID, PlayState.rep.replay.songID);
+				var diffic:String = CoolUtil.getDifficultySuffix(PlayState.rep.replay.songDiff, false, PlayState.rep.replay.difficulties);
+
+				PlayState.SONG = Song.loadFromJson(PlayState.rep.replay.songID  + diffic, PlayState.rep.replay.songID);
 				PlayState.gameMode = 'replay';
+				PlayState.difficulties = PlayState.rep.replay.difficulties;
 				PlayState.lastDifficulty = PlayState.rep.replay.songDiff;
 				PlayState.storyDifficulty = PlayState.rep.replay.songDiff;
 				PlayState.storyWeek = PlayState.rep.replay.weekID;
