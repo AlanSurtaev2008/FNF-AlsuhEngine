@@ -2231,6 +2231,7 @@ class PlayState extends MusicBeatState
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 				swagNote.mustPress = gottaHitNote;
 				swagNote.sustainLength = songNotes[2];
+				swagNote.gfNote = (section.gfSection && (songNotes[1] < 4));
 				swagNote.noteType = (!Std.isOfType(songNotes[3], String) ? editors.ChartingState.noteTypeList[songNotes[3]] : songNotes[3]);
 				swagNote.scrollFactor.set();
 
@@ -2239,27 +2240,33 @@ class PlayState extends MusicBeatState
 				susLength = susLength / Conductor.stepCrochet;
 				unspawnNotes.push(swagNote);
 
-				for (susNote in 0...Math.floor(susLength))
+				var floorSus:Int = Math.floor(susLength);
+
+				if (floorSus > 0)
 				{
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true);
-					sustainNote.mustPress = gottaHitNote;
-					sustainNote.noteType = swagNote.noteType;
-					sustainNote.scrollFactor.set();
-					unspawnNotes.push(sustainNote);
-
-					if (sustainNote.mustPress)
+					for (susNote in 0...floorSus + 1)
 					{
-						sustainNote.x += FlxG.width / 2; // general offset
-					}
-					else if (OptionData.middleScroll)
-					{
-						sustainNote.x += 310;
-	
-						if (daNoteData > 1) // Up and Right
+						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+
+						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true);
+						sustainNote.mustPress = gottaHitNote;
+						sustainNote.gfNote = (section.gfSection && (songNotes[1]<4));
+						sustainNote.noteType = swagNote.noteType;
+						sustainNote.scrollFactor.set();
+						unspawnNotes.push(sustainNote);
+
+						if (sustainNote.mustPress)
 						{
-							sustainNote.x += FlxG.width / 2 + 25;
+							sustainNote.x += FlxG.width / 2; // general offset
+						}
+						else if (OptionData.middleScroll)
+						{
+							sustainNote.x += 310;
+		
+							if (daNoteData > 1) // Up and Right
+							{
+								sustainNote.x += FlxG.width / 2 + 25;
+							}
 						}
 					}
 				}
@@ -5078,6 +5085,7 @@ class PlayState extends MusicBeatState
 			if (SONG.notes[curSection].changeBPM)
 			{
 				Conductor.changeBPM(SONG.notes[curSection].bpm);
+
 				setOnLuas('curBpm', Conductor.bpm);
 				setOnLuas('crochet', Conductor.crochet);
 				setOnLuas('stepCrochet', Conductor.stepCrochet);

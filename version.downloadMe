@@ -1,14 +1,3 @@
 1.1.2;
-- Fixed Test Vocals
-- Fixed Replays
-- Fixed Ranking System
-- Fixed BF holding GF on Song "Stress"
-- Fixed Difficulty's Suffix on Create Song on Week Editor
-- Fixed Scroll Speed
-- Fixed Song's IDs and Names
-- Added Winning Icons Support
-- Added Stuff Lua Functions
-- Added support to softcoded credits
-- Added function sectionHit() from Psych Engine
-- Fixed crashes on HTML5 while begining the song
-- Fixed Week Editor
+- Fixed GF section
+- Fixed Menus and Game Over Screen

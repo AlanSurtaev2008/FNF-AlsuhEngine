@@ -1571,6 +1571,13 @@ class ChartingState extends MusicBeatState
 					_song.notes[curSec].mustHitSection = check.checked;
 					updateHeads();
 				}
+				case 'GF section':
+				{
+					_song.notes[curSec].gfSection = check.checked;
+
+					updateGrid();
+					updateHeads();
+				}
 				case 'Change BPM':
 				{
 					_song.notes[curSec].changeBPM = check.checked;

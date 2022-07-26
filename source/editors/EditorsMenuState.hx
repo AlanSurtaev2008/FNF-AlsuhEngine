@@ -2,6 +2,7 @@ package editors;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxColor;
 import flixel.group.FlxGroup;
 
 using StringTools;
@@ -24,6 +25,8 @@ class EditorsMenuState extends MusicBeatState
 	override function create():Void
 	{
 		super.create();
+
+		FlxG.camera.bgColor = FlxColor.BLACK;
 
 		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
 		{
