@@ -1,4 +1,5 @@
 1.1.2h;
-- Fixehd Music on Replays Menu
+- Fixed lua function addLuaSprite() again
+- Fixed Music on Replays Menu
 - Fixed GF section
 - Fixed Menus and Game Over Screen
