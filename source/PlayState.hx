@@ -1582,6 +1582,7 @@ class PlayState extends MusicBeatState
 		senpaiEvil.scrollFactor.set();
 		senpaiEvil.updateHitbox();
 		senpaiEvil.screenCenter();
+		senpaiEvil.x += senpaiEvil.width / 5;
 
 		if (SONG.songID == 'roses' || SONG.songID == 'thorns')
 		{
@@ -3966,6 +3967,32 @@ class PlayState extends MusicBeatState
 			case 'BG Freaks Expression':
 			{
 				if (bgGirls != null) bgGirls.swapDanceType();
+			}
+			case 'Change Scroll Speed':
+			{
+				if (songSpeedType == "constant") return;
+		
+				var val1:Float = Std.parseFloat(value1);
+				var val2:Float = Std.parseFloat(value2);
+	
+				if (Math.isNaN(val1)) val1 = 1;
+				if (Math.isNaN(val2)) val2 = 0;
+
+				var newValue:Float = SONG.speed * PlayStateChangeables.scrollSpeed * val1;
+
+				if(val2 <= 0)
+				{
+					songSpeed = newValue;
+				}
+				else
+				{
+					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2, {ease: FlxEase.linear, onComplete:
+						function (twn:FlxTween)
+						{
+							songSpeedTween = null;
+						}
+					});
+				}
 			}
 			case 'Set Property':
 			{
