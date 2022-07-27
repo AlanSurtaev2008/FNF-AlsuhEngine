@@ -47,16 +47,19 @@ class CreditsMenuState extends MusicBeatState
 		add(bg);
 
 		#if MODS_ALLOWED
-		var creditsFile:String = Paths.mods('data/credits.txt');
-
-		if (FileSystem.exists(creditsFile))
+		for (folder in Paths.modFolders())
 		{
-			var firstarray:Array<String> = File.getContent(creditsFile).split('\n');
+			var creditsFile:String = Paths.mods(folder + 'data/credits.txt');
 
-			for (i in firstarray)
+			if (FileSystem.exists(creditsFile))
 			{
-				var arr:Array<String> = i.replace('\\n', '\n').split("::");
-				creditsArray.push(new Credit(arr[0], arr[1] == 'true' ? true : false, arr[2], arr[3], FlxColor.fromString(arr[4])));
+				var firstarray:Array<String> = File.getContent(creditsFile).split('\n');
+
+				for (i in firstarray)
+				{
+					var arr:Array<String> = i.replace('\\n', '\n').split("::");
+					creditsArray.push(new Credit(arr[0], arr[1] == 'true' ? true : false, arr[2], arr[3], FlxColor.fromString(arr[4])));
+				}
 			}
 		}
 		#end
