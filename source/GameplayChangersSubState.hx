@@ -140,8 +140,16 @@ class GameplayChangersSubState extends MusicBeatSubState
 			blueballedTxt.updateHitbox();
 			blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
 			add(blueballedTxt);
+
+			var chartingText:FlxText = new FlxText(20, 20 + 96, 0, "CHARTING MODE", 32);
+			chartingText.scrollFactor.set();
+			chartingText.setFormat(Paths.font('vcr.ttf'), 32);
+			chartingText.x = FlxG.width - (chartingText.width + 20);
+			chartingText.updateHitbox();
+			chartingText.visible = PlayState.chartingMode;
+			add(chartingText);
 	
-			practiceText = new FlxText(20, 15 + 96 + (PlayStateChangeables.practiceMode ? 5 : 0), 0, 'PRACTICE MODE', 32);
+			practiceText = new FlxText(20, 15 + (PlayState.chartingMode ? 128 : 96) + (PlayStateChangeables.practiceMode ? 5 : 0), 0, 'PRACTICE MODE', 32);
 			practiceText.scrollFactor.set();
 			practiceText.setFormat(Paths.font('vcr.ttf'), 32);
 			practiceText.x = FlxG.width - (practiceText.width + 20);

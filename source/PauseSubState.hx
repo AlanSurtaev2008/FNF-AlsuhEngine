@@ -141,7 +141,15 @@ class PauseSubState extends MusicBeatSubState
 		blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
 		add(blueballedTxt);
 
-		var practiceText:FlxText = new FlxText(20, 15 + 96, 0, 'PRACTICE MODE', 32);
+		var chartingText:FlxText = new FlxText(20, 15 + 96, 0, "CHARTING MODE", 32);
+		chartingText.scrollFactor.set();
+		chartingText.setFormat(Paths.font('vcr.ttf'), 32);
+		chartingText.x = FlxG.width - (chartingText.width + 20);
+		chartingText.updateHitbox();
+		chartingText.alpha = 0;
+		add(chartingText);
+
+		var practiceText:FlxText = new FlxText(20, 15 + (PlayState.chartingMode ? 128 : 96), 0, 'PRACTICE MODE', 32);
 		practiceText.scrollFactor.set();
 		practiceText.setFormat(Paths.font('vcr.ttf'), 32);
 		practiceText.x = FlxG.width - (practiceText.width + 20);
@@ -161,6 +169,11 @@ class PauseSubState extends MusicBeatSubState
 				practiceText.alpha = 1;
 				practiceText.y += 5;
 			}
+
+			if (PlayState.chartingMode) {
+				chartingText.alpha = 1;
+				chartingText.y += 5;
+			}
 		}
 		else
 		{
@@ -176,7 +189,15 @@ class PauseSubState extends MusicBeatSubState
 
 			if (PlayStateChangeables.practiceMode)
 			{
-				FlxTween.tween(practiceText, {alpha: 1, y: practiceText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
+				if (PlayState.chartingMode)
+					FlxTween.tween(practiceText, {alpha: 1, y: practiceText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 1.1});
+				else
+					FlxTween.tween(practiceText, {alpha: 1, y: practiceText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
+			}
+
+			if (PlayState.chartingMode)
+			{
+				FlxTween.tween(chartingText, {alpha: 1, y: chartingText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
 			}
 		}
 

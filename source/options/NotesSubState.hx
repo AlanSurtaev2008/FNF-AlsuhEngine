@@ -88,12 +88,20 @@ class NotesSubState extends MusicBeatSubState
 			blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
 			add(blueballedTxt);
 	
-			var practiceText:FlxText = new FlxText(20, 20 + 96, 0, 'PRACTICE MODE', 32);
+			var chartingText:FlxText = new FlxText(20, 20 + 96, 0, "CHARTING MODE", 32);
+			chartingText.scrollFactor.set();
+			chartingText.setFormat(Paths.font('vcr.ttf'), 32);
+			chartingText.x = FlxG.width - (chartingText.width + 20);
+			chartingText.updateHitbox();
+			chartingText.visible = PlayState.chartingMode;
+			add(chartingText);
+	
+			var practiceText:FlxText = new FlxText(20, 20 + (PlayState.chartingMode ? 128 : 96), 0, 'PRACTICE MODE', 32);
 			practiceText.scrollFactor.set();
 			practiceText.setFormat(Paths.font('vcr.ttf'), 32);
 			practiceText.x = FlxG.width - (practiceText.width + 20);
 			practiceText.updateHitbox();
-			practiceText.visible = PlayStateChangeables.practiceMode;
+			practiceText.alpha = PlayStateChangeables.practiceMode ? 1 : 0;
 			add(practiceText);
 		}
 		
