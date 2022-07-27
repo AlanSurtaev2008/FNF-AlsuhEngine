@@ -163,9 +163,6 @@ class GameOverSubState extends MusicBeatSubState
 					{
 						PlayState.deathCounter = 0;
 						PlayState.seenCutscene = false;
-						PlayState.botPlay = false;
-						PlayState.practiceMode = false;
-						PlayState.usedPractice = false;
 			
 						switch (PlayState.gameMode)
 						{
@@ -174,7 +171,27 @@ class GameOverSubState extends MusicBeatSubState
 							case 'freeplay':
 								MusicBeatState.switchState(new FreeplayMenuState());
 							case 'replay':
+							{
+								if (FlxG.save.data.scrollSpeed != null)
+								{
+									PlayStateChangeables.scrollSpeed = FlxG.save.data.scrollSpeed;
+								}
+								else
+								{
+									PlayStateChangeables.scrollSpeed = 1.0;
+								}
+			
+								if (FlxG.save.data.downScroll != null)
+								{
+									OptionData.downScroll = FlxG.save.data.downScroll;
+								}
+								else
+								{
+									OptionData.downScroll = false;
+								}
+	
 								MusicBeatState.switchState(new options.ReplaysState());
+							}
 							default:
 								MusicBeatState.switchState(new MainMenuState());
 						}

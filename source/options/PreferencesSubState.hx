@@ -57,6 +57,14 @@ class PreferencesSubState extends MusicBeatSubState
 		option.onChange = onChangeAntiAliasing; // Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
 
+		var option:Option = new Option('Shaders', //Name
+			true,
+			'If unchecked, disables shaders.\nIt\'s used for some visual effects, and also CPU intensive for weaker PCs.', //Description
+			'shaders', //Save data variable name
+			'bool', //Variable type
+			true); //Default value
+		addOption(option);
+
 		#if !html5 // Apparently other framerates isn't correctly supported on Browser? Probably it has some V-Sync shit enabled by default, idk
 		var option:Option = new Option('Framerate',
 			true,
@@ -531,7 +539,7 @@ class PreferencesSubState extends MusicBeatSubState
 			practiceText.setFormat(Paths.font('vcr.ttf'), 32);
 			practiceText.x = FlxG.width - (practiceText.width + 20);
 			practiceText.updateHitbox();
-			practiceText.visible = PlayState.practiceMode;
+			practiceText.visible = PlayStateChangeables.practiceMode;
 			add(practiceText);
 		}
 
@@ -717,7 +725,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 				}
-				else if (!unselectableCheck(curSelected))
+				else
 				{
 					if (curOption.type == 'bool' && !curOption.isPause)
 					{
@@ -770,7 +778,7 @@ class PreferencesSubState extends MusicBeatSubState
 				reloadCheckboxes();
 			}
 
-			if ((controls.UI_LEFT || controls.UI_RIGHT) && curOption.type != 'bool' && curOption.type != 'menu' && !curOption.isPause)
+			if ((controls.UI_LEFT || controls.UI_RIGHT) && curOption.type != 'bool' && curOption.type != 'menu' && curOption != defaultValue && !curOption.isPause)
 			{
 				var pressed:Bool = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
 

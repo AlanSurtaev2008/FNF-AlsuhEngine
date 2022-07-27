@@ -75,6 +75,7 @@ class TitleState extends MusicBeatState
 		PlayerSettings.init();
 
 		OptionData.loadCtrls();
+		PlayStateChangeables.loadChangeables();
 
 		#if sys
 		if (!FileSystem.exists(Sys.getCwd() + "\\assets\\replays"))
@@ -346,6 +347,14 @@ class TitleState extends MusicBeatState
 
 		if (initialized && !transitioning && skippedIntro)
 		{
+			#if sys
+			if (controls.BACK)
+			{
+				persistentUpdate = false;
+				openSubState(new ExitSubState());
+			}
+			#end
+
 			if (newTitle && !pressedEnter)
 			{
 				var timer:Float = titleTimer;

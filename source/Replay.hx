@@ -92,7 +92,7 @@ class Replay
 			"songNotes": noteArray,
 			"keyPresses": replay.keyPresses,
 			"keyReleases": replay.keyReleases,
-			"noteSpeed": (OptionData.scrollSpeed > 1 ? OptionData.scrollSpeed : PlayState.SONG.speed),
+			"noteSpeed": PlayState.instance.songSpeed,
 			"isDownscroll": OptionData.downScroll,
 			"timestamp": Date.now()
 		};

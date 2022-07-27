@@ -180,7 +180,7 @@ class EditorPlayState extends MusicBeatState
 	{
 		Conductor.changeBPM(songData.bpm);
 
-		FlxG.sound.playMusic(Paths.inst(songData.song), 0, false);
+		FlxG.sound.playMusic(Paths.inst(songData.songID), 0, false);
 		FlxG.sound.music.pause();
 		FlxG.sound.music.onComplete = endSong;
 		vocals.pause();

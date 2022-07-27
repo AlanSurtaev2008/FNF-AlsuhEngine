@@ -313,7 +313,7 @@ class OptionsSubState extends MusicBeatSubState
 		practiceText.setFormat(Paths.font('vcr.ttf'), 32);
 		practiceText.x = FlxG.width - (practiceText.width + 20);
 		practiceText.updateHitbox();
-		practiceText.visible = PlayState.practiceMode;
+		practiceText.visible = PlayStateChangeables.practiceMode;
 		add(practiceText);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
@@ -355,6 +355,8 @@ class OptionsSubState extends MusicBeatSubState
 			OptionData.savePrefs();
 
 			FlxG.sound.play(Paths.sound('cancelMenu'));
+
+			PlayState.isNextSubState = true;
 
 			FlxG.state.closeSubState();
 			FlxG.state.openSubState(new PauseSubState(true));

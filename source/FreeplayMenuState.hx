@@ -146,9 +146,11 @@ class FreeplayMenuState extends MusicBeatState
 		add(diffText);
 
 		#if PRELOAD_ALL
-		var leText:String = "Press RESET to Reset your Score and Accuracy | Press SPACE to listen to the Song.";
+		var leText:String = "Press SPACE to listen to the Song | Press CTRL to open the Gameplay Changers Menu | Press RESET to Reset your Score and Accuracy.";
+		var size:Int = 16;
 		#else
-		var leText:String = "Press RESET to Reset your Score and Accuracy.";
+		var leText:String = "Press CTRL to open the Gameplay Changers Menu | Press RESET to Reset your Score and Accuracy.";
+		var size:Int = 18;
 		#end
 
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height);
@@ -156,8 +158,8 @@ class FreeplayMenuState extends MusicBeatState
 		textBG.alpha = 0.6;
 		add(textBG);
 
-		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, 18);
-		text.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
+		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
+		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
 
@@ -317,7 +319,12 @@ class FreeplayMenuState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.keys.justPressed.SPACE)
+		if (FlxG.keys.justPressed.CONTROL)
+		{
+			persistentUpdate = false;
+			openSubState(new GameplayChangersSubState(false));
+		}
+		else if (FlxG.keys.justPressed.SPACE)
 		{
 			if (instPlaying != curSelected)
 			{

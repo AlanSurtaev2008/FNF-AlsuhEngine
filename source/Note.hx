@@ -21,6 +21,13 @@ class Note extends FlxSprite
 {
 	public var strumTime:Float = 0;
 
+	public var spawned:Bool = false;
+	public var noRating:Bool = false;
+	public var parent:Note;
+
+	public var blockHit:Bool = false; // only works for player
+
+	public var tail:Array<Note> = []; // for sustains lol
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
@@ -55,14 +62,23 @@ class Note extends FlxSprite
 	// Lua shit
 	public var noteSplashDisabled:Bool = false;
 	public var noteSplashTexture:String = null;
+
 	public var noteSplashHue:Float = 0;
 	public var noteSplashSat:Float = 0;
 	public var noteSplashBrt:Float = 0;
 
+	public var isCustomNoteSplash:Bool = false;
+	public var noteSplashHueCustom:Float = 0;
+	public var noteSplashSatCustom:Float = 0;
+	public var noteSplashBrtCustom:Float = 0;
+
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
 	public var offsetAngle:Float = 0;
+
 	public var multAlpha:Float = 1;
+	public var multSpeed(default, set):Float = 1;
+	public var distance:Float = 2000; //plan on doing scroll directions soon -bb
 
 	public var copyX:Bool = true;
 	public var copyY:Bool = true;
@@ -82,6 +98,23 @@ class Note extends FlxSprite
 	public var texture(default, set):String = null;
 
 	public var hitsoundDisabled:Bool = false;
+
+	private function set_multSpeed(value:Float):Float
+	{
+		resizeByRatio(value / multSpeed);
+		multSpeed = value;
+
+		return value;
+	}
+
+	public function resizeByRatio(ratio:Float):Void // haha funny twitter shit
+	{
+		if (isSustainNote && !animation.curAnim.name.endsWith('end'))
+		{
+			scale.y *= ratio;
+			updateHitbox();
+		}
+	}
 
 	public var hitCausesMiss:Bool = false;
 
@@ -149,10 +182,6 @@ class Note extends FlxSprite
 
 			noteType = value;
 		}
-
-		noteSplashHue = colorSwap.hue;
-		noteSplashSat = colorSwap.saturation;
-		noteSplashBrt = colorSwap.brightness;
 
 		return value;
 	}
@@ -276,6 +305,8 @@ class Note extends FlxSprite
 		x += offsetX;
 	}
 
+	public var originalHeightForCalcs:Float = 6;
+
 	function reloadNote(?prefix:String = '', ?texture:String = '', ?suffix:String = ''):Void
 	{
 		if (prefix == null) prefix = '';
@@ -314,6 +345,8 @@ class Note extends FlxSprite
 
 				width = width / 4;
 				height = height / 2;
+
+				originalHeightForCalcs = height;
 
 				loadGraphic(Paths.image('notes/pixel/' + blahblah + 'ENDS'), true, Math.floor(width), Math.floor(height));
 			}
@@ -415,6 +448,10 @@ class Note extends FlxSprite
 			colorSwap.hue = OptionData.arrowHSV[noteData % 4][0] / 360;
 			colorSwap.saturation = OptionData.arrowHSV[noteData % 4][1] / 100;
 			colorSwap.brightness = OptionData.arrowHSV[noteData % 4][2] / 100;
+
+			noteSplashHue = colorSwap.hue;
+			noteSplashSat = colorSwap.saturation;
+			noteSplashBrt = colorSwap.brightness;
 		}
 
 		if (mustPress)

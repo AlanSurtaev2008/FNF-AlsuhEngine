@@ -13,6 +13,7 @@ class OptionData
 	public static var fullScreen:Bool = false;
 	public static var lowQuality:Bool = false;
 	public static var globalAntialiasing:Bool = true;
+	public static var shaders:Bool = true;
 	public static var framerate:Int = 60;
 
 	public static var ghostTapping:Bool = true;
@@ -29,7 +30,6 @@ class OptionData
 	public static var badWindow:Int = 135;
 	public static var shitWindow:Int = 160;
 	public static var safeFrames:Float = 10;
-	public static var scrollSpeed:Float = 1;
 	public static var noteOffset:Int = 0;
 
 	public static var camZooms:Bool = true;
@@ -65,6 +65,7 @@ class OptionData
 		FlxG.save.data.fullScreen = fullScreen;
 		FlxG.save.data.lowQuality = lowQuality;
 		FlxG.save.data.globalAntialiasing = globalAntialiasing;
+		FlxG.save.data.shaders = shaders;
 		FlxG.save.data.framerate = framerate;
 
 		FlxG.save.data.ghostTapping = ghostTapping;
@@ -78,7 +79,6 @@ class OptionData
 		FlxG.save.data.badWindow = badWindow;
 		FlxG.save.data.shitWindow = shitWindow;
 		FlxG.save.data.safeFrames = safeFrames;
-		FlxG.save.data.scrollSpeed = scrollSpeed;
 		FlxG.save.data.noteOffset = noteOffset;
 		FlxG.save.data.camZooms = camZooms;
 		FlxG.save.data.noteSplashes = noteSplashes;
@@ -125,6 +125,9 @@ class OptionData
 		}
 		if (FlxG.save.data.globalAntialiasing != null) {
 			globalAntialiasing = FlxG.save.data.globalAntialiasing;
+		}
+		if (FlxG.save.data.shaders != null) {
+			shaders = FlxG.save.data.shaders;
 		}
 		if (FlxG.save.data.framerate != null) {
 			framerate = FlxG.save.data.framerate;
@@ -177,9 +180,6 @@ class OptionData
 		}
 		if (FlxG.save.data.safeFrames != null) {
 			safeFrames = FlxG.save.data.safeFrames;
-		}
-		if (FlxG.save.data.scrollSpeed != null) {
-			scrollSpeed = FlxG.save.data.scrollSpeed;
 		}
 		if (FlxG.save.data.noteOffset != null) {
 			noteOffset = FlxG.save.data.noteOffset;

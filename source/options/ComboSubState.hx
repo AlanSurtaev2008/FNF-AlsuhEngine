@@ -88,7 +88,7 @@ class ComboSubState extends MusicBeatSubState
 			practiceText.setFormat(Paths.font('vcr.ttf'), 32);
 			practiceText.x = FlxG.width - (practiceText.width + 20);
 			practiceText.updateHitbox();
-			practiceText.visible = PlayState.practiceMode;
+			practiceText.visible = PlayStateChangeables.practiceMode;
 			add(practiceText);
 		}
 

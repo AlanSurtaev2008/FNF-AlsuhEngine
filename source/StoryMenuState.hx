@@ -174,7 +174,7 @@ class StoryMenuState extends MusicBeatState
 		textBG.alpha = 0.6;
 		add(textBG);
 
-		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "Press RESET to Reset your Score.", 18);
+		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "Press CTRL to open the Gameplay Changers Menu | Press RESET to Reset your Score.", 18);
 		text.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
@@ -293,7 +293,12 @@ class StoryMenuState extends MusicBeatState
 				}
 			}
 
-			if (controls.RESET)
+			if (FlxG.keys.justPressed.CONTROL)
+			{
+				persistentUpdate = false;
+				openSubState(new GameplayChangersSubState(false));
+			}
+			else if (controls.RESET)
 			{
 				persistentUpdate = false;
 
