@@ -47,9 +47,11 @@ class CreditsMenuState extends MusicBeatState
 		add(bg);
 
 		#if MODS_ALLOWED
-		for (folder in Paths.modFolders())
+		var directories:Array<String> = [Paths.mods('characters/'), Paths.mods(Paths.currentModDirectory + '/characters/'), Paths.getPreloadPath('characters/')];
+
+		for (folder in directories)
 		{
-			var creditsFile:String = Paths.mods(folder + 'data/credits.txt');
+			var creditsFile:String = Paths.mods(folder + '/data/credits.txt');
 
 			if (FileSystem.exists(creditsFile))
 			{
