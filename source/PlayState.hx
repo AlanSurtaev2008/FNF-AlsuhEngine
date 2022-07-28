@@ -5368,6 +5368,15 @@ class PlayState extends MusicBeatState
 			{
 				bgGirls.dance();
 			}
+			case 'tank':
+			{
+				if (!OptionData.lowQuality) tankWatchtower.dance();
+
+				foregroundSprites.forEach(function(spr:BGSprite)
+				{
+					spr.dance();
+				});
+			}
 		}
 
 		lastBeatHit = curBeat;
