@@ -12,6 +12,7 @@ import flixel.util.FlxTimer;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 import lime.utils.Assets as LimeAssets;
+import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -28,23 +29,28 @@ class LoadingState extends MusicBeatState
 	var stopMusic:Bool = false;
 	var directory:String;
 
-	function new(target:FlxState, stopMusic:Bool, directory:String):Void
+	var skip:Bool = false;
+
+	function new(target:FlxState, stopMusic:Bool, directory:String, ?skip:Bool = false):Void
 	{
 		super();
 
 		this.target = target;
 		this.stopMusic = stopMusic;
 		this.directory = directory;
+		this.skip = skip;
 	}
 	
 	override function create():Void
 	{
+		super.create();
+
 		var bg:FlxSprite = new FlxSprite();
 		bg.makeGraphic(FlxG.width, FlxG.height, 0xFFCAFF4D);
 		add(bg);
 
 		funkay = new FlxSprite();
-		funkay.loadGraphic(Paths.image('bg/funkay'));
+		funkay.loadGraphic(Paths.getImage('bg/funkay'));
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		funkay.antialiasing = OptionData.globalAntialiasing;
@@ -57,6 +63,11 @@ class LoadingState extends MusicBeatState
 		loadBar.antialiasing = OptionData.globalAntialiasing;
 		loadBar.screenCenter(X);
 		add(loadBar);
+
+		if (skip) {
+			FlxTransitionableState.skipNextTransIn = false;
+			FlxTransitionableState.skipNextTransOut = true;
+		}
 		
 		initSongsManifest().onComplete(function(lib)
 		{
@@ -84,7 +95,7 @@ class LoadingState extends MusicBeatState
 			final symbolPath = path.split(":").pop();
 
 			var callback = callbacks.add("song:" + path);
-			Assets.loadSound(path).onComplete(function (_) { callback(); });
+			Assets.loadSound(path).onComplete(function(_) { callback(); });
 		}
 	}
 	
@@ -99,7 +110,7 @@ class LoadingState extends MusicBeatState
 				throw "Missing library: " + library;
 			
 			var callback = callbacks.add("library:" + library);
-			Assets.loadLibrary(library).onComplete(function (_) { callback(); });
+			Assets.loadLibrary(library).onComplete(function(_) { callback(); });
 		}
 	}
 	
@@ -140,20 +151,20 @@ class LoadingState extends MusicBeatState
 	
 	static function getSongPath():Any
 	{
-		return Paths.inst(PlayState.SONG.songID);
+		return Paths.getInst(PlayState.SONG.songID);
 	}
 	
 	static function getVocalPath():Any
 	{
-		return Paths.voices(PlayState.SONG.songID);
+		return Paths.getVoices(PlayState.SONG.songID);
 	}
 	
-	public static function loadAndSwitchState(target:FlxState, stopMusic = false):Void
+	public static function loadAndSwitchState(target:FlxState, stopMusic:Bool = false, skip:Bool = false):Void
 	{
-		MusicBeatState.switchState(getNextState(target, stopMusic));
+		MusicBeatState.switchState(getNextState(target, stopMusic, skip));
 	}
 	
-	static function getNextState(target:FlxState, stopMusic = false):FlxState
+	static function getNextState(target:FlxState, stopMusic:Bool = false, skip:Bool = false):FlxState
 	{
 		var directory:String = 'shared';
 		var weekDir:String = StageData.forceNextDirectory;
@@ -172,7 +183,7 @@ class LoadingState extends MusicBeatState
 		}
 
 		if (!loaded) {
-			return new LoadingState(target, stopMusic, directory);
+			return new LoadingState(target, stopMusic, directory, skip);
 		}
 		#end
 

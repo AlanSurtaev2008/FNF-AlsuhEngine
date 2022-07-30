@@ -46,8 +46,6 @@ class PauseSubState extends MusicBeatSubState
 	{
 		super.create();
 
-		menuItems = menuItemsOG;
-
 		if (PlayState.difficulties[1].length < 2 || PlayState.gameMode == 'replay') { // No need to change difficulty if there is only one!
 			menuItemsOG.remove('Change Difficulty');
 		}
@@ -67,11 +65,17 @@ class PauseSubState extends MusicBeatSubState
 			menuItemsOG.insert(3 + num, 'End Song');
 		}
 
+		if (PlayState.gameMode == 'replay') {
+			menuItemsOG.remove('Gameplay Changeables');
+		}
+
 		for (i in 0...PlayState.difficulties[1].length) {
 			difficultyChoices.push(CoolUtil.getDifficultyName(PlayState.difficulties[1][i]));
 		}
 
 		difficultyChoices.push('BACK');
+
+		menuItems = menuItemsOG;
 
 		if (FlxG.sound.music.playing && FlxG.sound.music != null) {
 			FlxG.sound.music.pause();
@@ -93,7 +97,7 @@ class PauseSubState extends MusicBeatSubState
 			pauseMusic = new FlxSound();
 
 			if (OptionData.pauseMusic != 'None') {
-				pauseMusic.loadEmbedded(Paths.music(Paths.formatToSongPath(OptionData.pauseMusic)), true, true);
+				pauseMusic.loadEmbedded(Paths.getMusic(Paths.formatToSongPath(OptionData.pauseMusic)), true, true);
 			}
 
 			pauseMusic.volume = 0;
@@ -120,7 +124,7 @@ class PauseSubState extends MusicBeatSubState
 		var levelInfo:FlxText = new FlxText(20, 15, 0, '', 32);
 		levelInfo.text += PlayState.SONG.songName;
 		levelInfo.scrollFactor.set();
-		levelInfo.setFormat(Paths.font('vcr.ttf'), 32);
+		levelInfo.setFormat(Paths.getFont('vcr.ttf'), 32);
 		levelInfo.updateHitbox();
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		add(levelInfo);
@@ -128,7 +132,7 @@ class PauseSubState extends MusicBeatSubState
 		var levelDifficulty:FlxText = new FlxText(20, 15 + 32, 0, '', 32);
 		levelDifficulty.text += CoolUtil.getDifficultyName(PlayState.lastDifficulty, PlayState.difficulties).toUpperCase();
 		levelDifficulty.scrollFactor.set();
-		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
+		levelDifficulty.setFormat(Paths.getFont('vcr.ttf'), 32);
 		levelDifficulty.updateHitbox();
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 		add(levelDifficulty);
@@ -136,14 +140,14 @@ class PauseSubState extends MusicBeatSubState
 		var blueballedTxt:FlxText = new FlxText(20, 15 + 64, 0, '', 32);
 		blueballedTxt.text = 'Blue balled: ' + PlayState.deathCounter;
 		blueballedTxt.scrollFactor.set();
-		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
+		blueballedTxt.setFormat(Paths.getFont('vcr.ttf'), 32);
 		blueballedTxt.updateHitbox();
 		blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
 		add(blueballedTxt);
 
 		var chartingText:FlxText = new FlxText(20, 15 + 96, 0, "CHARTING MODE", 32);
 		chartingText.scrollFactor.set();
-		chartingText.setFormat(Paths.font('vcr.ttf'), 32);
+		chartingText.setFormat(Paths.getFont('vcr.ttf'), 32);
 		chartingText.x = FlxG.width - (chartingText.width + 20);
 		chartingText.updateHitbox();
 		chartingText.alpha = 0;
@@ -151,7 +155,7 @@ class PauseSubState extends MusicBeatSubState
 
 		var practiceText:FlxText = new FlxText(20, 15 + (PlayState.chartingMode ? 128 : 96), 0, 'PRACTICE MODE', 32);
 		practiceText.scrollFactor.set();
-		practiceText.setFormat(Paths.font('vcr.ttf'), 32);
+		practiceText.setFormat(Paths.getFont('vcr.ttf'), 32);
 		practiceText.x = FlxG.width - (practiceText.width + 20);
 		practiceText.updateHitbox();
 		practiceText.alpha = 0;
@@ -226,7 +230,7 @@ class PauseSubState extends MusicBeatSubState
 			if (menuItems[i] == 'Skip Time')
 			{
 				skipTimeText = new FlxText(0, 0, 0, '', 64);
-				skipTimeText.setFormat(Paths.font("vcr.ttf"), 64, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+				skipTimeText.setFormat(Paths.getFont("vcr.ttf"), 64, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 				skipTimeText.scrollFactor.set();
 				skipTimeText.borderSize = 2;
 				skipTimeTracker = menuItem;
@@ -259,7 +263,7 @@ class PauseSubState extends MusicBeatSubState
 		{
 			if (controls.UI_UP_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.getSound('scrollMenu'));
 				changeSelection(-1);
 
 				holdTime = 0;
@@ -267,7 +271,7 @@ class PauseSubState extends MusicBeatSubState
 
 			if (controls.UI_DOWN_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.getSound('scrollMenu'));
 				changeSelection(1);
 
 				holdTime = 0;
@@ -281,14 +285,14 @@ class PauseSubState extends MusicBeatSubState
 
 				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.getSound('scrollMenu'));
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 				}
 			}
 
 			if (FlxG.mouse.wheel != 0)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+				FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
 
 				changeSelection(-1 * FlxG.mouse.wheel);
 			}
@@ -304,7 +308,7 @@ class PauseSubState extends MusicBeatSubState
 			{
 				if (controls.UI_LEFT_P)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.4);
 	
 					curTime -= 1000;
 					holdTime = 0;
@@ -312,7 +316,7 @@ class PauseSubState extends MusicBeatSubState
 
 				if (controls.UI_RIGHT_P)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.4);
 		
 					curTime += 1000;
 					holdTime = 0;
@@ -430,6 +434,8 @@ class PauseSubState extends MusicBeatSubState
 
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
+
+					WeekData.loadTheFirstEnabledMod();
 
 					switch (PlayState.gameMode)
 					{

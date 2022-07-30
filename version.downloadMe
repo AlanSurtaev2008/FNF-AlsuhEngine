@@ -1,10 +1,7 @@
-1.2.2;
-- Credits for Modcharting
-- Fixed Tankmens's dances on Week 7
-- On Thorns's cutscene Senpai stands in the middle
-- Added Event "Change Scroll Speed"
-- Added Shaders Option
-- Fixed Replays again
-- Fixed Editor Gameplay
-- Added Gameplay Changeables Menu
-- Removed "Toggle Practice Mode" and "Toggle Botplay" from Pause Menu
+1.3;
+- Added Mods Menu
+- Added Icons Zooms Option
+- Changed Icons Zooming
+- Fixed Camera Zooms Option
+- Fixed Pause Menu Song Option (I had to make it unavailable in the pause menu)
+- Fixed Camera Position on middle of the song and more on week

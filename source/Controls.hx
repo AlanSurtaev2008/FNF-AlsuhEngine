@@ -381,7 +381,7 @@ class Controls extends FlxActionSet
 	}
 	#end
 
-	override function update()
+	override function update():Void
 	{
 		super.update();
 	}

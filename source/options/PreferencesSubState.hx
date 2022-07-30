@@ -242,19 +242,6 @@ class PreferencesSubState extends MusicBeatSubState
 		option.onChange = onChangeSafeFrames;
 		addOption(option);
 
-		var option:Option = new Option('Scroll Speed',
-			true,
-			'Change your scroll speed. (1 = Chart dependent)',
-			'scrollSpeed',
-			'float',
-			1);
-		option.displayFormat = '%vX';
-		option.scrollSpeed = 1.5;
-		option.minValue = 0.5;
-		option.maxValue = 4;
-		option.changeValue = 0.1;
-		addOption(option);
-
 		var option:Option = new Option('Note Delay',
 			true,
 			'Changes how late a note is spawned.\nUseful for preventing audio lag from wireless earphones.',
@@ -277,6 +264,14 @@ class PreferencesSubState extends MusicBeatSubState
 			'bool',
 			true);
 		option.onChange = onChangeCameraZoom;
+		addOption(option);
+
+		var option:Option = new Option('Icon Zooms',
+			true,
+			"If unchecked, the icons won't zoom in on a beat hit.",
+			'iconZooms',
+			'bool',
+			true);
 		addOption(option);
 
 		var option:Option = new Option('Note Splashes',
@@ -377,6 +372,7 @@ class PreferencesSubState extends MusicBeatSubState
 			['None', 'Breakfast', 'Tea Time']);
 		option.onChange = onChangePauseMusic;
 		option.isIgnoriteFunctionOnReset = true;
+		option.isPause = isPause;
 		addOption(option);
 
 		#if !mobile
@@ -499,7 +495,7 @@ class PreferencesSubState extends MusicBeatSubState
 		}
 		else
 		{
-			bg.loadGraphic(Paths.image('bg/menuDesat'));
+			bg.loadGraphic(Paths.getImage('bg/menuDesat'));
 			bg.color = 0xFFea71fd;
 			bg.updateHitbox();
 			bg.screenCenter();
@@ -513,7 +509,7 @@ class PreferencesSubState extends MusicBeatSubState
 			var levelInfo:FlxText = new FlxText(20, 20, 0, '', 32);
 			levelInfo.text += PlayState.SONG.songName;
 			levelInfo.scrollFactor.set();
-			levelInfo.setFormat(Paths.font('vcr.ttf'), 32);
+			levelInfo.setFormat(Paths.getFont('vcr.ttf'), 32);
 			levelInfo.updateHitbox();
 			levelInfo.x = FlxG.width - (levelInfo.width + 20);
 			add(levelInfo);
@@ -521,7 +517,7 @@ class PreferencesSubState extends MusicBeatSubState
 			var levelDifficulty:FlxText = new FlxText(20, 20 + 32, 0, '', 32);
 			levelDifficulty.text += CoolUtil.getDifficultyName(PlayState.lastDifficulty, PlayState.difficulties).toUpperCase();
 			levelDifficulty.scrollFactor.set();
-			levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
+			levelDifficulty.setFormat(Paths.getFont('vcr.ttf'), 32);
 			levelDifficulty.updateHitbox();
 			levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 			add(levelDifficulty);
@@ -529,14 +525,14 @@ class PreferencesSubState extends MusicBeatSubState
 			var blueballedTxt:FlxText = new FlxText(20, 20 + 64, 0, '', 32);
 			blueballedTxt.text = 'Blue balled: ' + PlayState.deathCounter;
 			blueballedTxt.scrollFactor.set();
-			blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
+			blueballedTxt.setFormat(Paths.getFont('vcr.ttf'), 32);
 			blueballedTxt.updateHitbox();
 			blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
 			add(blueballedTxt);
 	
 			var chartingText:FlxText = new FlxText(20, 20 + 96, 0, "CHARTING MODE", 32);
 			chartingText.scrollFactor.set();
-			chartingText.setFormat(Paths.font('vcr.ttf'), 32);
+			chartingText.setFormat(Paths.getFont('vcr.ttf'), 32);
 			chartingText.x = FlxG.width - (chartingText.width + 20);
 			chartingText.updateHitbox();
 			chartingText.visible = PlayState.chartingMode;
@@ -544,7 +540,7 @@ class PreferencesSubState extends MusicBeatSubState
 	
 			var practiceText:FlxText = new FlxText(20, 20 + (PlayState.chartingMode ? 128 : 96), 0, 'PRACTICE MODE', 32);
 			practiceText.scrollFactor.set();
-			practiceText.setFormat(Paths.font('vcr.ttf'), 32);
+			practiceText.setFormat(Paths.getFont('vcr.ttf'), 32);
 			practiceText.x = FlxG.width - (practiceText.width + 20);
 			practiceText.updateHitbox();
 			practiceText.alpha = PlayStateChangeables.practiceMode ? 1 : 0;
@@ -628,7 +624,7 @@ class PreferencesSubState extends MusicBeatSubState
 		add(descBox);
 
 		descText = new FlxText(50, 600, 1180, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		descText.setFormat(Paths.getFont("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		descText.scrollFactor.set();
 		descText.borderSize = 2.4;
 		add(descText);
@@ -658,7 +654,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 		if (controls.BACK)
 		{
-			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxG.sound.play(Paths.getSound('cancelMenu'));
 
 			if (isPause)
 			{
@@ -720,18 +716,18 @@ class PreferencesSubState extends MusicBeatSubState
 						FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
 						{
 							reset();
-							FlxG.sound.play(Paths.sound('cancelMenu'));
+							FlxG.sound.play(Paths.getSound('cancelMenu'));
 						});
 					}
 					else
 					{
 						reset();
 
-						FlxG.sound.play(Paths.sound('cancelMenu'));
+						FlxG.sound.play(Paths.getSound('cancelMenu'));
 						reloadCheckboxes();
 					}
 
-					FlxG.sound.play(Paths.sound('confirmMenu'));
+					FlxG.sound.play(Paths.getSound('confirmMenu'));
 				}
 				else
 				{
@@ -746,7 +742,7 @@ class PreferencesSubState extends MusicBeatSubState
 								changeBool(curOption);
 							});
 	
-							FlxG.sound.play(Paths.sound('confirmMenu'));
+							FlxG.sound.play(Paths.getSound('confirmMenu'));
 						}
 						else
 						{
@@ -765,7 +761,7 @@ class PreferencesSubState extends MusicBeatSubState
 								curOption.change();
 							});
 
-							FlxG.sound.play(Paths.sound('confirmMenu'));
+							FlxG.sound.play(Paths.getSound('confirmMenu'));
 						}
 						else
 						{
@@ -780,7 +776,7 @@ class PreferencesSubState extends MusicBeatSubState
 				curOption.resetToDefault();
 				curOption.change();
 
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 				updateTextFrom(curOption);
 				reloadCheckboxes();
@@ -848,7 +844,7 @@ class PreferencesSubState extends MusicBeatSubState
 						updateTextFrom(curOption);
 
 						curOption.change();
-						FlxG.sound.play(Paths.sound('scrollMenu'));
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 					}
 					else if (curOption.type != 'string')
 					{
@@ -896,7 +892,7 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		if (holdTimeValue > 0.5)
 		{
-			FlxG.sound.play(Paths.sound('scrollMenu'));
+			FlxG.sound.play(Paths.getSound('scrollMenu'));
 		}
 
 		holdTimeValue = 0;
@@ -937,7 +933,7 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		flickering = false;
 
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 		option.setValue((option.getValue() == true) ? false : true);
 		option.change();
@@ -1003,9 +999,9 @@ class PreferencesSubState extends MusicBeatSubState
 		if (OptionData.hitsoundType != 'None')
 		{
 			if (OptionData.hitsoundType == 'Kade') {
-				FlxG.sound.play(Paths.sound('SNAP', 'shared'), OptionData.hitsoundVolume);
+				FlxG.sound.play(Paths.getSound('SNAP', 'shared'), OptionData.hitsoundVolume);
 			} else if (OptionData.hitsoundType == 'Psych') {
-				FlxG.sound.play(Paths.sound('hitsound', 'shared'), OptionData.hitsoundVolume);
+				FlxG.sound.play(Paths.getSound('hitsound', 'shared'), OptionData.hitsoundVolume);
 			}
 		}
 	}
@@ -1022,18 +1018,18 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		if (isPause)
 		{
-			lastZoom = FlxG.camera.zoom;
-			lastZoomHUD = PlayState.instance.camHUD.zoom;
-
 			if (OptionData.camZooms)
-			{
-				FlxG.camera.zoom = 0;
-				PlayState.instance.camHUD.zoom = 0;
-			}
-			else
 			{
 				FlxG.camera.zoom = lastZoom;
 				PlayState.instance.camHUD.zoom = lastZoomHUD;
+			}
+			else
+			{
+				lastZoom = FlxG.camera.zoom;
+				lastZoomHUD = PlayState.instance.camHUD.zoom;
+
+				FlxG.camera.zoom = PlayState.instance.defaultCamZoom;
+				PlayState.instance.camHUD.zoom = 0;
 			}
 		}
 	}
@@ -1104,28 +1100,13 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		FreeplayMenuState.destroyFreeplayVocals();
 
-		if (isPause)
-		{
-			for (i in FlxG.sound.list)
-			{
-				if (i.ID == 9000 && OptionData.pauseMusic != 'None')
-				{
-					i.loadEmbedded(Paths.music(Paths.formatToSongPath(OptionData.pauseMusic)), true, true);
-					i.volume = 0.05;
-					i.play();
-				}
-			}
+		if (OptionData.pauseMusic == 'None') {
+			FlxG.sound.music.volume = 0;
+		} else {
+			FlxG.sound.playMusic(Paths.getMusic(Paths.formatToSongPath(OptionData.pauseMusic), 'shared'));
 		}
-		else
-		{
-			if (OptionData.pauseMusic == 'None') {
-				FlxG.sound.music.volume = 0;
-			} else {
-				FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(OptionData.pauseMusic), 'shared'));
-			}
 
-			changedMusic = true;
-		}
+		changedMusic = true;
 	}
 
 	#if !mobile
@@ -1148,7 +1129,7 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		super.destroy();
 
-		if (changedMusic) FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		if (changedMusic) FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 	}
 
 	override function beatHit():Void
@@ -1228,7 +1209,7 @@ class PreferencesSubState extends MusicBeatSubState
 			boyfriend.visible = curOption.showBoyfriend && !curOption.isPause;
 		}
 
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		FlxG.sound.play(Paths.getSound('scrollMenu'));
 	}
 
 	public function reloadBoyfriend():Void

@@ -97,14 +97,14 @@ class ResetScoreSubState extends MusicBeatSubState
 
 		if (controls.UI_LEFT_P || controls.UI_RIGHT_P)
 		{
-			FlxG.sound.play(Paths.sound('scrollMenu'), 1);
+			FlxG.sound.play(Paths.getSound('scrollMenu'), 1);
 			onYes = !onYes;
 			updateOptions();
 		}
 
 		if (controls.BACK)
 		{
-			FlxG.sound.play(Paths.sound('cancelMenu'), 1);
+			FlxG.sound.play(Paths.getSound('cancelMenu'), 1);
 			close();
 		}
 		else if (controls.ACCEPT)
@@ -121,7 +121,7 @@ class ResetScoreSubState extends MusicBeatSubState
 				}
 			}
 
-			FlxG.sound.play(Paths.sound('cancelMenu'), 1);
+			FlxG.sound.play(Paths.getSound('cancelMenu'), 1);
 			close();
 		}
 	}

@@ -211,9 +211,9 @@ class Alphabet extends FlxSpriteGroup // Loosley based on FlxTypeText lolol
 	public static function setDialogueSound(name:String = ''):Void
 	{
 		if (name == null || name.trim() == '') name = 'dialogue';
-		soundDialog = Paths.sound(name);
+		soundDialog = Paths.getSound(name);
 
-		if (soundDialog == null) soundDialog = Paths.sound('dialogue');
+		if (soundDialog == null) soundDialog = Paths.getSound('dialogue');
 	}
 
 	var typeTimer:FlxTimer = null;

@@ -72,7 +72,9 @@ class WeekData
 	public var hideStoryMode:Bool;
 	public var hideFreeplay:Bool;
 
-	public function new(weekFile:WeekFile):Void
+	public var fileName:String;
+
+	public function new(weekFile:WeekFile, fileName:String):Void
 	{
 		weekID = weekFile.weekID;
 		weekName = weekFile.weekName;
@@ -88,6 +90,8 @@ class WeekData
 		storyName = weekFile.storyName;
 		hideStoryMode = weekFile.hideStoryMode;
 		hideFreeplay = weekFile.hideFreeplay;
+
+		this.fileName = fileName;
 	}
 
 	public static function createWeekFile():WeekFile
@@ -154,23 +158,48 @@ class WeekData
 	public static function reloadWeekFiles(isStoryMode:Null<Bool> = false):Void
 	{
 		weeksList = [];
-
 		weeksLoaded.clear();
 
 		#if MODS_ALLOWED
+		var disabledMods:Array<String> = [];
+		var modsListPath:String = 'modsList.txt';
 		var directories:Array<String> = [Paths.mods(), Paths.getPreloadPath()];
 		var originalLength:Int = directories.length;
-
-		if (FileSystem.exists(Paths.mods()))
+	
+		if (FileSystem.exists(modsListPath))
 		{
-			for (folder in FileSystem.readDirectory(Paths.mods()))
+			var stuff:Array<String> = CoolUtil.coolTextFile(modsListPath);
+	
+			for (i in 0...stuff.length)
 			{
-				var path = Path.join([Paths.mods(), folder]);
-
-				if (sys.FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(folder))
+				var splitName:Array<String> = stuff[i].trim().split('|');
+		
+				if (splitName[1] == '0') // Disable mod
 				{
-					directories.push(path + '/');
+					disabledMods.push(splitName[0]);
 				}
+			
+				else // Sort mod loading order based on modsList.txt file
+				{
+					var path = haxe.io.Path.join([Paths.mods(), splitName[0]]);
+
+					if (sys.FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/'))
+					{
+						directories.push(path + '/');
+					}
+				}
+			}
+		}
+
+		var modsDirectories:Array<String> = Paths.getModDirectories();
+	
+		for (folder in modsDirectories)
+		{
+			var pathThing:String = haxe.io.Path.join([Paths.mods(), folder]) + '/';
+		
+			if (!disabledMods.contains(folder) && !directories.contains(pathThing))
+			{
+				directories.push(pathThing);
 			}
 		}
 		#else
@@ -179,24 +208,23 @@ class WeekData
 		#end
 
 		var sexList:Array<String> = CoolUtil.coolTextFile(Paths.getPreloadPath('weeks/weekList.txt'));
-
-		for (i in 0...sexList.length)
+	
+		for (i in 0...sexList.length) 
 		{
 			for (j in 0...directories.length)
 			{
 				var fileToCheck:String = directories[j] + 'weeks/' + sexList[i] + '.json';
-
+			
 				if (!weeksLoaded.exists(sexList[i]))
 				{
 					var week:WeekFile = getWeekFile(fileToCheck);
-
+				
 					if (week != null)
 					{
-						var weekFile:WeekData = new WeekData(week);
+						var weekFile:WeekData = new WeekData(week, sexList[i]);
 
 						#if MODS_ALLOWED
-						if (j >= originalLength)
-						{
+						if (j >= originalLength) {
 							weekFile.folder = directories[j].substring(Paths.mods().length, directories[j].length-1);
 						}
 						#end
@@ -212,45 +240,62 @@ class WeekData
 		}
 
 		#if MODS_ALLOWED
-		for (i in 0...directories.length)
+		for (i in 0...directories.length) 
 		{
 			var directory:String = directories[i] + 'weeks/';
-
+		
 			if (FileSystem.exists(directory))
 			{
+				var listOfWeeks:Array<String> = CoolUtil.coolTextFile(directory + 'weekList.txt');
+			
+				for (daWeek in listOfWeeks)
+				{
+					var path:String = directory + daWeek + '.json';
+				
+					if (sys.FileSystem.exists(path))
+					{
+						addWeek(daWeek, path, directories[i], i, originalLength);
+					}
+				}
+
 				for (file in FileSystem.readDirectory(directory))
 				{
-					var path = Path.join([directory, file]);
-
+					var path = haxe.io.Path.join([directory, file]);
+			
 					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json'))
 					{
-						var weekToCheck:String = file.substr(0, file.length - 5);
-
-						if (!weeksLoaded.exists(weekToCheck))
-						{
-							var week:WeekFile = getWeekFile(path);
-
-							if (week != null)
-							{
-								var weekFile:WeekData = new WeekData(week);
-
-								if (i >= originalLength)
-								{
-									weekFile.folder = directories[i].substring(Paths.mods().length, directories[i].length-1);
-								}
-
-								if ((isStoryMode && !weekFile.hideStoryMode) || (!isStoryMode && !weekFile.hideFreeplay)) 
-								{
-									weeksLoaded.set(weekToCheck, weekFile);
-									weeksList.push(weekToCheck);
-								}
-							}
-						}
+						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
 					}
 				}
 			}
 		}
 		#end
+	}
+
+	private static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int):Void
+	{
+		if (!weeksLoaded.exists(weekToCheck))
+		{
+			var week:WeekFile = getWeekFile(path);
+		
+			if(week != null)
+			{
+				var weekFile:WeekData = new WeekData(week, weekToCheck);
+			
+				if (i >= originalLength)
+				{
+					#if MODS_ALLOWED
+					weekFile.folder = directory.substring(Paths.mods().length, directory.length-1);
+					#end
+				}
+		
+				if ((PlayState.gameMode == 'story' && weekFile.hideStoryMode == false) || (PlayState.gameMode == 'freeplay' && weekFile.hideFreeplay == false))
+				{
+					weeksLoaded.set(weekToCheck, weekFile);
+					weeksList.push(weekToCheck);
+				}
+			}
+		}
 	}
 
 	public static function getWeekFile(path:String):WeekFile
@@ -291,5 +336,29 @@ class WeekData
 		{
 			Paths.currentModDirectory = data.folder;
 		}
+	}
+
+	public static function loadTheFirstEnabledMod():Void
+	{
+		Paths.currentModDirectory = '';
+		
+		#if MODS_ALLOWED
+		if (FileSystem.exists("modsList.txt"))
+		{
+			var list:Array<String> = CoolUtil.listFromString(File.getContent("modsList.txt"));
+			var foundTheTop = false;
+
+			for (i in list)
+			{
+				var dat = i.split("|");
+	
+				if (dat[1] == "1" && !foundTheTop)
+				{
+					foundTheTop = true;
+					Paths.currentModDirectory = dat[0];
+				}
+			}
+		}
+		#end
 	}
 }

@@ -7,7 +7,7 @@ import flixel.group.FlxGroup;
 
 using StringTools;
 
-class EditorsMenuState extends MusicBeatState
+class MasterEditorMenu extends MusicBeatState
 {
 	private var curSelected:Int = 0;
 	private var editorsArray:Array<String> =
@@ -30,7 +30,7 @@ class EditorsMenuState extends MusicBeatState
 
 		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
 		{
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
 		FlxG.mouse.visible = false;
@@ -40,7 +40,7 @@ class EditorsMenuState extends MusicBeatState
 		#end
 
 		var bg:FlxSprite = new FlxSprite();
-		bg.loadGraphic(Paths.image('bg/menuDesat'));
+		bg.loadGraphic(Paths.getImage('bg/menuDesat'));
 		bg.scrollFactor.set();
 		bg.color = 0xFF353535;
 		add(bg);
@@ -67,7 +67,7 @@ class EditorsMenuState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxG.sound.play(Paths.getSound('cancelMenu'));
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
@@ -75,7 +75,6 @@ class EditorsMenuState extends MusicBeatState
 		{
 			if (controls.UI_UP_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeSelection(-1);
 
 				holdTime = 0;
@@ -83,7 +82,6 @@ class EditorsMenuState extends MusicBeatState
 
 			if (controls.UI_DOWN_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeSelection(1);
 
 				holdTime = 0;
@@ -103,7 +101,7 @@ class EditorsMenuState extends MusicBeatState
 
 			if (FlxG.mouse.wheel != 0)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+				FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
 
 				changeSelection(-1 * FlxG.mouse.wheel);
 			}
@@ -164,6 +162,6 @@ class EditorsMenuState extends MusicBeatState
 			}
 		}
 
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		FlxG.sound.play(Paths.getSound('scrollMenu'), 0.4);
 	}
 }

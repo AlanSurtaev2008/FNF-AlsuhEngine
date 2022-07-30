@@ -9,6 +9,7 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxTween;
+import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -41,6 +42,9 @@ class StoryMenuState extends MusicBeatState
 
 	override function create():Void
 	{
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
+
 		super.create();
 
 		WeekData.reloadWeekFiles(true);
@@ -53,7 +57,7 @@ class StoryMenuState extends MusicBeatState
 
 		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
 		{
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
 		Conductor.changeBPM(102);
@@ -150,22 +154,22 @@ class StoryMenuState extends MusicBeatState
 		add(rightArrow);
 
 		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * 0.07, bgYellow.y + 425);
-		tracksSprite.loadGraphic(Paths.image('storymenu/Menu_Tracks'));
+		tracksSprite.loadGraphic(Paths.getImage('storymenu/Menu_Tracks'));
 		tracksSprite.antialiasing = OptionData.globalAntialiasing;
 		add(tracksSprite);
 
 		txtTracklist = new FlxText(FlxG.width * 0.05, tracksSprite.y + 60, 0, '', 32);
 		txtTracklist.alignment = CENTER;
-		txtTracklist.font = Paths.font('vcr.ttf');
+		txtTracklist.font = Paths.getFont('vcr.ttf');
 		txtTracklist.color = 0xFFE55777;
 		add(txtTracklist);
 
 		scoreText = new FlxText(10, 10, 0, '', 36);
-		scoreText.setFormat(Paths.font('vcr.ttf'), 32);
+		scoreText.setFormat(Paths.getFont('vcr.ttf'), 32);
 		add(scoreText);
 
 		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, '', 32);
-		txtWeekTitle.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, RIGHT);
+		txtWeekTitle.setFormat(Paths.getFont('vcr.ttf'), 32, FlxColor.WHITE, RIGHT);
 		txtWeekTitle.alpha = 0.7;
 		add(txtWeekTitle);
 
@@ -175,7 +179,7 @@ class StoryMenuState extends MusicBeatState
 		add(textBG);
 
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "Press CTRL to open the Gameplay Changers Menu | Press RESET to Reset your Score.", 18);
-		text.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
+		text.setFormat(Paths.getFont("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
 
@@ -221,7 +225,7 @@ class StoryMenuState extends MusicBeatState
 		{
 			if (controls.BACK)
 			{
-				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxG.sound.play(Paths.getSound('cancelMenu'));
 				MusicBeatState.switchState(new MainMenuState());
 			}
 
@@ -229,7 +233,7 @@ class StoryMenuState extends MusicBeatState
 			{
 				if (controls.UI_UP_P)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.getSound('scrollMenu'));
 					changeSelection(-shiftMult);
 
 					holdTime = 0;
@@ -237,7 +241,7 @@ class StoryMenuState extends MusicBeatState
 
 				if (controls.UI_DOWN_P)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.getSound('scrollMenu'));
 					changeSelection(shiftMult);
 
 					holdTime = 0;
@@ -251,14 +255,14 @@ class StoryMenuState extends MusicBeatState
 	
 					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 					}
 				}
 	
 				if (FlxG.mouse.wheel != 0)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
 
 					changeSelection(-shiftMult * FlxG.mouse.wheel);
 				}
@@ -344,8 +348,12 @@ class StoryMenuState extends MusicBeatState
 					PlayState.campaignScore = 0;
 					PlayState.seenCutscene = false;
 
-					FlxG.sound.play(Paths.sound('confirmMenu'));
+					FlxG.sound.play(Paths.getSound('confirmMenu'));
 					
+					#if NO_PRELOAD_ALL
+					FlxTransitionableState.skipNextTransOut = true;
+					#end
+
 					new FlxTimer().start(1, function(tmr:FlxTimer)
 					{
 						LoadingState.loadAndSwitchState(new PlayState(), true);
@@ -354,7 +362,7 @@ class StoryMenuState extends MusicBeatState
 				}
 				else
 				{
-					FlxG.sound.play(Paths.sound('cancelMenu'));
+					FlxG.sound.play(Paths.getSound('cancelMenu'));
 				}
 			}
 		}
@@ -424,7 +432,7 @@ class StoryMenuState extends MusicBeatState
 
 		if (curDifficultyString != newDifficulty)
 		{
-			sprDifficulty.loadGraphic(Paths.image('storymenu/menudifficulties/' + newDifficulty));
+			sprDifficulty.loadGraphic(Paths.getImage('storymenu/menudifficulties/' + newDifficulty));
 			sprDifficulty.x = leftArrow.x + 60;
 			sprDifficulty.x += (308 - sprDifficulty.width) / 2;
 			sprDifficulty.alpha = 0;
@@ -441,7 +449,7 @@ class StoryMenuState extends MusicBeatState
 		}
 		else
 		{
-			sprDifficulty.loadGraphic(Paths.image('storymenu/menudifficulties/' + newDifficulty));
+			sprDifficulty.loadGraphic(Paths.getImage('storymenu/menudifficulties/' + newDifficulty));
 			sprDifficulty.x = leftArrow.x + 60;
 			sprDifficulty.x += (308 - sprDifficulty.width) / 2;
 			sprDifficulty.y = leftArrow.y + 15;
@@ -495,7 +503,7 @@ class StoryMenuState extends MusicBeatState
 		}
 		else
 		{
-			bgSprite.loadGraphic(Paths.image('storymenu/menubackgrounds/menu_' + assetName));
+			bgSprite.loadGraphic(Paths.getImage('storymenu/menubackgrounds/menu_' + assetName));
 		}
 	}
 

@@ -30,7 +30,7 @@ class AttachedSprite extends FlxSprite
 		}
 		else if (file != null)
 		{
-			loadGraphic(Paths.image(file, library));
+			loadGraphic(Paths.getImage(file, library));
 		}
 
 		antialiasing = OptionData.globalAntialiasing;

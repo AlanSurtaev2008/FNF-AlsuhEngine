@@ -120,7 +120,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 			var levelInfo:FlxText = new FlxText(20, 20, 0, '', 32);
 			levelInfo.text += PlayState.SONG.songName;
 			levelInfo.scrollFactor.set();
-			levelInfo.setFormat(Paths.font('vcr.ttf'), 32);
+			levelInfo.setFormat(Paths.getFont('vcr.ttf'), 32);
 			levelInfo.updateHitbox();
 			levelInfo.x = FlxG.width - (levelInfo.width + 20);
 			add(levelInfo);
@@ -128,7 +128,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 			var levelDifficulty:FlxText = new FlxText(20, 20 + 32, 0, '', 32);
 			levelDifficulty.text += CoolUtil.getDifficultyName(PlayState.lastDifficulty, PlayState.difficulties).toUpperCase();
 			levelDifficulty.scrollFactor.set();
-			levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
+			levelDifficulty.setFormat(Paths.getFont('vcr.ttf'), 32);
 			levelDifficulty.updateHitbox();
 			levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 			add(levelDifficulty);
@@ -136,14 +136,14 @@ class GameplayChangersSubState extends MusicBeatSubState
 			var blueballedTxt:FlxText = new FlxText(20, 20 + 64, 0, '', 32);
 			blueballedTxt.text = 'Blue balled: ' + PlayState.deathCounter;
 			blueballedTxt.scrollFactor.set();
-			blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
+			blueballedTxt.setFormat(Paths.getFont('vcr.ttf'), 32);
 			blueballedTxt.updateHitbox();
 			blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
 			add(blueballedTxt);
 
 			var chartingText:FlxText = new FlxText(20, 20 + 96, 0, "CHARTING MODE", 32);
 			chartingText.scrollFactor.set();
-			chartingText.setFormat(Paths.font('vcr.ttf'), 32);
+			chartingText.setFormat(Paths.getFont('vcr.ttf'), 32);
 			chartingText.x = FlxG.width - (chartingText.width + 20);
 			chartingText.updateHitbox();
 			chartingText.visible = PlayState.chartingMode;
@@ -151,7 +151,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 	
 			practiceText = new FlxText(20, 15 + (PlayState.chartingMode ? 128 : 96) + (PlayStateChangeables.practiceMode ? 5 : 0), 0, 'PRACTICE MODE', 32);
 			practiceText.scrollFactor.set();
-			practiceText.setFormat(Paths.font('vcr.ttf'), 32);
+			practiceText.setFormat(Paths.getFont('vcr.ttf'), 32);
 			practiceText.x = FlxG.width - (practiceText.width + 20);
 			practiceText.updateHitbox();
 			practiceText.alpha = PlayStateChangeables.practiceMode ? 1 : 0;
@@ -238,7 +238,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 				close();
 			}
 
-			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxG.sound.play(Paths.getSound('cancelMenu'));
 		}
 
 		if (!flickering)
@@ -273,7 +273,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 
 				if (FlxG.mouse.wheel != 0)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
 
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
@@ -290,18 +290,18 @@ class GameplayChangersSubState extends MusicBeatSubState
 						FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
 						{
 							reset();
-							FlxG.sound.play(Paths.sound('cancelMenu'));
+							FlxG.sound.play(Paths.getSound('cancelMenu'));
 						});
 					}
 					else
 					{
 						reset();
 
-						FlxG.sound.play(Paths.sound('cancelMenu'));
+						FlxG.sound.play(Paths.getSound('cancelMenu'));
 						reloadCheckboxes();
 					}
 
-					FlxG.sound.play(Paths.sound('confirmMenu'));
+					FlxG.sound.play(Paths.getSound('confirmMenu'));
 				}
 				else
 				{
@@ -316,7 +316,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 								changeBool(curOption);
 							});
 
-							FlxG.sound.play(Paths.sound('confirmMenu'));
+							FlxG.sound.play(Paths.getSound('confirmMenu'));
 						}
 						else
 						{
@@ -335,7 +335,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 								curOption.change();
 							});
 
-							FlxG.sound.play(Paths.sound('confirmMenu'));
+							FlxG.sound.play(Paths.getSound('confirmMenu'));
 						}
 						else
 						{
@@ -407,7 +407,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 						updateTextFrom(curOption);
 
 						curOption.change();
-						FlxG.sound.play(Paths.sound('scrollMenu'));
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 					}
 					else if (curOption.type != 'string')
 					{
@@ -450,7 +450,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 				curOption.resetToDefault();
 				curOption.change();
 
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 				updateTextFrom(curOption);
 				reloadCheckboxes();
@@ -511,7 +511,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 	{
 		flickering = false;
 
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 		option.setValue((option.getValue() == true) ? false : true);
 		option.change();
@@ -571,7 +571,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 	function clearHold():Void
 	{
 		if (holdTimeValue > 0.5) {
-			FlxG.sound.play(Paths.sound('scrollMenu'));
+			FlxG.sound.play(Paths.getSound('scrollMenu'));
 		}
 
 		holdTimeValue = 0;
@@ -623,7 +623,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 
 		curOption = optionsArray[curSelected]; //shorter lol
 
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		FlxG.sound.play(Paths.getSound('scrollMenu'));
 	}
 
 	function reloadCheckboxes():Void

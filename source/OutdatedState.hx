@@ -20,7 +20,7 @@ class OutdatedState extends MusicBeatState
 		super.create();
 
 		var bg:FlxSprite = new FlxSprite();
-		bg.loadGraphic(Paths.image('bg/menuDesat'));
+		bg.loadGraphic(Paths.getImage('bg/menuDesat'));
 		bg.antialiasing = OptionData.globalAntialiasing;
 		bg.color = 0xFF0F0F0F;
 		add(bg);
@@ -28,7 +28,7 @@ class OutdatedState extends MusicBeatState
 		var txt:FlxText = new FlxText(0, 0, FlxG.width, "Your used version " + MainMenuState.engineVersion + "\nof Alsuh Engine is outdated."
 			+ "\nUse the latest version " + newVersion
 			+ ".\n\nWhat new?\n\n" + curChanges + "\n\nPress ENTER to download latest version\nor ESCAPE to ignorite this message.", 32);
-		txt.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
+		txt.setFormat(Paths.getFont('vcr.ttf'), 32, FlxColor.WHITE, CENTER);
 		txt.screenCenter();
 		add(txt);
 	}
@@ -42,7 +42,7 @@ class OutdatedState extends MusicBeatState
 			leftState = true;
 
 			MusicBeatState.switchState(new MainMenuState());
-			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxG.sound.play(Paths.getSound('cancelMenu'));
 		}
 		else if (controls.ACCEPT)
 		{

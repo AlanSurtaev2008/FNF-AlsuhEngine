@@ -33,6 +33,7 @@ class OptionData
 	public static var noteOffset:Int = 0;
 
 	public static var camZooms:Bool = true;
+	public static var iconZooms:Bool = true;
 	public static var noteSplashes:Bool = true;
 	public static var songPositionType:String = 'Time Left';
 	public static var scoreText:Bool = true;
@@ -81,6 +82,7 @@ class OptionData
 		FlxG.save.data.safeFrames = safeFrames;
 		FlxG.save.data.noteOffset = noteOffset;
 		FlxG.save.data.camZooms = camZooms;
+		FlxG.save.data.iconZooms = iconZooms;
 		FlxG.save.data.noteSplashes = noteSplashes;
 		FlxG.save.data.songPositionType = songPositionType;
 		FlxG.save.data.scoreText = scoreText;
@@ -187,6 +189,9 @@ class OptionData
 
 		if (FlxG.save.data.camZooms != null) {
 			camZooms = FlxG.save.data.camZooms;
+		}
+		if (FlxG.save.data.iconZooms != null) {
+			iconZooms = FlxG.save.data.iconZooms;
 		}
 		if (FlxG.save.data.noteSplashes != null) {
 			noteSplashes = FlxG.save.data.noteSplashes;
@@ -303,10 +308,19 @@ class OptionData
 		'ui_up'			=> [W, UP],
 		'ui_right'		=> [D, RIGHT],
 
+		'mods'			=> [M, NONE],
+
 		'reset'			=> [R, NONE],
 		'accept'		=> [SPACE, ENTER],
 		'back'			=> [BACKSPACE, ESCAPE],
-		'pause'			=> [ENTER, ESCAPE]
+		'pause'			=> [ENTER, ESCAPE],
+		
+		'volume_mute'	=> [ZERO, NONE],
+		'volume_up'		=> [NUMPADPLUS, PLUS],
+		'volume_down'	=> [NUMPADMINUS, MINUS],
+		
+		'debug_1'		=> [SEVEN, NONE],
+		'debug_2'		=> [EIGHT, NONE]
 	];
 
 	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
@@ -319,7 +333,7 @@ class OptionData
 	public static function saveCtrls():Void
 	{
 		var save:FlxSave = new FlxSave();
-		save.bind('controls', 'afford-set');
+		save.bind('controls_v2', 'afford-set');
 		save.data.keyBinds = keyBinds;
 		save.flush();
 	}
@@ -327,7 +341,7 @@ class OptionData
 	public static function loadCtrls():Void
 	{
 		var save:FlxSave = new FlxSave();
-		save.bind('controls', 'afford-set');
+		save.bind('controls_v2', 'afford-set');
 
 		if (save != null && save.data.keyBinds != null)
 		{
@@ -337,14 +351,27 @@ class OptionData
 			{
 				keyBinds.set(control, keys);
 			}
-		}
 
-		reloadControls();
+			reloadControls();
+		}
 	}
 
 	public static function reloadControls():Void
 	{
 		PlayerSettings.player1.controls.setKeyboardScheme(KeyboardScheme.Solo);
+
+		MainMenuState.modsKeys = copyKey(keyBinds.get('mods'));
+
+		TitleState.muteKeys = copyKey(keyBinds.get('volume_mute'));
+		TitleState.volumeDownKeys = copyKey(keyBinds.get('volume_down'));
+		TitleState.volumeUpKeys = copyKey(keyBinds.get('volume_up'));
+
+		PlayState.debugKeysChart = OptionData.copyKey(OptionData.keyBinds.get('debug_1'));
+		PlayState.debugKeysCharacter = OptionData.copyKey(OptionData.keyBinds.get('debug_2'));
+
+		FlxG.sound.muteKeys = TitleState.muteKeys;
+		FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
+		FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
 	}
 
 	public static function copyKey(arrayToCopy:Array<FlxKey>):Array<FlxKey>

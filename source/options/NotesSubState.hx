@@ -53,7 +53,7 @@ class NotesSubState extends MusicBeatSubState
 		}
 		else
 		{
-			bg.loadGraphic(Paths.image('bg/menuDesat'));
+			bg.loadGraphic(Paths.getImage('bg/menuDesat'));
 			bg.color = 0xFFea71fd;
 			bg.updateHitbox();
 			bg.screenCenter();
@@ -67,7 +67,7 @@ class NotesSubState extends MusicBeatSubState
 			var levelInfo:FlxText = new FlxText(20, 20, 0, '', 32);
 			levelInfo.text += PlayState.SONG.songName;
 			levelInfo.scrollFactor.set();
-			levelInfo.setFormat(Paths.font('vcr.ttf'), 32);
+			levelInfo.setFormat(Paths.getFont('vcr.ttf'), 32);
 			levelInfo.updateHitbox();
 			levelInfo.x = FlxG.width - (levelInfo.width + 20);
 			add(levelInfo);
@@ -75,7 +75,7 @@ class NotesSubState extends MusicBeatSubState
 			var levelDifficulty:FlxText = new FlxText(20, 20 + 32, 0, '', 32);
 			levelDifficulty.text += CoolUtil.getDifficultyName(PlayState.lastDifficulty, PlayState.difficulties).toUpperCase();
 			levelDifficulty.scrollFactor.set();
-			levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
+			levelDifficulty.setFormat(Paths.getFont('vcr.ttf'), 32);
 			levelDifficulty.updateHitbox();
 			levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 			add(levelDifficulty);
@@ -83,14 +83,14 @@ class NotesSubState extends MusicBeatSubState
 			var blueballedTxt:FlxText = new FlxText(20, 20 + 64, 0, '', 32);
 			blueballedTxt.text = 'Blue balled: ' + PlayState.deathCounter;
 			blueballedTxt.scrollFactor.set();
-			blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
+			blueballedTxt.setFormat(Paths.getFont('vcr.ttf'), 32);
 			blueballedTxt.updateHitbox();
 			blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
 			add(blueballedTxt);
 	
 			var chartingText:FlxText = new FlxText(20, 20 + 96, 0, "CHARTING MODE", 32);
 			chartingText.scrollFactor.set();
-			chartingText.setFormat(Paths.font('vcr.ttf'), 32);
+			chartingText.setFormat(Paths.getFont('vcr.ttf'), 32);
 			chartingText.x = FlxG.width - (chartingText.width + 20);
 			chartingText.updateHitbox();
 			chartingText.visible = PlayState.chartingMode;
@@ -98,7 +98,7 @@ class NotesSubState extends MusicBeatSubState
 	
 			var practiceText:FlxText = new FlxText(20, 20 + (PlayState.chartingMode ? 128 : 96), 0, 'PRACTICE MODE', 32);
 			practiceText.scrollFactor.set();
-			practiceText.setFormat(Paths.font('vcr.ttf'), 32);
+			practiceText.setFormat(Paths.getFont('vcr.ttf'), 32);
 			practiceText.x = FlxG.width - (practiceText.width + 20);
 			practiceText.updateHitbox();
 			practiceText.alpha = PlayStateChangeables.practiceMode ? 1 : 0;
@@ -181,17 +181,17 @@ class NotesSubState extends MusicBeatSubState
 					if (controls.UI_LEFT_P)
 					{
 						updateValue(-1);
-						FlxG.sound.play(Paths.sound('scrollMenu'));
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 					}
 					else if (controls.UI_RIGHT_P)
 					{
 						updateValue(1);
-						FlxG.sound.play(Paths.sound('scrollMenu'));
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 					}
 					else if (controls.RESET)
 					{
 						resetValue(curSelected, typeSelected);
-						FlxG.sound.play(Paths.sound('scrollMenu'));
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 					}
 
 					if (controls.UI_LEFT_R || controls.UI_RIGHT_R)
@@ -223,7 +223,7 @@ class NotesSubState extends MusicBeatSubState
 				
 					if (controls.UI_LEFT_R || controls.UI_RIGHT_R)
 					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 						holdTimeValue = 0;
 					}
 				}
@@ -264,7 +264,7 @@ class NotesSubState extends MusicBeatSubState
 
 				if (controls.UI_LEFT_P)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 					changeType(-1);
 					holdTime = 0;
@@ -272,7 +272,7 @@ class NotesSubState extends MusicBeatSubState
 
 				if (controls.UI_RIGHT_P)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 					changeType(1);
 					holdTime = 0;
@@ -286,7 +286,7 @@ class NotesSubState extends MusicBeatSubState
 
 					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 						changeType((checkNewHold - checkLastHold) * (controls.UI_LEFT ? -1 : 1));
 					}
 				}
@@ -297,7 +297,7 @@ class NotesSubState extends MusicBeatSubState
 						resetValue(curSelected, i);
 					}
 
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.getSound('scrollMenu'));
 				}
 		
 				if (controls.ACCEPT && nextAccept <= 0)
@@ -313,7 +313,7 @@ class NotesSubState extends MusicBeatSubState
 							selectType();
 						});
 
-						FlxG.sound.play(Paths.sound('confirmMenu'));
+						FlxG.sound.play(Paths.getSound('confirmMenu'));
 					}
 					else
 					{
@@ -323,7 +323,7 @@ class NotesSubState extends MusicBeatSubState
 
 				if (controls.BACK)
 				{
-					FlxG.sound.play(Paths.sound('cancelMenu'));
+					FlxG.sound.play(Paths.getSound('cancelMenu'));
 	
 					if (isPause)
 					{
@@ -349,7 +349,7 @@ class NotesSubState extends MusicBeatSubState
 
 	function selectType():Void
 	{
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 		flickering = false;
 		changingNote = true;
@@ -416,7 +416,7 @@ class NotesSubState extends MusicBeatSubState
 			}
 		}
 
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		FlxG.sound.play(Paths.getSound('scrollMenu'));
 	}
 
 	function changeType(change:Int = 0):Void

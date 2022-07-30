@@ -13,12 +13,14 @@ import flixel.group.FlxGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.effects.FlxFlicker;
-import flixel.addons.transition.FlxTransitionableState;
+import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
+	public static var modsKeys:Array<FlxKey> = [M, NONE];
+
 	private static var curSelected:Int = 0;
 
 	var menuItems:Array<String> = ['story_mode', 'freeplay', #if !switch 'donate', 'options' #end];
@@ -29,29 +31,36 @@ class MainMenuState extends MusicBeatState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.2.2';
+	public static var engineVersion:String = '1.3';
 	public static var gameVersion:String = '0.2.8';
+
+	var debugKeys:Array<FlxKey>;
 
 	override function create():Void
 	{
 		super.create();
 
+		#if MODS_ALLOWED
+		Paths.pushGlobalMods();
+		#end
+
+		WeekData.loadTheFirstEnabledMod();
+
 		#if desktop
 		DiscordClient.changePresence("In the Menus", null); // Updating Discord Rich Presence
 		#end
 
-		transIn = FlxTransitionableState.defaultTransIn;
-		transOut = FlxTransitionableState.defaultTransOut;
+		debugKeys = OptionData.copyKey(OptionData.keyBinds.get('debug_1'));
 
 		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
 		{
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
 		persistentUpdate = persistentDraw = true;
 
 		var bg:FlxSprite = new FlxSprite(-80);
-		bg.loadGraphic(Paths.image('bg/menuBG'));
+		bg.loadGraphic(Paths.getImage('bg/menuBG'));
 		bg.scrollFactor.x = 0;
 		bg.scrollFactor.y = 0.18;
 		bg.setGraphicSize(Std.int(bg.width * 1.2));
@@ -66,7 +75,7 @@ class MainMenuState extends MusicBeatState
 		add(camFollowPos);
 
 		magenta = new FlxSprite(-80);
-		magenta.loadGraphic(Paths.image('bg/menuDesat'));
+		magenta.loadGraphic(Paths.getImage('bg/menuDesat'));
 		magenta.scrollFactor.x = 0;
 		magenta.scrollFactor.y = 0.18;
 		magenta.setGraphicSize(Std.int(magenta.width * 1.2));
@@ -99,9 +108,27 @@ class MainMenuState extends MusicBeatState
 		var text:String = 'v ' + gameVersion + (OptionData.watermarks ? ' - FNF | v ' + engineVersion + ' - Alsuh Engine' : '');
 
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 24, 0, text, 12);
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		versionShit.setFormat(Paths.getFont('vcr.ttf'), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		versionShit.scrollFactor.set();
 		add(versionShit);
+
+		#if MODS_ALLOWED
+		var keyShit:String = InputFormatter.getKeyName(OptionData.keyBinds.get('mods')[0]) + ' or ' + InputFormatter.getKeyName(OptionData.keyBinds.get('mods')[1]);
+
+		if (keyShit.contains('---')) {
+			keyShit = StringTools.replace(keyShit, '---', '');
+			keyShit = StringTools.replace(keyShit, ' or ', '');
+		}
+
+		if (keyShit != '---')
+		{
+			var modsShit:FlxText = new FlxText(0, FlxG.height - 24, 0, 'Press ' + keyShit + ' to Mods Menu', 12);
+			modsShit.setFormat(Paths.getFont('vcr.ttf'), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			modsShit.x = FlxG.width - (modsShit.width + 12);
+			modsShit.scrollFactor.set();
+			add(modsShit);
+		}
+		#end
 
 		changeSelection();
 	}
@@ -126,7 +153,7 @@ class MainMenuState extends MusicBeatState
 		{
 			if (controls.BACK)
 			{
-				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxG.sound.play(Paths.getSound('cancelMenu'));
 				MusicBeatState.switchState(new TitleState());
 			}
 
@@ -134,7 +161,7 @@ class MainMenuState extends MusicBeatState
 			{
 				if (controls.UI_UP_P)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.getSound('scrollMenu'));
 					changeSelection(-1);
 
 					holdTime = 0;
@@ -142,7 +169,7 @@ class MainMenuState extends MusicBeatState
 
 				if (controls.UI_DOWN_P)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.getSound('scrollMenu'));
 					changeSelection(1);
 
 					holdTime = 0;
@@ -156,18 +183,27 @@ class MainMenuState extends MusicBeatState
 	
 					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 					}
 				}
 	
 				if (FlxG.mouse.wheel != 0)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
 
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
 			}
+
+			#if MODS_ALLOWED
+			if (FlxG.keys.anyJustPressed(OptionData.copyKey(modsKeys)))
+			{
+				selectedSomethin = true;
+
+				MusicBeatState.switchState(new ModsMenuState());
+			}
+			#end
 
 			if (controls.ACCEPT)
 			{
@@ -218,16 +254,15 @@ class MainMenuState extends MusicBeatState
 						}
 					});
 
-					FlxG.sound.play(Paths.sound('confirmMenu'));
+					FlxG.sound.play(Paths.getSound('confirmMenu'));
 				}
 			}
-
 			#if desktop
-			if (FlxG.keys.justPressed.SEVEN)
+			else if (FlxG.keys.anyJustPressed(debugKeys))
 			{
 				selectedSomethin = true;
 
-				MusicBeatState.switchState(new editors.EditorsMenuState());
+				MusicBeatState.switchState(new editors.MasterEditorMenu());
 			}
 			#end
 		}

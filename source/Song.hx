@@ -102,9 +102,9 @@ class Song
 		if (rawJson == null)
 		{
 			#if sys
-			rawJson = File.getContent(Paths.json(folder + '/' + jsonInput)).trim();
+			rawJson = File.getContent(Paths.getJson(folder + '/' + jsonInput)).trim();
 			#else
-			rawJson = Assets.getText(Paths.json(folder + '/' + jsonInput)).trim();
+			rawJson = Assets.getText(Paths.getJson(folder + '/' + jsonInput)).trim();
 			#end
 		}
 

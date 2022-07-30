@@ -65,7 +65,7 @@ class WeekEditorState extends MusicBeatState
 		Conductor.changeBPM(102);
 
 		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
-		txtWeekTitle.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, RIGHT);
+		txtWeekTitle.setFormat(Paths.getFont('vcr.ttf'), 32, FlxColor.WHITE, RIGHT);
 		txtWeekTitle.alpha = 0.7;
 		
 		var ui_tex = Paths.getSparrowAtlas('storymenu/campaign_menu_UI_assets');
@@ -92,7 +92,7 @@ class WeekEditorState extends MusicBeatState
 		add(lock);
 		
 		missingFileText = new FlxText(0, 0, FlxG.width, "");
-		missingFileText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		missingFileText.setFormat(Paths.getFont("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		missingFileText.borderSize = 2;
 		missingFileText.visible = false;
 		add(missingFileText); 
@@ -111,13 +111,13 @@ class WeekEditorState extends MusicBeatState
 		add(grpWeekCharacters);
 
 		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * 0.07, bgSprite.y + 435);
-		tracksSprite.loadGraphic(Paths.image('storymenu/Menu_Tracks'));
+		tracksSprite.loadGraphic(Paths.getImage('storymenu/Menu_Tracks'));
 		tracksSprite.antialiasing = OptionData.globalAntialiasing;
 		add(tracksSprite);
 
 		txtTracklist = new FlxText(FlxG.width * 0.05, tracksSprite.y + 60, 0, "", 32);
 		txtTracklist.alignment = CENTER;
-		txtTracklist.font = Paths.font("vcr.ttf");
+		txtTracklist.font = Paths.getFont("vcr.ttf");
 		txtTracklist.color = 0xFFe55777;
 		add(txtTracklist);
 		add(txtWeekTitle);
@@ -438,7 +438,7 @@ class WeekEditorState extends MusicBeatState
 			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsImages('storymenu/menubackgrounds/menu_' + assetName)) || #end
 				Assets.exists(Paths.getPath('images/storymenu/menubackgrounds/menu_' + assetName + '.png', IMAGE), IMAGE))
 			{
-				bgSprite.loadGraphic(Paths.image('storymenu/menubackgrounds/menu_' + assetName));
+				bgSprite.loadGraphic(Paths.getImage('storymenu/menubackgrounds/menu_' + assetName));
 				isMissing = false;
 			}
 		}
@@ -462,7 +462,7 @@ class WeekEditorState extends MusicBeatState
 			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsImages('storymenu/menuitems/' + assetName)) || #end
 				Assets.exists(Paths.getPath('images/storymenu/menuitems/' + assetName + '.png', IMAGE), IMAGE))
 			{
-				weekThing.loadGraphic(Paths.image('storymenu/menuitems/' + assetName));
+				weekThing.loadGraphic(Paths.getImage('storymenu/menuitems/' + assetName));
 				isMissing = false;
 			}
 		}
@@ -654,7 +654,7 @@ class WeekEditorState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.ESCAPE)
 			{
-				MusicBeatState.switchState(new EditorsMenuState());
+				MusicBeatState.switchState(new MasterEditorMenu());
 			}
 		}
 
@@ -854,7 +854,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		super.create();
 
 		bg = new FlxSprite();
-		bg.loadGraphic(Paths.image('bg/menuDesat'));
+		bg.loadGraphic(Paths.getImage('bg/menuDesat'));
 		bg.color = 0xFFFFFFFF;
 		bg.updateHitbox();
 		bg.screenCenter();
@@ -1121,9 +1121,9 @@ class WeekEditorFreeplayState extends MusicBeatState
 				difficultiesSuffixesInputText.text = diffSuffixes;
 			}
 	
-			if (weekFile.defaultDifficulty != null)
+			if (weekFile.songs[curSelected].defaultDifficulty != null)
 			{
-				defaultDiffInputText.text = weekFile.defaultDifficulty;
+				defaultDiffInputText.text = weekFile.songs[curSelected].defaultDifficulty;
 			}
 		});
 
@@ -1226,16 +1226,16 @@ class WeekEditorFreeplayState extends MusicBeatState
 			difficultiesSuffixesInputText.text = diffSuffixes;
 		}
 
-		if (weekFile.defaultDifficulty != null)
+		if (weekFile.songs[curSelected].defaultDifficulty != null)
 		{
-			defaultDiffInputText.text = weekFile.defaultDifficulty;
+			defaultDiffInputText.text = weekFile.songs[curSelected].defaultDifficulty;
 		}
 
 		updateBG();
 
 		if (playSound)
 		{
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+			FlxG.sound.play(Paths.getSound('scrollMenu'), 0.4);
 		}
 	}
 
@@ -1288,7 +1288,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 				difficultiesCopy = null;
 				defaultDifficultyCopy = null;
 
-				MusicBeatState.switchState(new EditorsMenuState());
+				MusicBeatState.switchState(new MasterEditorMenu());
 			}
 
 			if (weekFile.songs.length > 1)
@@ -1321,7 +1321,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 				if (FlxG.mouse.wheel != 0)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
 
 					changeSelection(-1 * FlxG.mouse.wheel, false);
 				}

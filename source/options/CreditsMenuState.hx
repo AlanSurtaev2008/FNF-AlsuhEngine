@@ -39,7 +39,7 @@ class CreditsMenuState extends MusicBeatState
 		#end
 
 		bg = new FlxSprite();
-		bg.loadGraphic(Paths.image('bg/menuDesat'));
+		bg.loadGraphic(Paths.getImage('bg/menuDesat'));
 		bg.color = 0xFFFFFFFF;
 		bg.screenCenter();
 		bg.scrollFactor.set();
@@ -55,14 +55,40 @@ class CreditsMenuState extends MusicBeatState
 
 			if (FileSystem.exists(creditsFile))
 			{
-				var firstarray:Array<String> = File.getContent(creditsFile).split('\n');
 
-				for (i in firstarray)
+			}
+		}
+		#end
+
+		#if MODS_ALLOWED
+		var path:String = 'modsList.txt';
+
+		if (FileSystem.exists(path))
+		{
+			var leMods:Array<String> = CoolUtil.coolTextFile(path);
+		
+			for (i in 0...leMods.length)
+			{
+				if (leMods.length > 1 && leMods[0].length > 0)
 				{
-					var arr:Array<String> = i.replace('\\n', '\n').split("::");
-					creditsArray.push(new Credit(arr[0], arr[1] == 'true' ? true : false, arr[2], arr[3], FlxColor.fromString(arr[4])));
+					var modSplit:Array<String> = leMods[i].split('|');
+				
+					if (!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase()) && !modsAdded.contains(modSplit[0]))
+					{
+						if (modSplit[1] == '1')
+							pushModCreditsToList(modSplit[0]);
+						else
+							modsAdded.push(modSplit[0]);
+					}
 				}
 			}
+		}
+
+		var arrayOfFolders:Array<String> = Paths.getModDirectories();
+
+		for (folder in arrayOfFolders)
+		{
+			pushModCreditsToList(folder);
 		}
 		#end
 
@@ -142,7 +168,7 @@ class CreditsMenuState extends MusicBeatState
 		add(descBox);
 
 		descText = new FlxText(50, 600, 1180, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		descText.setFormat(Paths.getFont("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		descText.scrollFactor.set();
 		descText.borderSize = 2.4;
 		add(descText);
@@ -162,7 +188,7 @@ class CreditsMenuState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxG.sound.play(Paths.getSound('cancelMenu'));
 			MusicBeatState.switchState(new OptionsMenuState());
 		}
 
@@ -212,7 +238,7 @@ class CreditsMenuState extends MusicBeatState
 						CoolUtil.browserLoad(curCredit.link);
 					});
 
-					FlxG.sound.play(Paths.sound('confirmMenu'));
+					FlxG.sound.play(Paths.getSound('confirmMenu'));
 				}
 				else
 				{
@@ -280,8 +306,37 @@ class CreditsMenuState extends MusicBeatState
 
 		descBox.visible = (curCredit.description != '');
 
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		FlxG.sound.play(Paths.getSound('scrollMenu'));
 	}
+
+	#if MODS_ALLOWED
+	private var modsAdded:Array<String> = [];
+
+	function pushModCreditsToList(folder:String)
+	{
+		if (modsAdded.contains(folder)) return;
+
+		var creditsFile:String = null;
+
+		if (folder != null && folder.trim().length > 0)
+			creditsFile = Paths.mods(folder + '/data/credits.txt');
+		else
+			creditsFile = Paths.mods('data/credits.txt');
+
+		if (FileSystem.exists(creditsFile))
+		{
+			var firstarray:Array<String> = File.getContent(creditsFile).split('\n');
+
+			for (i in firstarray)
+			{
+				var arr:Array<String> = i.replace('\\n', '\n').split("::");
+				creditsArray.push(new Credit(arr[0], arr[1] == 'true' ? true : false, arr[2], arr[3], FlxColor.fromString(arr[4])));
+			}
+		}
+
+		modsAdded.push(folder);
+	}
+	#end
 
 	private function unselectableCheck(num:Int):Bool
 	{

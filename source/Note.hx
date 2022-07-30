@@ -341,23 +341,23 @@ class Note extends FlxSprite
 		{
 			if (isSustainNote)
 			{
-				loadGraphic(Paths.image('notes/pixel/' + blahblah + 'ENDS'));
+				loadGraphic(Paths.getImage('notes/pixel/' + blahblah + 'ENDS'));
 
 				width = width / 4;
 				height = height / 2;
 
 				originalHeightForCalcs = height;
 
-				loadGraphic(Paths.image('notes/pixel/' + blahblah + 'ENDS'), true, Math.floor(width), Math.floor(height));
+				loadGraphic(Paths.getImage('notes/pixel/' + blahblah + 'ENDS'), true, Math.floor(width), Math.floor(height));
 			}
 			else
 			{
-				loadGraphic(Paths.image('notes/pixel/' + blahblah));
+				loadGraphic(Paths.getImage('notes/pixel/' + blahblah));
 
 				width = width / 4;
 				height = height / 5;
 
-				loadGraphic(Paths.image('notes/pixel/' + blahblah), true, Math.floor(width), Math.floor(height));
+				loadGraphic(Paths.getImage('notes/pixel/' + blahblah), true, Math.floor(width), Math.floor(height));
 			}
 
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom));

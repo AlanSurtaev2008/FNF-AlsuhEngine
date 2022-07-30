@@ -217,7 +217,7 @@ class ChartingState extends MusicBeatState
 		curSec = lastSection;
 
 		var bg:FlxSprite = new FlxSprite();
-		bg.loadGraphic(Paths.image('bg/menuDesat'));
+		bg.loadGraphic(Paths.getImage('bg/menuDesat'));
 		bg.scrollFactor.set();
 		bg.color = 0xFF222222;
 		bg.antialiasing = OptionData.globalAntialiasing;
@@ -231,7 +231,7 @@ class ChartingState extends MusicBeatState
 		add(waveformSprite);
 
 		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90);
-		eventIcon.loadGraphic(Paths.image('ui/eventArrow'));
+		eventIcon.loadGraphic(Paths.getImage('ui/eventArrow'));
 		eventIcon.scrollFactor.set(1, 1);
 		eventIcon.setGraphicSize(30, 30);
 		add(eventIcon);
@@ -379,32 +379,37 @@ class ChartingState extends MusicBeatState
 
 		#if MODS_ALLOWED
 		var directories:Array<String> = [Paths.mods('characters/'), Paths.mods(Paths.currentModDirectory + '/characters/'), Paths.getPreloadPath('characters/')];
+
+		for (mod in Paths.getGlobalMods()) {
+			directories.push(Paths.mods(mod + '/characters/'));
+		}
+
 		#else
 		var directories:Array<String> = [Paths.getPreloadPath('characters/')];
 		#end
 
 		var tempMap:Map<String, Bool> = new Map<String, Bool>();
-		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characterList'));
+		var characters:Array<String> = CoolUtil.coolTextFile(Paths.getTxt('characterList'));
 
 		for (i in 0...characters.length) {
 			tempMap.set(characters[i], true);
 		}
 
 		#if MODS_ALLOWED
-		for (i in 0...directories.length)
+		for (i in 0...directories.length) 
 		{
 			var directory:String = directories[i];
-
+		
 			if (FileSystem.exists(directory))
 			{
 				for (file in FileSystem.readDirectory(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
-	
+				
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
 					{
 						var charToCheck:String = file.substr(0, file.length - 5);
-
+				
 						if (!charToCheck.endsWith('-dead') && !tempMap.exists(charToCheck))
 						{
 							tempMap.set(charToCheck, true);
@@ -445,24 +450,27 @@ class ChartingState extends MusicBeatState
 	
 		#if MODS_ALLOWED
 		var directories:Array<String> = [Paths.mods('stages/'), Paths.mods(Paths.currentModDirectory + '/stages/'), Paths.getPreloadPath('stages/')];
+
+		for (mod in Paths.getGlobalMods()) {
+			directories.push(Paths.mods(mod + '/stages/'));
+		}
 		#else
 		var directories:Array<String> = [Paths.getPreloadPath('stages/')];
 		#end
 
 		tempMap.clear();
 
-		var stageFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('stageList'));
+		var stageFile:Array<String> = CoolUtil.coolTextFile(Paths.getTxt('stageList'));
 		var stages:Array<String> = [];
 
-		for (i in 0...stageFile.length)
+		for (i in 0...stageFile.length) // Prevent duplicates
 		{
 			var stageToCheck:String = stageFile[i];
-
-			if (!tempMap.exists(stageToCheck))
-			{
+	
+			if (!tempMap.exists(stageToCheck)) {
 				stages.push(stageToCheck);
 			}
-
+	
 			tempMap.set(stageToCheck, true);
 		}
 
@@ -470,17 +478,17 @@ class ChartingState extends MusicBeatState
 		for (i in 0...directories.length)
 		{
 			var directory:String = directories[i];
-
-			if (FileSystem.exists(directory)) 
+	
+			if (FileSystem.exists(directory))
 			{
-				for (file in FileSystem.readDirectory(directory)) 
+				for (file in FileSystem.readDirectory(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
-	
+			
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
 					{
 						var stageToCheck:String = file.substr(0, file.length - 5);
-
+				
 						if (!tempMap.exists(stageToCheck))
 						{
 							tempMap.set(stageToCheck, true);
@@ -578,7 +586,7 @@ class ChartingState extends MusicBeatState
 			MusicBeatState.resetState();
 		});
 
-		var saveEvents:FlxButton = new FlxButton(200, loadAutosaveBtn.y + 30, 'Save Events', function ()
+		var saveEvents:FlxButton = new FlxButton(200, loadAutosaveBtn.y + 30, 'Save Events', function()
 		{
 			saveEvents();
 		});
@@ -586,7 +594,7 @@ class ChartingState extends MusicBeatState
 		var loadEventJson:FlxButton = new FlxButton(200, saveEvents.y + 30, 'Load Events', function()
 		{
 			var songName:String = _song.songID;
-			var file:String = Paths.json(songName + '/events');
+			var file:String = Paths.getJson(songName + '/events');
 
 			#if sys
 			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson(songName + '/events')) || #end FileSystem.exists(file))
@@ -1513,7 +1521,7 @@ class ChartingState extends MusicBeatState
 			FlxG.sound.music.stop();
 		}
 
-		var file:Dynamic = Paths.voices(currentSongName);
+		var file:Dynamic = Paths.getVoices(currentSongName);
 		vocals = new FlxSound();
 
 		if (Std.isOfType(file, Sound) || OpenFlAssets.exists(file))
@@ -1532,7 +1540,7 @@ class ChartingState extends MusicBeatState
 
 	function generateSong():Void
 	{
-		FlxG.sound.playMusic(Paths.inst(currentSongName), 0.6);
+		FlxG.sound.playMusic(Paths.getInst(currentSongName), 0.6);
 
 		if (instVolume != null) FlxG.sound.music.volume = instVolume.value;
 		if (check_mute_inst != null && check_mute_inst.checked) FlxG.sound.music.volume = 0;
@@ -2209,7 +2217,7 @@ class ChartingState extends MusicBeatState
 							}
 							
 							if (soundToPlay != '') {
-								FlxG.sound.play(Paths.sound(soundToPlay)).pan = note.noteData < 4 ? -0.3 : 0.3; // would be coolio
+								FlxG.sound.play(Paths.getSound(soundToPlay)).pan = note.noteData < 4 ? -0.3 : 0.3; // would be coolio
 							}
 
 							playedSound[data] = true;
@@ -2237,7 +2245,7 @@ class ChartingState extends MusicBeatState
 
 			if (metroStep != lastMetroStep) 
 			{
-				FlxG.sound.play(Paths.sound('Metronome_Tick'));
+				FlxG.sound.play(Paths.getSound('Metronome_Tick'));
 			}
 		}
 
@@ -2799,7 +2807,7 @@ class ChartingState extends MusicBeatState
 				if (typeInt == null) theType = '?';
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 100, theType, 24);
-				daText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+				daText.setFormat(Paths.getFont("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 				daText.xAdd = -32;
 				daText.yAdd = 6;
 				daText.borderSize = 1;
@@ -2826,7 +2834,7 @@ class ChartingState extends MusicBeatState
 				if (note.eventLength > 1) text = note.eventLength + ' Events:\n' + note.eventName;
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 400, text, 12);
-				daText.setFormat(Paths.font("vcr.ttf"), 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+				daText.setFormat(Paths.getFont("vcr.ttf"), 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 				daText.xAdd = -410;
 				daText.borderSize = 1;
 				if (note.eventLength > 1) daText.yAdd += 8;
@@ -2892,7 +2900,7 @@ class ChartingState extends MusicBeatState
 		}
 		else // Event note
 		{
-			note.loadGraphic(Paths.image('ui/eventArrow'));
+			note.loadGraphic(Paths.getImage('ui/eventArrow'));
 			note.eventName = getEventName(i[1]);
 			note.eventLength = i[1].length;
 

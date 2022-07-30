@@ -61,7 +61,7 @@ class Prompt extends MusicBeatSubState
 		super();
 	}
 	
-	override public function create():Void 
+	override function create():Void 
 	{
 		super.create();
 

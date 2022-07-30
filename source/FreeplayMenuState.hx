@@ -9,6 +9,7 @@ import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
+import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -41,7 +42,7 @@ class FreeplayMenuState extends MusicBeatState
 
 		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
 		{
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
 		WeekData.reloadWeekFiles(false);
@@ -80,8 +81,10 @@ class FreeplayMenuState extends MusicBeatState
 			}
 		}
 
+		WeekData.loadTheFirstEnabledMod();
+
 		bg = new FlxSprite();
-		bg.loadGraphic(Paths.image('bg/menuDesat'));
+		bg.loadGraphic(Paths.getImage('bg/menuDesat'));
 		bg.color = 0xFFFFFFFF;
 		bg.updateHitbox();
 		bg.screenCenter();
@@ -128,7 +131,7 @@ class FreeplayMenuState extends MusicBeatState
 		WeekData.setDirectoryFromWeek();
 
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
-		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+		scoreText.setFormat(Paths.getFont("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 		add(scoreText);
 
 		scoreBG = new FlxSprite(scoreText.x - 6, 0);
@@ -159,7 +162,7 @@ class FreeplayMenuState extends MusicBeatState
 		add(textBG);
 
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
-		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
+		text.setFormat(Paths.getFont("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
 
@@ -248,7 +251,7 @@ class FreeplayMenuState extends MusicBeatState
 		{
 			persistentUpdate = false;
 
-			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxG.sound.play(Paths.getSound('cancelMenu'));
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
@@ -284,7 +287,7 @@ class FreeplayMenuState extends MusicBeatState
 
 			if (FlxG.mouse.wheel != 0)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+				FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
 
 				changeSelection(-shiftMult * FlxG.mouse.wheel, false);
 			}
@@ -339,12 +342,12 @@ class FreeplayMenuState extends MusicBeatState
 				PlayState.SONG = Song.loadFromJson(curSong.songID + diffic, curSong.songID);
 
 				if (PlayState.SONG.needsVoices)
-					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.songID));
+					vocals = new FlxSound().loadEmbedded(Paths.getVoices(PlayState.SONG.songID));
 				else
 					vocals = new FlxSound();
 
 				FlxG.sound.list.add(vocals);
-				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.songID), 0.7);
+				FlxG.sound.playMusic(Paths.getInst(PlayState.SONG.songID), 0.7);
 
 				vocals.play();
 				vocals.persist = true;
@@ -375,6 +378,10 @@ class FreeplayMenuState extends MusicBeatState
 			#end
 
 			destroyFreeplayVocals();
+
+			#if NO_PRELOAD_ALL
+			FlxTransitionableState.skipNextTransOut = true;
+			#end
 
 			LoadingState.loadAndSwitchState(new PlayState(), true);
 		}
@@ -444,7 +451,7 @@ class FreeplayMenuState extends MusicBeatState
 
 		if (playSound)
 		{
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+			FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
 		}
 
 		changeDifficulty();

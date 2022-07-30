@@ -7,6 +7,7 @@ import sys.FileSystem;
 #end
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -29,11 +30,11 @@ class ReplaysState extends MusicBeatState
 
 		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
 		{
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
 		var bg:FlxSprite = new FlxSprite();
-		bg.loadGraphic(Paths.image('bg/menuBGBlue'));
+		bg.loadGraphic(Paths.getImage('bg/menuBGBlue'));
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = OptionData.globalAntialiasing;
@@ -83,7 +84,7 @@ class ReplaysState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxG.sound.play(Paths.getSound('cancelMenu'));
 			MusicBeatState.switchState(new OptionsMenuState());
 		}
 
@@ -91,7 +92,7 @@ class ReplaysState extends MusicBeatState
 		{
 			if (controls.UI_UP_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.getSound('scrollMenu'));
 				changeSelection(-1);
 
 				holdTime = 0;
@@ -99,7 +100,7 @@ class ReplaysState extends MusicBeatState
 
 			if (controls.UI_DOWN_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.getSound('scrollMenu'));
 				changeSelection(1);
 
 				holdTime = 0;
@@ -112,7 +113,7 @@ class ReplaysState extends MusicBeatState
 			if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 			{
 				changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.getSound('scrollMenu'));
 			}
 		}
 		else
@@ -137,11 +138,16 @@ class ReplaysState extends MusicBeatState
 				PlayState.storyWeekName = PlayState.rep.replay.weekName;
 	
 				FreeplayMenuState.destroyFreeplayVocals();
+
+				#if NO_PRELOAD_ALL
+				FlxTransitionableState.skipNextTransOut = true;
+				#end
+
 				LoadingState.loadAndSwitchState(new PlayState(), true);
 			}
 			else
 			{
-				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxG.sound.play(Paths.getSound('cancelMenu'));
 			}
 		}
 	}

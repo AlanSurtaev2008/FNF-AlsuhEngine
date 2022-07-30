@@ -352,10 +352,18 @@ class Character extends FlxSprite
 		}
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0, ?finishCallBack:(name:String)->Void = null, ?callback:(name:String, frameNumber:Int, frameIndex:Int)->Void = null):Void
 	{
 		specialAnim = false;
 		animation.play(AnimName, Force, Reversed, Frame);
+
+		if (finishCallBack != null) {
+			animation.finishCallback = finishCallBack;
+		}
+
+		if (callback != null) {
+			animation.callback = callback;
+		}
 
 		var daOffset = animOffsets.get(AnimName);
 

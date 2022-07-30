@@ -1,9 +1,19 @@
 package;
 
-import flixel.addons.display.FlxPieDial;
 import flixel.FlxG;
-import lime.utils.Assets;
 import flixel.math.FlxMath;
+import openfl.utils.Assets;
+import flixel.system.FlxSound;
+import lime.utils.AssetLibrary;
+import lime.utils.AssetManifest;
+import lime.utils.Assets as LimeAssets;
+
+#if sys
+import sys.io.File;
+import sys.FileSystem;
+#else
+import openfl.utils.Assets;
+#end
 
 using StringTools;
 
@@ -87,7 +97,26 @@ class CoolUtil
 
 	public static function coolTextFile(path:String):Array<String>
 	{
-		var daList:Array<String> = Assets.getText(path).trim().split('\n');
+		var daList:Array<String> = [];
+
+		#if sys
+		if (FileSystem.exists(path)) daList = File.getContent(path).trim().split('\n');
+		#else
+		if (Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
+		#end
+
+		for (i in 0...daList.length)
+		{
+			daList[i] = daList[i].trim();
+		}
+
+		return daList;
+	}
+
+	public static function listFromString(string:String):Array<String>
+	{
+		var daList:Array<String> = [];
+		daList = string.trim().split('\n');
 
 		for (i in 0...daList.length)
 		{
@@ -120,16 +149,16 @@ class CoolUtil
 
 	public static function precacheImage(image:String, ?library:String = null):Void
 	{
-		Paths.image(image, library);
+		Paths.getImage(image, library);
 	}
 
 	public static function precacheSound(sound:String, ?library:String = null):Void
 	{
-		Paths.sound(sound, library);
+		Paths.getSound(sound, library);
 	}
 
 	public static function precacheMusic(sound:String, ?library:String = null):Void
 	{
-		Paths.music(sound, library);
+		Paths.getMusic(sound, library);
 	}
 }

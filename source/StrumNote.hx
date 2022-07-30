@@ -37,12 +37,12 @@ class StrumNote extends FlxSprite
 
 		if (PlayState.isPixelStage)
 		{
-			loadGraphic(Paths.image('notes/pixel/' + skin));
+			loadGraphic(Paths.getImage('notes/pixel/' + skin));
 
 			width = width / 4;
 			height = height / 5;
 
-			loadGraphic(Paths.image('notes/pixel/' + skin), true, Math.floor(width), Math.floor(height));
+			loadGraphic(Paths.getImage('notes/pixel/' + skin), true, Math.floor(width), Math.floor(height));
 		
 			animation.add('green', [6]);
 			animation.add('red', [7]);

@@ -213,7 +213,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 		if (song != null && song != '')
 		{
-			FlxG.sound.playMusic(Paths.music(song), 0);
+			FlxG.sound.playMusic(Paths.getMusic(song), 0);
 			FlxG.sound.music.fadeIn(2, 0, 1);
 		}
 		
@@ -400,7 +400,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 				{
 					startNextDialog();
 				}
-				FlxG.sound.play(Paths.sound('dialogueClose'));
+				FlxG.sound.play(Paths.getSound('dialogueClose'));
 			}
 			else if (daText.finishedText)
 			{

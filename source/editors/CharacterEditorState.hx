@@ -112,7 +112,7 @@ class CharacterEditorState extends MusicBeatState
 		loadChar(!daAnim.startsWith('bf'), false);
 
 		healthBarBG = new FlxSprite(30, FlxG.height - 75);
-		healthBarBG.loadGraphic(Paths.image('ui/healthBar', 'shared'));
+		healthBarBG.loadGraphic(Paths.getImage('ui/healthBar', 'shared'));
 		healthBarBG.scrollFactor.set();
 		healthBarBG.cameras = [camHUD];
 		add(healthBarBG);
@@ -127,7 +127,7 @@ class CharacterEditorState extends MusicBeatState
 		add(dumbTexts);
 
 		textAnim = new FlxText(300, 16);
-		textAnim.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		textAnim.setFormat(Paths.getFont("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		textAnim.borderSize = 1;
 		textAnim.size = 32;
 		textAnim.scrollFactor.set();
@@ -990,21 +990,25 @@ class CharacterEditorState extends MusicBeatState
 
 		var directories:Array<String> = [Paths.mods('characters/'), Paths.mods(Paths.currentModDirectory + '/characters/'), Paths.getPreloadPath('characters/')];
 
+		for (mod in Paths.getGlobalMods()) {
+			directories.push(Paths.mods(mod + '/characters/'));
+		}
+
 		for (i in 0...directories.length)
 		{
 			var directory:String = directories[i];
-
-			if (FileSystem.exists(directory))
+		
+			if (FileSystem.exists(directory)) 
 			{
 				for (file in FileSystem.readDirectory(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
-
-					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json'))
+					
+					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json')) 
 					{
 						var charToCheck:String = file.substr(0, file.length - 5);
-
-						if (!charsLoaded.exists(charToCheck))
+			
+						if (!charsLoaded.exists(charToCheck)) 
 						{
 							characterList.push(charToCheck);
 							charsLoaded.set(charToCheck, true);
@@ -1014,7 +1018,7 @@ class CharacterEditorState extends MusicBeatState
 			}
 		}
 		#else
-		characterList = CoolUtil.coolTextFile(Paths.txt('characterList'));
+		characterList = CoolUtil.coolTextFile(Paths.getTxt('characterList'));
 		#end
 
 		charDropDown.setData(FlxUIDropDownMenuCustom.makeStrIdLabelArray(characterList, true));
@@ -1096,7 +1100,7 @@ class CharacterEditorState extends MusicBeatState
 				}
 				else
 				{
-					MusicBeatState.switchState(new EditorsMenuState());
+					MusicBeatState.switchState(new MasterEditorMenu());
 				}
 
 				FlxG.mouse.visible = false;

@@ -38,12 +38,12 @@ class DialogueBox extends FlxSpriteGroup
 		{
 			case 'senpai':
 			{
-				FlxG.sound.playMusic(Paths.music('Lunchbox'), 0);
+				FlxG.sound.playMusic(Paths.getMusic('Lunchbox'), 0);
 				FlxG.sound.music.fadeIn(1, 0, 0.8);
 			}
 			case 'thorns':
 			{
-				FlxG.sound.playMusic(Paths.music('LunchboxScary'), 0);
+				FlxG.sound.playMusic(Paths.getMusic('LunchboxScary'), 0);
 				FlxG.sound.music.fadeIn(1, 0, 0.8);
 			}
 		}
@@ -97,7 +97,7 @@ class DialogueBox extends FlxSpriteGroup
 			{
 				hasDialog = true;
 
-				FlxG.sound.play(Paths.sound('ANGRY_TEXT_BOX'));
+				FlxG.sound.play(Paths.getSound('ANGRY_TEXT_BOX'));
 
 				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-senpaiMad');
 				box.animation.addByPrefix('normalOpen', 'SENPAI ANGRY IMPACT SPEECH', 24, false);
@@ -112,7 +112,7 @@ class DialogueBox extends FlxSpriteGroup
 				box.animation.addByIndices('normal', 'Spirit Textbox spawn', [11], "", 24);
 
 				var face:FlxSprite = new FlxSprite(320, 170);
-				face.loadGraphic(Paths.image('weeb/spiritFaceForward'));
+				face.loadGraphic(Paths.getImage('weeb/spiritFaceForward'));
 				face.setGraphicSize(Std.int(face.width * 6));
 				add(face);
 			}
@@ -133,7 +133,7 @@ class DialogueBox extends FlxSpriteGroup
 		portraitLeft.screenCenter(X);
 
 		handSelect = new FlxSprite(1042, 590);
-		handSelect.loadGraphic(Paths.image('weeb/pixelUI/hand_textbox'));
+		handSelect.loadGraphic(Paths.getImage('weeb/pixelUI/hand_textbox'));
 		handSelect.setGraphicSize(Std.int(handSelect.width * PlayState.daPixelZoom * 0.9));
 		handSelect.updateHitbox();
 		handSelect.visible = false;
@@ -149,7 +149,7 @@ class DialogueBox extends FlxSpriteGroup
 		swagDialogue = new FlxTypeText(240, 500, Std.int(FlxG.width * 0.6), "", 32);
 		swagDialogue.font = 'Pixel Arial 11 Bold';
 		swagDialogue.color = 0xFF3F2021;
-		swagDialogue.sounds = [FlxG.sound.load(Paths.sound('pixelText'), 0.6)];
+		swagDialogue.sounds = [FlxG.sound.load(Paths.getSound('pixelText'), 0.6)];
 		add(swagDialogue);
 	}
 
@@ -194,7 +194,7 @@ class DialogueBox extends FlxSpriteGroup
 
 		if (FlxG.keys.justPressed.ANY && dialogueEnded)
 		{
-			FlxG.sound.play(Paths.sound('clickText'), 0.8);
+			FlxG.sound.play(Paths.getSound('clickText'), 0.8);
 
 			if (dialogueList[1] == null && dialogueList[0] != null)
 			{
@@ -230,12 +230,16 @@ class DialogueBox extends FlxSpriteGroup
 			}
 			else
 			{
+				FlxG.sound.play(Paths.getSound('clickText'), 0.8);
+
 				dialogueList.remove(dialogueList[0]);
 				startDialogue();
 			}
 		}
 		else if (FlxG.keys.justPressed.ANY && dialogueStarted)
 		{
+			FlxG.sound.play(Paths.getSound('clickText'), 0.8);
+
 			swagDialogue.skip();
 		}
 	}

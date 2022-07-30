@@ -60,7 +60,18 @@ class TitleState extends MusicBeatState
 
 	override function create():Void
 	{
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
+
+		#if LUA_ALLOWED
+		Paths.pushGlobalMods();
+		#end
+
+		WeekData.loadTheFirstEnabledMod();
+
 		super.create();
+
+		OptionData.loadPrefs();
 
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.sound.muteKeys = muteKeys;
@@ -68,7 +79,6 @@ class TitleState extends MusicBeatState
 		FlxG.sound.volumeUpKeys = volumeUpKeys;
 		FlxG.keys.preventDefaultKeys = [TAB];
 
-		persistentUpdate = persistentDraw = true;
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		Highscore.load();
@@ -84,18 +94,7 @@ class TitleState extends MusicBeatState
 		}
 		#end
 		
-		#if (desktop && MODS_ALLOWED)
-		var path = "mods/title/gfDanceTitle.json";
-
-		if (!FileSystem.exists(path)) {
-			path = "assets/title/gfDanceTitle.json";
-		}
-
-		titleJSON = Json.parse(File.getContent(path));
-		#else
-		var path = Paths.getPreloadPath("title/gfDanceTitle.json");
-		titleJSON = Json.parse(Assets.getText(path)); 
-		#end
+		titleJSON = Json.parse(Paths.getTextFromFile('title/gfDanceTitle.json'));
 
 		if (OptionData.checkForUpdates && !initialized)
 		{
@@ -128,6 +127,9 @@ class TitleState extends MusicBeatState
 		}
 		else
 		{
+			persistentUpdate = true;
+			persistentDraw = true;
+
 			startIntro();
 		}
 
@@ -153,13 +155,18 @@ class TitleState extends MusicBeatState
 
 	function startIntro():Void
 	{
-		Conductor.changeBPM(102);
+		if (initialized == false)
+		{		
+			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
+		}
+
+		Conductor.changeBPM(titleJSON.bpm);
 		persistentUpdate = true;
 
 		var bg:FlxSprite = new FlxSprite();
 
 		if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.length > 0 && titleJSON.backgroundSprite != 'none') {
-			bg.loadGraphic(Paths.image('title/' + titleJSON.backgroundSprite));
+			bg.loadGraphic(Paths.getImage('title/' + titleJSON.backgroundSprite));
 		} else {
 			bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		}
@@ -169,19 +176,7 @@ class TitleState extends MusicBeatState
 		swagShader = new ColorSwap();
 
 		gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
-
-		#if (desktop && MODS_ALLOWED)
-		var path = "mods/images/title/gfDanceTitle.png";
-
-		if (!FileSystem.exists(path)) {
-			path = "assets/images/title/gfDanceTitle.png";
-		}
-
-		gfDance.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path), File.getContent(StringTools.replace(path, ".png", ".xml")));
-		#else
 		gfDance.frames = Paths.getSparrowAtlas('title/gfDanceTitle');
-		#end
-
 		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 		gfDance.antialiasing = OptionData.globalAntialiasing;
@@ -189,19 +184,7 @@ class TitleState extends MusicBeatState
 		add(gfDance);
 
 		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
-
-		#if (desktop && MODS_ALLOWED)
-		var path = "mods/images/title/logoBumpin.png";
-
-		if (!FileSystem.exists(path)) {
-			path = "assets/images/title/logoBumpin.png";
-		}
-
-		logoBl.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path), File.getContent(StringTools.replace(path, ".png", ".xml")));
-		#else
 		logoBl.frames = Paths.getSparrowAtlas('title/logoBumpin');
-		#end
-		
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
 		logoBl.antialiasing = OptionData.globalAntialiasing;
 		logoBl.shader = swagShader.shader;
@@ -210,7 +193,11 @@ class TitleState extends MusicBeatState
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
 
 		#if (desktop && MODS_ALLOWED)
-		var path = "mods/images/title/titleEnter.png";
+		var path = "mods/" + Paths.currentModDirectory + "/images/title/titleEnter.png";
+
+		if (!FileSystem.exists(path)) {
+			path = "mods/images/title/titleEnter.png";
+		}
 
 		if (!FileSystem.exists(path)) {
 			path = "assets/images/title/titleEnter.png";
@@ -257,12 +244,12 @@ class TitleState extends MusicBeatState
 		add(textGroup);
 
 		ngSpr = new FlxSprite(0, FlxG.height * 0.52);
-		ngSpr.loadGraphic(Paths.image('title/newgrounds_logo'));
-		ngSpr.visible = false;
+		ngSpr.loadGraphic(Paths.getImage('title/newgrounds_logo'));
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = OptionData.globalAntialiasing;
+		ngSpr.visible = false;
 		add(ngSpr);
 
 		FlxG.mouse.visible = false;
@@ -274,14 +261,12 @@ class TitleState extends MusicBeatState
 		else
 		{
 			initialized = true;
-
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		}
 	}
 
 	function getIntroTextShit():Array<Array<String>>
 	{
-		var fullText:String = Assets.getText(Paths.txt('introText'));
+		var fullText:String = Assets.getText(Paths.getTxt('introText'));
 
 		var firstArray:Array<String> = fullText.split('\n');
 		var swagGoodArray:Array<Array<String>> = [];
@@ -380,7 +365,7 @@ class TitleState extends MusicBeatState
 				}
 
 				FlxG.camera.flash(OptionData.flashingLights ? FlxColor.WHITE : 0x4CFFFFFF, 1);
-				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+				FlxG.sound.play(Paths.getSound('confirmMenu'), 0.7);
 
 				transitioning = true;
 

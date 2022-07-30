@@ -16,7 +16,7 @@ class PhillyGlowParticle extends FlxSprite
 
 		this.color = color;
 
-		loadGraphic(Paths.image('philly/particle'));
+		loadGraphic(Paths.getImage('philly/particle'));
 
 		antialiasing = OptionData.globalAntialiasing;
 
@@ -68,7 +68,7 @@ class PhillyGlowGradient extends FlxSprite
 
 		originalY = y;
 
-		loadGraphic(Paths.image('philly/gradient'));
+		loadGraphic(Paths.getImage('philly/gradient'));
 
 		antialiasing = OptionData.globalAntialiasing;
 		scrollFactor.set(0, 0.75);

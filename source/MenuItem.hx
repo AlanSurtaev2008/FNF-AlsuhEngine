@@ -17,7 +17,7 @@ class MenuItem extends FlxSprite
 	{
 		super(x, y);
 
-		loadGraphic(Paths.image('storymenu/menuitems/' + weekNum));
+		loadGraphic(Paths.getImage('storymenu/menuitems/' + weekNum));
 
 		antialiasing = OptionData.globalAntialiasing;
 	}
