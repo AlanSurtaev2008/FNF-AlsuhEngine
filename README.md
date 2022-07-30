@@ -17,7 +17,7 @@ To install LuaJIT do this: `haxelib git linc_luajit https://github.com/nebulazor
 
 Install Actuate do this: `haxelib install actuate` on a Command prompt/PowerShell.
 
-If you want video support on your mod, simply do `haxelib git hxCodec https://github.com/polybiusproxy/hxCodec` or `haxelib git extension-webm https://github.com/GrowtopiaFli/extension-webm` or generally install them both on a Command prompt/PowerShell
+If you want video support on your mod, simply do `haxelib git hxCodec https://github.com/polybiusproxy/hxCodec` generally install them both on a Command prompt/PowerShell
 otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ## Credits:
