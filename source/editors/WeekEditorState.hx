@@ -239,7 +239,7 @@ class WeekEditorState extends MusicBeatUIState
 		};
 
 		tab_group.add(new FlxText(songsIDsInputText.x, songsIDsInputText.y - 18, 0, 'Songs\'s IDs (must be lower case):'));
-		tab_group.add(new FlxText(songsNamesInputText.x, songsNamesInputText.y - 18, 0, 'Songs\'s Names: (type this first, else it will crash)'));
+		tab_group.add(new FlxText(songsNamesInputText.x, songsNamesInputText.y - 18, 0, 'Songs\'s Names:'));
 		tab_group.add(new FlxText(opponentInputText.x, opponentInputText.y - 18, 0, 'Characters:'));
 		tab_group.add(new FlxText(backgroundInputText.x, backgroundInputText.y - 18, 0, 'Background Asset:'));
 		tab_group.add(new FlxText(displayNameInputText.x, displayNameInputText.y - 18, 0, 'Display Name:'));
