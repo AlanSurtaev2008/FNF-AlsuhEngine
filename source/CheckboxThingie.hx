@@ -25,15 +25,17 @@ class CheckboxThingie extends FlxSprite
 		animation.addByPrefix("checked", "checkbox finish", 24, false);
 
 		antialiasing = OptionData.globalAntialiasing;
+
 		setGraphicSize(Std.int(0.9 * width));
 		updateHitbox();
 
 		animationFinished(checked ? 'checking' : 'unchecking');
+
 		animation.finishCallback = animationFinished;
 		daValue = checked;
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

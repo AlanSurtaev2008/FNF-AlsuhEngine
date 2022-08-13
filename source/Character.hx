@@ -16,7 +16,6 @@ import flixel.tweens.FlxTween;
 import animateatlas.AtlasFrameMaker;
 import flixel.addons.effects.FlxTrail;
 import flixel.animation.FlxBaseAnimation;
-import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 
@@ -51,11 +50,11 @@ class Character extends FlxSprite
 {
 	public var char_name:String = 'Boyfriend';
 
-	public var animOffsets:Map<String, Array<Dynamic>>;
+	public var animOffsets:Map<String, Array<Float>>;
 	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
-	public var character:String = DEFAULT_CHARACTER;
+	public var curCharacter:String = DEFAULT_CHARACTER;
 
 	public var colorTween:FlxTween;
 	public var holdTimer:Float = 0;
@@ -63,7 +62,7 @@ class Character extends FlxSprite
 	public var specialAnim:Bool = false;
 	public var animationNotes:Array<Dynamic> = [];
 	public var stunned:Bool = false;
-	public var singDuration:Float = 4; //Multiplier of how long a character holds the sing pose
+	public var singDuration:Float = 4; //Multiplier of how long a curCharacter holds the sing pose
 	public var idleSuffix:String = '';
 	public var danceIdle:Bool = false; //Character use "danceLeft" and "danceRight" instead of "idle"
 	public var skipDance:Bool = false;
@@ -83,9 +82,9 @@ class Character extends FlxSprite
 	public var originalFlipX:Bool = false;
 	public var healthColorArray:Array<Int> = [255, 0, 0];
 
-	public static var DEFAULT_CHARACTER:String = 'bf'; //In case a character is missing, it will use BF on its place
+	public static var DEFAULT_CHARACTER:String = 'bf'; //In case a curCharacter is missing, it will use BF on its place
 
-	public function new(x:Float, y:Float, ?character:String = 'bf', ?isPlayer:Bool = false):Void
+	public function new(x:Float, y:Float, ?curCharacter:String = 'bf', ?isPlayer:Bool = false):Void
 	{
 		super(x, y);
 
@@ -95,19 +94,19 @@ class Character extends FlxSprite
 		animOffsets = new Map<String, Array<Dynamic>>();
 		#end
 
-		this.character = character;
+		this.curCharacter = curCharacter;
 		this.isPlayer = isPlayer;
 
 		antialiasing = OptionData.globalAntialiasing;
 
-		switch (character)
+		switch (curCharacter)
 		{
-			// case 'your character name in case you want to hardcode them instead':
+			// case 'your curCharacter name in case you want to hardcode them instead':
 			// {
 			// }
 			default:
 			{
-				var characterPath:String = 'characters/' + character + '.json';
+				var characterPath:String = 'characters/' + curCharacter + '.json';
 
 				#if MODS_ALLOWED
 				var path:String = Paths.modFolders(characterPath);
@@ -123,7 +122,7 @@ class Character extends FlxSprite
 				if (!Assets.exists(path))
 				#end
 				{
-					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a curCharacter couldn't be found, change him to BF just to prevent a crash
 				}
 
 				#if MODS_ALLOWED
@@ -252,7 +251,7 @@ class Character extends FlxSprite
 			flipX = !flipX;
 		}
 
-		switch (character)
+		switch (curCharacter)
 		{
 			case 'pico-speaker':
 			{
@@ -264,7 +263,7 @@ class Character extends FlxSprite
 		}
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -291,7 +290,7 @@ class Character extends FlxSprite
 				dance();
 			}
 			
-			switch (character)
+			switch (curCharacter)
 			{
 				case 'pico-speaker':
 				{
@@ -376,7 +375,7 @@ class Character extends FlxSprite
 			offset.set(0, 0);
 		}
 
-		if (character.startsWith('gf'))
+		if (curCharacter.startsWith('gf'))
 		{
 			if (AnimName == 'singLEFT')
 			{

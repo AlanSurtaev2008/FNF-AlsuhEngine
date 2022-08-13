@@ -34,7 +34,7 @@ class Alphabet extends FlxSpriteGroup // Loosley based on FlxTypeText lolol
 
 	var splitWords:Array<String> = [];
 
-	var isBold:Bool = false;
+	public var isBold:Bool = false;
 	public var lettersArray:Array<AlphaCharacter> = [];
 
 	public var finishedText:Bool = false;
@@ -56,7 +56,7 @@ class Alphabet extends FlxSpriteGroup // Loosley based on FlxTypeText lolol
 
 		if (text != "")
 		{
-			if (typed)
+			if (typed == true)
 			{
 				startTypedText(typingSpeed);
 			}
@@ -359,7 +359,7 @@ class Alphabet extends FlxSpriteGroup // Loosley based on FlxTypeText lolol
 		}
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

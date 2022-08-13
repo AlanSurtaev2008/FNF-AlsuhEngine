@@ -1,6 +1,7 @@
 package;
 
 import flixel.*;
+import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
@@ -61,7 +62,7 @@ class Prompt extends MusicBeatSubState
 		super();
 	}
 	
-	override function create():Void 
+	public override function create():Void 
 	{
 		super.create();
 

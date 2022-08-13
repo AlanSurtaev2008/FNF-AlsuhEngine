@@ -12,7 +12,6 @@ import flixel.util.FlxTimer;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 import lime.utils.Assets as LimeAssets;
-import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -41,7 +40,7 @@ class LoadingState extends MusicBeatState
 		this.skip = skip;
 	}
 	
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -65,8 +64,8 @@ class LoadingState extends MusicBeatState
 		add(loadBar);
 
 		if (skip) {
-			FlxTransitionableState.skipNextTransIn = false;
-			FlxTransitionableState.skipNextTransOut = true;
+			Transition.skipNextTransIn = false;
+			Transition.skipNextTransOut = true;
 		}
 		
 		initSongsManifest().onComplete(function(lib)
@@ -114,7 +113,7 @@ class LoadingState extends MusicBeatState
 		}
 	}
 	
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -146,7 +145,7 @@ class LoadingState extends MusicBeatState
 			FlxG.sound.music.stop();
 		}
 		
-		MusicBeatState.switchState(target);
+		FlxG.switchState(target);
 	}
 	
 	static function getSongPath():Any
@@ -161,7 +160,7 @@ class LoadingState extends MusicBeatState
 	
 	public static function loadAndSwitchState(target:FlxState, stopMusic:Bool = false, skip:Bool = false):Void
 	{
-		MusicBeatState.switchState(getNextState(target, stopMusic, skip));
+		FlxG.switchState(getNextState(target, stopMusic, skip));
 	}
 	
 	static function getNextState(target:FlxState, stopMusic:Bool = false, skip:Bool = false):FlxState
@@ -206,7 +205,7 @@ class LoadingState extends MusicBeatState
 	}
 	#end
 	
-	override function destroy():Void
+	public override function destroy():Void
 	{
 		super.destroy();
 		

@@ -35,7 +35,7 @@ class GameOverSubState extends MusicBeatSubState
 		endSoundName = 'gameOverEnd';
 	}
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -73,7 +73,7 @@ class GameOverSubState extends MusicBeatSubState
 
 	var isFollowingAlready:Bool = false;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -169,9 +169,9 @@ class GameOverSubState extends MusicBeatSubState
 						switch (PlayState.gameMode)
 						{
 							case 'story':
-								MusicBeatState.switchState(new StoryMenuState());
+								FlxG.switchState(new StoryMenuState());
 							case 'freeplay':
-								MusicBeatState.switchState(new FreeplayMenuState());
+								FlxG.switchState(new FreeplayMenuState());
 							case 'replay':
 							{
 								if (FlxG.save.data.scrollSpeed != null)
@@ -192,15 +192,15 @@ class GameOverSubState extends MusicBeatSubState
 									OptionData.downScroll = false;
 								}
 	
-								MusicBeatState.switchState(new options.ReplaysState());
+								FlxG.switchState(new options.ReplaysState());
 							}
 							default:
-								MusicBeatState.switchState(new MainMenuState());
+								FlxG.switchState(new MainMenuState());
 						}
 					}
 					else
 					{
-						MusicBeatState.resetState();
+						FlxG.resetState();
 					}
 				});
 			});

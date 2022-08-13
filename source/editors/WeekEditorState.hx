@@ -1,5 +1,9 @@
 package editors;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import haxe.Json;
 
 import WeekData;
@@ -26,11 +30,10 @@ import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
-import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
-class WeekEditorState extends MusicBeatState
+class WeekEditorState extends MusicBeatUIState
 {
 	var txtWeekTitle:FlxText;
 
@@ -58,7 +61,7 @@ class WeekEditorState extends MusicBeatState
 			weekFileName = 'week1';
 	}
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -161,7 +164,7 @@ class WeekEditorState extends MusicBeatState
 		
 		var freeplayButton:FlxButton = new FlxButton(0, 650, "Freeplay", function()
 		{
-			MusicBeatState.switchState(new WeekEditorFreeplayState(weekFile));
+			FlxG.switchState(new WeekEditorFreeplayState(weekFile));
 		});
 
 		freeplayButton.screenCenter(X);
@@ -481,7 +484,7 @@ class WeekEditorState extends MusicBeatState
 		#end
 	}
 	
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText))
 		{
@@ -567,8 +570,11 @@ class WeekEditorState extends MusicBeatState
 			{
 				var splittedText:Array<String> = songsNamesInputText.text.trim().split(',');
 
-				for (i in 0...splittedText.length) {
-					weekFile.songs[i].songName = splittedText[i];
+				for (i in 0...splittedText.length)
+				{
+					if (weekFile.songs[i] != null) {
+						weekFile.songs[i].songName = splittedText[i];
+					}
 				}
 
 				updateText();
@@ -611,7 +617,7 @@ class WeekEditorState extends MusicBeatState
 		}
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -654,7 +660,7 @@ class WeekEditorState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.ESCAPE)
 			{
-				MusicBeatState.switchState(new MasterEditorMenu());
+				FlxG.switchState(new MasterEditorMenu());
 			}
 		}
 
@@ -662,7 +668,7 @@ class WeekEditorState extends MusicBeatState
 		missingFileText.y = weekThing.y + 36;
 	}
 
-	override function beatHit():Void
+	public override function beatHit():Void
 	{
 		super.beatHit();
 
@@ -829,7 +835,7 @@ class WeekEditorState extends MusicBeatState
 	}
 }
 
-class WeekEditorFreeplayState extends MusicBeatState
+class WeekEditorFreeplayState extends MusicBeatUIState
 {
 	var weekFile:WeekFile = null;
 
@@ -849,7 +855,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 	var curSelected:Int = 0;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -919,7 +925,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		
 		var storyModeButton:FlxButton = new FlxButton(0, 685, "Story Mode", function()
 		{
-			MusicBeatState.switchState(new WeekEditorState(weekFile));
+			FlxG.switchState(new WeekEditorState(weekFile));
 		});
 
 		storyModeButton.screenCenter(X);
@@ -935,7 +941,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		add(saveWeekButton);
 	}
 	
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText))
 		{
@@ -1241,7 +1247,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 	var holdTime:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -1249,10 +1255,10 @@ class WeekEditorFreeplayState extends MusicBeatState
 		{
 			super.update(elapsed);
 
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
+			Transition.skipNextTransIn = true;
+			Transition.skipNextTransOut = true;
 
-			MusicBeatState.switchState(new WeekEditorFreeplayState(WeekEditorState.loadedWeek));
+			FlxG.switchState(new WeekEditorFreeplayState(WeekEditorState.loadedWeek));
 
 			WeekEditorState.loadedWeek = null;
 
@@ -1288,7 +1294,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 				difficultiesCopy = null;
 				defaultDifficultyCopy = null;
 
-				MusicBeatState.switchState(new MasterEditorMenu());
+				FlxG.switchState(new MasterEditorMenu());
 			}
 
 			if (weekFile.songs.length > 1)

@@ -13,7 +13,7 @@ class TankmenBG extends FlxSprite
 
 	var endingOffset:Float;
 
-	public function new(x:Float, y:Float, uhh:Bool)
+	public function new(x:Float, y:Float, uhh:Bool):Void
 	{
 		super(x, y);
 
@@ -46,7 +46,7 @@ class TankmenBG extends FlxSprite
 		}
 	}
 
-	override function update(elapsed:Float)
+	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 		

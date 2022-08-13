@@ -252,7 +252,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 		}
 	}
 
-	override function set_visible(Value:Bool):Bool
+	public override function set_visible(Value:Bool):Bool
 	{
 		var vDropPanel = dropPanel.visible;
 		var vButtons = [];

@@ -2,6 +2,10 @@ package editors;
 
 import haxe.Json;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import Character;
 
 #if sys
@@ -31,12 +35,11 @@ import flixel.animation.FlxAnimation;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
 
 using StringTools;
 
-class CharacterEditorState extends MusicBeatState
+class CharacterEditorState extends MusicBeatUIState
 {
 	var char:Character;
 	var ghostChar:Character;
@@ -72,7 +75,7 @@ class CharacterEditorState extends MusicBeatState
 	var cameraFollowPointer:FlxSprite;
 	var healthBarBG:FlxSprite;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -643,7 +646,7 @@ class CharacterEditorState extends MusicBeatState
 		UI_characterbox.addGroup(tab_group);
 	}
 
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText))
 		{
@@ -1040,7 +1043,7 @@ class CharacterEditorState extends MusicBeatState
 		#end
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		if (char.animationsArray[curAnim] != null)
 		{
@@ -1096,11 +1099,11 @@ class CharacterEditorState extends MusicBeatState
 			{
 				if (goToPlayState)
 				{
-					MusicBeatState.switchState(new PlayState());
+					FlxG.switchState(new PlayState());
 				}
 				else
 				{
-					MusicBeatState.switchState(new MasterEditorMenu());
+					FlxG.switchState(new MasterEditorMenu());
 				}
 
 				FlxG.mouse.visible = false;

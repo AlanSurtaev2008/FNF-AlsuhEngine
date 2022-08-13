@@ -1,5 +1,9 @@
 package editors;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import haxe.Json;
 
 #if sys
@@ -26,7 +30,7 @@ import flixel.addons.ui.FlxUINumericStepper;
 
 using StringTools;
 
-class MenuCharacterEditorState extends MusicBeatState
+class MenuCharacterEditorState extends MusicBeatUIState
 {
 	var grpWeekCharacters:FlxTypedGroup<MenuCharacter>;
 
@@ -35,7 +39,7 @@ class MenuCharacterEditorState extends MusicBeatState
 
 	var defaultCharacters:Array<String> = ['dad', 'bf', 'gf'];
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -348,7 +352,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		#end
 	}
 
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText))
 		{
@@ -434,7 +438,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		}
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -469,7 +473,7 @@ class MenuCharacterEditorState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.ESCAPE)
 			{
-				MusicBeatState.switchState(new MasterEditorMenu());
+				FlxG.switchState(new MasterEditorMenu());
 			}
 
 			var shiftMult:Int = FlxG.keys.pressed.SHIFT ? 10 : 1;
@@ -511,7 +515,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		}
 	}
 
-	override function beatHit():Void
+	public override function beatHit():Void
 	{
 		super.beatHit();
 

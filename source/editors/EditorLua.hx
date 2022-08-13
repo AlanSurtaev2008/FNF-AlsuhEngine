@@ -1,5 +1,9 @@
 package editors;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import Controls;
 import Type.ValueType;
 import DialogueBoxPsych;

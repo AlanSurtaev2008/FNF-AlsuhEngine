@@ -327,7 +327,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	var daText:Alphabet = null;
 	var ignoreThisFrame:Bool = true; // First frame is reserved for loading dialogue images
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		if (ignoreThisFrame)
 		{

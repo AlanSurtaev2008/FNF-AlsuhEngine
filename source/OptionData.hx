@@ -291,9 +291,14 @@ class OptionData
 		}
 	}
 
-	public static function fromString(variable:String):Dynamic
+	public static function getValue(variable:String):Dynamic
 	{
-		return Reflect.getProperty(OptionData, variable);
+		return Reflect.field(OptionData, variable);
+	}
+
+	public static function setValue(variable:String, value:Dynamic):Void
+	{
+		Reflect.setField(OptionData, variable, value);
 	}
 
 	public static var keyBinds:Map<String, Array<FlxKey>> =
@@ -351,9 +356,9 @@ class OptionData
 			{
 				keyBinds.set(control, keys);
 			}
-
-			reloadControls();
 		}
+
+		reloadControls();
 	}
 
 	public static function reloadControls():Void

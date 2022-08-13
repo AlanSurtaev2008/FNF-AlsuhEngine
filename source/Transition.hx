@@ -10,8 +10,11 @@ import flixel.util.FlxGradient;
 
 using StringTools;
 
-class CustomFadeTransition extends MusicBeatSubState
+class Transition extends MusicBeatSubState
 {
+	public static var skipNextTransIn:Bool = false;
+	public static var skipNextTransOut:Bool = false;
+
 	public static var finishCallback:Void->Void;
 	public static var nextCamera:FlxCamera;
 
@@ -28,6 +31,7 @@ class CustomFadeTransition extends MusicBeatSubState
 		this.isTransIn = isTransIn;
 
 		var zoom:Float = CoolUtil.boundTo(FlxG.camera.zoom, 0.05, 1);
+
 		var width:Int = Std.int(FlxG.width / zoom);
 		var height:Int = Std.int(FlxG.height / zoom);
 
@@ -64,8 +68,7 @@ class CustomFadeTransition extends MusicBeatSubState
 				ease: FlxEase.linear,
 				onComplete: function(twn:FlxTween)
 				{
-					if (finishCallback != null)
-					{
+					if (finishCallback != null) {
 						finishCallback();
 					}
 				}
@@ -81,30 +84,24 @@ class CustomFadeTransition extends MusicBeatSubState
 		nextCamera = null;
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
-		if (isTransIn)
-		{
+		if (isTransIn) {
 			transBlack.y = transGradient.y + transGradient.height;
-		}
-		else
-		{
+		} else {
 			transBlack.y = transGradient.y - transBlack.height;
 		}
 
 		super.update(elapsed);
 
-		if (isTransIn)
-		{
+		if (isTransIn) {
 			transBlack.y = transGradient.y + transGradient.height;
-		}
-		else
-		{
+		} else {
 			transBlack.y = transGradient.y - transBlack.height;
 		}
 	}
 
-	override function destroy():Void
+	public override function destroy():Void
 	{
 		super.destroy();
 

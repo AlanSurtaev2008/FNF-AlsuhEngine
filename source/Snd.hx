@@ -160,7 +160,7 @@ class ChannelEventInstance extends Channel {//basically a sound instance
 	
 	public function getData()	return data;
 	
-	override function dispose(){
+	public override function dispose(){
 		super.dispose();
 		if ( data != null){
 			data.release();
@@ -168,27 +168,27 @@ class ChannelEventInstance extends Channel {//basically a sound instance
 		}
 	}
 	
-	override function poolBack(){
+	public override function poolBack(){
 		super.poolBack();
 		ChannelEventInstance.delete(this);
 	}
 	
-	override function stop(){
+	public override function stop(){
 		if (data != null) data.stop(FmodStudioStopMode.StopAllowFadeout());
 		super.stop();
 	}
 	
-	override function pause(){
+	public override function pause(){
 		super.pause();
 		if(data!=null) data.setPaused(true);
 	}
 	
-	override function resume(){
+	public override function resume(){
 		super.resume();
 		if(data!=null) data.setPaused(false);
 	}
 	
-	override function isPlaying(){
+	public override function isPlaying(){
 		if ( completed ) return false;
 		
 		if ( data == null ) {
@@ -217,7 +217,7 @@ class ChannelEventInstance extends Channel {//basically a sound instance
 	}
 	
 	//returns in secs
-	override function getPlayCursorMs() : Float {
+	public override function getPlayCursorMs() : Float {
 		if ( data == null ) return 0.0;
 		
 		var pos : Int = 0;
@@ -225,7 +225,7 @@ class ChannelEventInstance extends Channel {//basically a sound instance
 		return 1.0 * pos;
 	}
 	
-	override function setPlayCursorMs(posMs:Float) {
+	public override function setPlayCursorMs(posMs:Float) {
 		if ( data == null ) return;
 		
 		if ( posMs < 0.0) posMs = 0.0;
@@ -243,11 +243,11 @@ class ChannelEventInstance extends Channel {//basically a sound instance
 		#end
 	}
 	
-	override function setNbLoops(nb:Int){
+	public override function setNbLoops(nb:Int){
 		
 	}
 	
-	override function getVolume() : Float{
+	public override function getVolume() : Float{
 		if (data == null ) return 0.0;
 		
 		var vol : cpp.Float32 = 0.0;
@@ -261,7 +261,7 @@ class ChannelEventInstance extends Channel {//basically a sound instance
 		return vol;
 	}
 	
-	override function setVolume(v:Float){
+	public override function setVolume(v:Float){
 		if (data == null ){
 			//#if debug
 			//trace("no data for "+name);
@@ -322,32 +322,32 @@ class ChannelLowLevel extends Channel{
 		return data;
 	}	
 	
-	override function poolBack(){
+	public override function poolBack(){
 		super.poolBack();
 		ChannelLowLevel.delete(this);
 	}
 	
-	override function stop(){
+	public override function stop(){
 		if (data != null) data.stop();
 		super.stop();
 	}
 	
-	override function pause(){
+	public override function pause(){
 		super.pause();
 		if(data!=null) data.setPaused(true);
 	}
 	
-	override function resume(){
+	public override function resume(){
 		super.resume();
 		if(data!=null) data.setPaused(false);
 	}
 	
-	override function dispose(){
+	public override function dispose(){
 		super.dispose();
 		data = null;
 	}
 	
-	override function isPlaying(){
+	public override function isPlaying(){
 		if ( completed ) return false;
 		
 		if (data == null) {
@@ -378,7 +378,7 @@ class ChannelLowLevel extends Channel{
 	}
 	
 	//returns in secs
-	override function getPlayCursorMs() : Float {
+	public override function getPlayCursorMs() : Float {
 		if (data == null) return 0.0;
 		
 		var pos : cpp.UInt32 = 0;
@@ -387,7 +387,7 @@ class ChannelLowLevel extends Channel{
 	}
 
 	
-	override function setPlayCursorMs(posMs:Float) {
+	public override function setPlayCursorMs(posMs:Float) {
 		if (data == null) return;
 		
 		if ( posMs < 0.0) posMs = 0.0;
@@ -401,13 +401,13 @@ class ChannelLowLevel extends Channel{
 		}
 	}
 	
-	override function setNbLoops(nb:Int){
+	public override function setNbLoops(nb:Int){
 		if (data == null) return;
 		data.setMode(FmodMode.FMOD_LOOP_NORMAL);
 		data.setLoopCount(nb);
 	}
 	
-	override function getVolume():Float{
+	public override function getVolume():Float{
 		if (data == null) return 0.0;
 		
 		var vol : cpp.Float32 = 0.0;
@@ -420,7 +420,7 @@ class ChannelLowLevel extends Channel{
 		return vol;
 	}
 	
-	override function setVolume(v:Float){
+	public override function setVolume(v:Float){
 		if (data == null) {
 			//if ( isDebug ){
 				//#if !prod
@@ -504,7 +504,7 @@ class SoundLowLevel extends Sound{
 		return data;
 	}
 	
-	override function dispose(){
+	public override function dispose(){
 		super.dispose();
 		
 		if ( Snd.released ) {
@@ -518,7 +518,7 @@ class SoundLowLevel extends Sound{
 	}
 	
 	//returns in secs
-	override function get_length() : Float{
+	public override function get_length() : Float{
 		if (disposed) return 0.0;
 		
 		var pos : cpp.UInt32 = 0;
@@ -532,7 +532,7 @@ class SoundLowLevel extends Sound{
 		return posF;
 	}
 	
-	override function play( ?offsetMs : Float = 0.0, ?nbLoops:Int = 1, ?volume:Float = 1.0) : Channel {
+	public override function play( ?offsetMs : Float = 0.0, ?nbLoops:Int = 1, ?volume:Float = 1.0) : Channel {
 		var nativeChan : FmodChannelRef = FaxeRef.playSoundWithHandle( data , false);
 		var chan = ChannelLowLevel.alloc( nativeChan, name );
 		
@@ -565,7 +565,7 @@ class SoundEvent extends Sound{
 		this.data = data;
 	}
 	
-	override function dispose(){
+	public override function dispose(){
 		super.dispose();
 		
 		if ( Snd.released ) {
@@ -583,7 +583,7 @@ class SoundEvent extends Sound{
 	}
 	
 	//returns in secs
-	override function get_length() : Float{
+	public override function get_length() : Float{
 		if (disposed) return 0.0;
 		
 		var pos : Int = 0;
@@ -597,7 +597,7 @@ class SoundEvent extends Sound{
 		return posF;
 	}
 	
-	override function play( ?offsetMs : Float = 0.0, ?nbLoops:Int = 1, ?volume:Float = 1.0) : Channel{
+	public override function play( ?offsetMs : Float = 0.0, ?nbLoops:Int = 1, ?volume:Float = 1.0) : Channel{
 		var nativeInstance : FmodStudioEventInstanceRef = data.createInstance();
 		var chan = ChannelEventInstance.alloc( nativeInstance, name );
 		

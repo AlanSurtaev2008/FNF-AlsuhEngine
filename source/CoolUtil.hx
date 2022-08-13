@@ -6,6 +6,7 @@ import openfl.utils.Assets;
 import flixel.system.FlxSound;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
+import flixel.input.keyboard.FlxKey;
 import lime.utils.Assets as LimeAssets;
 
 #if sys
@@ -54,11 +55,65 @@ class CoolUtil
 		return song + '-' + diff;
 	}
 
+	public static function getKeyName(key:FlxKey):String
+	{
+		return switch (key)
+		{
+			case BACKSPACE: "BckSpc";
+			case CONTROL: "Ctrl";
+			case ALT: "Alt";
+			case CAPSLOCK: "Caps";
+			case PAGEUP: "PgUp";
+			case PAGEDOWN: "PgDown";
+			case ZERO: "0";
+			case ONE: "1";
+			case TWO: "2";
+			case THREE: "3";
+			case FOUR: "4";
+			case FIVE: "5";
+			case SIX: "6";
+			case SEVEN: "7";
+			case EIGHT: "8";
+			case NINE: "9";
+			case NUMPADZERO: "#0";
+			case NUMPADONE: "#1";
+			case NUMPADTWO: "#2";
+			case NUMPADTHREE: "#3";
+			case NUMPADFOUR: "#4";
+			case NUMPADFIVE: "#5";
+			case NUMPADSIX: "#6";
+			case NUMPADSEVEN: "#7";
+			case NUMPADEIGHT: "#8";
+			case NUMPADNINE: "#9";
+			case NUMPADMULTIPLY: "#*";
+			case NUMPADPLUS: "#+";
+			case NUMPADMINUS: "#-";
+			case NUMPADPERIOD: "#.";
+			case SEMICOLON: ";";
+			case COMMA: ",";
+			case PERIOD: ".";
+			case GRAVEACCENT: "`";
+			case LBRACKET: "[";
+			case RBRACKET: "]";
+			case QUOTE: "'";
+			case PRINTSCREEN: "PrtScrn";
+			case NONE: '---';
+			default:
+			{
+				var label:String = '' + key;
+				if (label.toLowerCase() == 'null') '---';
+
+				'' + label.charAt(0).toUpperCase() + label.substr(1).toLowerCase();
+			}
+		}
+	}
+
 	public static function boundTo(value:Float, min:Float, max:Float):Float
 	{
 		return Math.max(min, Math.min(max, value));
 	}
 
+	@:deprecated("`CoolUtil.truncateFloat()` is deprecated, use `CoolUtil.floorDecimal()` or 'FlxMath.roundDecimal()' instead")
 	public static function truncateFloat(number:Float, precision:Int):Float
 	{
 		var num:Float = number;
@@ -71,28 +126,19 @@ class CoolUtil
 		return num;
 	}
 
-	public static function floorDecimal(value:Float, decimals:Int):Float
+	public static function floorDecimal(number:Float, precision:Int):Float
 	{
-		if (decimals < 1)
-		{
-			return Math.floor(value);
+		if (precision < 1) {
+			return Math.floor(number);
 		}
 
 		var tempMult:Float = 1;
 
-		for (i in 0...decimals)
-		{
+		for (i in 0...precision) {
 			tempMult *= 10;
 		}
 
-		var newValue:Float = Math.floor(value * tempMult);
-
-		return newValue / tempMult;
-	}
-
-	public static function GCD(a, b)
-	{
-		return b == 0 ? FlxMath.absInt(a) : GCD(b, a % b);
+		return Math.floor(number * tempMult) / tempMult;
 	}
 
 	public static function coolTextFile(path:String):Array<String>
@@ -105,8 +151,7 @@ class CoolUtil
 		if (Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
 		#end
 
-		for (i in 0...daList.length)
-		{
+		for (i in 0...daList.length) {
 			daList[i] = daList[i].trim();
 		}
 
@@ -118,8 +163,7 @@ class CoolUtil
 		var daList:Array<String> = [];
 		daList = string.trim().split('\n');
 
-		for (i in 0...daList.length)
-		{
+		for (i in 0...daList.length) {
 			daList[i] = daList[i].trim();
 		}
 
@@ -130,8 +174,7 @@ class CoolUtil
 	{
 		var dumbArray:Array<Int> = [];
 
-		for (i in min...max)
-		{
+		for (i in min...max) {
 			dumbArray.push(i);
 		}
 

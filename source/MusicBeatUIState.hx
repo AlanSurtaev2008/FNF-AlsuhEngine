@@ -3,10 +3,11 @@ package;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.util.FlxColor;
+import flixel.addons.ui.FlxUIState;
 
 using StringTools;
 
-class MusicBeatState extends FlxState
+class MusicBeatUIState extends FlxUIState
 {
 	private var curSection:Int = 0;
 	private var stepsToDo:Int = 0;
@@ -109,44 +110,6 @@ class MusicBeatState extends FlxState
 		}
 	}
 
-	var exiting:Bool = false;
-
-	public override function switchTo(nextState:FlxState):Bool
-	{
-		if (!Transition.skipNextTransIn)
-		{
-			if (!exiting)
-			{
-				openSubState(new Transition(0.6, false));
-
-				if (nextState == FlxG.state)
-				{
-					Transition.finishCallback = function()
-					{
-						exiting = true;
-						FlxG.switchState(nextState);
-					};
-				}
-				else
-				{
-					Transition.finishCallback = function()
-					{
-						exiting = true;
-						FlxG.switchState(nextState);
-					};
-				}
-			}
-
-			return exiting;
-		}
-		else
-		{
-			Transition.skipNextTransIn = false;
-		}
-
-		return true;
-	}
-
 	private function updateSection():Void
 	{
 		if (stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);
@@ -200,17 +163,42 @@ class MusicBeatState extends FlxState
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 
-	public static function resetState():Void
-	{
-		FlxG.switchState(FlxG.state);
-	}
+	var exiting:Bool = false;
 
-	public static function getState():MusicBeatState
+	public override function switchTo(nextState:FlxState):Bool
 	{
-		var curState:Dynamic = FlxG.state;
-		var leState:MusicBeatState = curState;
+		if (!Transition.skipNextTransIn)
+		{
+			if (!exiting)
+			{
+				openSubState(new Transition(0.6, false));
 
-		return leState;
+				if (nextState == FlxG.state)
+				{
+					Transition.finishCallback = function()
+					{
+						exiting = true;
+						FlxG.switchState(nextState);
+					};
+				}
+				else
+				{
+					Transition.finishCallback = function()
+					{
+						exiting = true;
+						FlxG.switchState(nextState);
+					};
+				}
+			}
+
+			return exiting;
+		}
+		else
+		{
+			Transition.skipNextTransIn = false;
+		}
+
+		return true;
 	}
 
 	public function stepHit():Void

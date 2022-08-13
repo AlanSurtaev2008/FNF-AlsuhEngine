@@ -1,5 +1,9 @@
 package options;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import options.OptionsMenuState;
 
 import flixel.FlxG;
@@ -28,7 +32,7 @@ class ComboSubState extends MusicBeatSubState
 		this.isPause = isPause;
 	}
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -145,7 +149,7 @@ class ComboSubState extends MusicBeatSubState
 		repositionCombo();
 	}
 
-	override function destroy():Void
+	public override function destroy():Void
 	{
 		super.destroy();
 
@@ -159,7 +163,7 @@ class ComboSubState extends MusicBeatSubState
 	var startMousePos:FlxPoint = new FlxPoint();
 	var startComboOffset:FlxPoint = new FlxPoint();
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

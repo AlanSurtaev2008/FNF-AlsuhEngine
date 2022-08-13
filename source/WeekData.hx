@@ -15,7 +15,7 @@ using StringTools;
 
 typedef WeekFile =
 {
-	var weekID:String;
+	var weekID:Null<String>;
 	var weekName:String;
 
 	var startUnlocked:Bool;
@@ -23,14 +23,14 @@ typedef WeekFile =
 
 	var songs:Array<SongLabel>;
 
-	var difficulties:Array<Array<String>>;
+	var difficulties:Dynamic;
 	var defaultDifficulty:String;
 
 	var weekCharacters:Array<String>;
 	var weekBackground:String;
 	var weekBefore:String;
 	var storyName:String;
-	var itemFile:String;
+	var itemFile:Null<String>;
 
 	var hideStoryMode:Bool;
 	var hideFreeplay:Bool;

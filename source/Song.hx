@@ -42,7 +42,7 @@ class Song
 	{
 		if (songJson.songID == null)
 		{
-			songJson.songID = StringTools.replace(songJson.song.toLowerCase(), ' ', '-');
+			songJson.songID = Paths.formatToSongPath(songJson.song);
 		}
 
 		if (songJson.songName == null)

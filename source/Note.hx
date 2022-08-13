@@ -60,6 +60,7 @@ class Note extends FlxSprite
 	public static var RED_NOTE:Int = 3;
 
 	// Lua shit
+	public var quickNoteSplash:Bool = false;
 	public var noteSplashDisabled:Bool = false;
 	public var noteSplashTexture:String = null;
 
@@ -439,7 +440,7 @@ class Note extends FlxSprite
 		}
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

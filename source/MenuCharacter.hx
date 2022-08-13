@@ -8,7 +8,6 @@ import sys.FileSystem;
 import flixel.FlxSprite;
 import openfl.utils.Assets;
 import haxe.format.JsonParser;
-import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 

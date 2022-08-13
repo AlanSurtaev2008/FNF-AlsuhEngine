@@ -1,5 +1,9 @@
 package options;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import options.OptionsMenuState;
 
 import flixel.FlxG;
@@ -127,11 +131,12 @@ class PreferencesSubState extends MusicBeatSubState
 			'Lighting Up',
 			['Lighting Up', 'Normal', 'Disabled']);
 
-		if (isPause) {
-			option.options = ['Lighting Up', 'Normal'];
-
+		if (isPause)
+		{
 			if (option.getValue() == 'Disabled') {
 				option.isPause = isPause;
+			} else {
+				option.options = ['Lighting Up', 'Normal'];
 			}
 		}
 
@@ -474,9 +479,13 @@ class PreferencesSubState extends MusicBeatSubState
 
 	private var boyfriend:Character = null;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
+
+		#if desktop
+		DiscordClient.changePresence("In the Options Menu - Preferences", null);
+		#end
 
 		getOptions();
 
@@ -643,7 +652,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 	var holdValue:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -1045,9 +1054,9 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		if (isPause)
 		{
-			PlayState.instance.songPosBG.visible = (OptionData.songPositionType != 'Disabled');
-			PlayState.instance.songPosBar.visible = (OptionData.songPositionType != 'Disabled');
-			PlayState.instance.songPosName.visible = (OptionData.songPositionType != 'Disabled');
+			PlayState.instance.songPosBG.visible = OptionData.songPositionType != 'Disabled';
+			PlayState.instance.songPosBar.visible = OptionData.songPositionType != 'Disabled';
+			PlayState.instance.songPosName.visible = OptionData.songPositionType != 'Disabled';
 
 			var curTime:Float = Conductor.songPosition - OptionData.noteOffset;
 			if (curTime < 0) curTime = 0;
@@ -1125,14 +1134,14 @@ class PreferencesSubState extends MusicBeatSubState
 	}
 	#end
 
-	override function destroy():Void
+	public override function destroy():Void
 	{
 		super.destroy();
 
 		if (changedMusic) FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 	}
 
-	override function beatHit():Void
+	public override function beatHit():Void
 	{
 		super.beatHit();
 
@@ -1229,7 +1238,7 @@ class PreferencesSubState extends MusicBeatSubState
 		boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.75));
 		boyfriend.updateHitbox();
 		boyfriend.dance();
-		insert(1, boyfriend);
+		insert(members.indexOf(grpOptions), boyfriend);
 		boyfriend.visible = wasVisible;
 	}	
 

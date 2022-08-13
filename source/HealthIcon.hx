@@ -26,8 +26,6 @@ class HealthIcon extends FlxSprite
 		scrollFactor.set();
 	}
 
-	private var iconOffsets:Array<Float> = [0, 0];
-
 	public function changeIcon(char:String):Void
 	{
 		if (char != this.character)
@@ -49,9 +47,6 @@ class HealthIcon extends FlxSprite
 					animation.add(char, [0, 1], 0, false, this.isPlayer);
 				}
 
-				iconOffsets[0] = (width - 150) / 2;
-				iconOffsets[1] = (width - 150) / 2;
-
 				animation.play(char);
 
 				this.character = char;
@@ -65,7 +60,7 @@ class HealthIcon extends FlxSprite
 		antialiasing = char.endsWith('-pixel') ? false : OptionData.globalAntialiasing;
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -73,14 +68,6 @@ class HealthIcon extends FlxSprite
 		{
 			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
 		}
-	}
-
-	override function updateHitbox():Void
-	{
-		super.updateHitbox();
-
-		offset.x = iconOffsets[0];
-		offset.y = iconOffsets[1];
 	}
 
 	public function getCharacter():String

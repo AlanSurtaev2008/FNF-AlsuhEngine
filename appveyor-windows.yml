@@ -1,4 +1,3 @@
-# Taken from https://github.com/andyli/HaxeCI/blob/master/appveyor.yml
 version: "{build}"
 
 environment:
@@ -6,28 +5,24 @@ environment:
     HAXELIB_ROOT: C:\projects\haxelib
 
 install:
-  # http://help.appveyor.com/discussions/problems/5616-not-able-to-build-due-to-problem-in-chocolateyinstallps1
-  - ps: Set-Service wuauserv -StartupType Manual
-  # Install the neko chocolatey package (https://chocolatey.org/packages/neko)
-  - cinst neko --version 2.3.0 -y
-  # Install the haxe chocolatey package (https://chocolatey.org/packages/haxe)
-  - cinst haxe --version 4.1.5 -y
-  - RefreshEnv
-  # Setup haxelib
-  - mkdir "%HAXELIB_ROOT%"
-  - haxelib setup "%HAXELIB_ROOT%"
-  # Install project dependencies
   - haxelib install lime 7.9.0
   - haxelib install openfl
   - haxelib install flixel
   - haxelib install flixel-addons
   - haxelib install flixel-ui
   - haxelib install hscript
+  - haxelib install actuate
   - haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit
   - haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
   - haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
+  - haxelib git https://github.com/GrowtopiaFli/extension-webm
+  - haxelib run lime rebuild extension-webm windows
+  - haxelib list
 
-# No tests idk lol
+test_script:
+  - haxelib run lime test windows
+  # haxelib run lime test windows
+
 build_script:
   - haxelib run lime build windows
   # haxelib run lime build linux

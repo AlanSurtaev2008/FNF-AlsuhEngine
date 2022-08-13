@@ -74,12 +74,9 @@ class StageData
 
 		var stageFile:StageFile = getStageFile(stage);
 
-		if (stageFile == null) // preventing crashes
-		{
+		if (stageFile == null) { // preventing crashes
 			forceNextDirectory = '';
-		}
-		else
-		{
+		} else {
 			forceNextDirectory = stageFile.directory;
 		}
 	}
@@ -92,22 +89,15 @@ class StageData
 		#if MODS_ALLOWED
 		var modPath:String = Paths.modFolders('stages/' + stage + '.json');
 
-		if (FileSystem.exists(modPath))
-		{
+		if (FileSystem.exists(modPath)) {
 			rawJson = File.getContent(modPath);
-		}
-		else if (FileSystem.exists(path))
-		{
+		} else if (FileSystem.exists(path)) {
 			rawJson = File.getContent(path);
 		}
 		#else
-		if (Assets.exists(path))
-		{
+		if (Assets.exists(path)) {
 			rawJson = Assets.getText(path);
-		}
-		#end
-		else
-		{
+		} #end else {
 			return null;
 		}
 

@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
-import flixel.group.FlxSpriteGroup;
 
 using StringTools;
 
@@ -31,7 +30,7 @@ class MenuItem extends FlxSprite
 
 	var fakeFramerate:Int = Math.round((1 / FlxG.elapsed) / 10);
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

@@ -1,5 +1,9 @@
 package options;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
@@ -39,23 +43,23 @@ class OptionsMenuState extends MusicBeatState
 			case 'Replays':
 			{
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
-				MusicBeatState.switchState(new ReplaysState());
+				FlxG.switchState(new ReplaysState());
 			}
 			#end
 			case 'Credits':
 			{
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
-				MusicBeatState.switchState(new CreditsMenuState());
+				FlxG.switchState(new CreditsMenuState());
 			}
 			case 'Exit':
 			{
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
-				MusicBeatState.switchState(new MainMenuState());
+				FlxG.switchState(new MainMenuState());
 			}
 		}
 	}
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -99,9 +103,13 @@ class OptionsMenuState extends MusicBeatState
 		changeSelection();
 	}
 
-	override function closeSubState():Void
+	public override function closeSubState():Void
 	{
 		super.closeSubState();
+
+		#if desktop
+		DiscordClient.changePresence("In the Options Menu", null);
+		#end
 
 		flickering = false;
 		OptionData.savePrefs();
@@ -110,7 +118,7 @@ class OptionsMenuState extends MusicBeatState
 	var flickering:Bool = false;
 	var holdTime:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -119,7 +127,7 @@ class OptionsMenuState extends MusicBeatState
 			OptionData.savePrefs();
 
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
-			MusicBeatState.switchState(new MainMenuState());
+			FlxG.switchState(new MainMenuState());
 		}
 
 		if (!flickering)
@@ -268,7 +276,7 @@ class OptionsSubState extends MusicBeatSubState
 		}
 	}
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -352,7 +360,7 @@ class OptionsSubState extends MusicBeatSubState
 	var flickering:Bool = false;
 	var holdTime:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -378,7 +386,6 @@ class OptionsSubState extends MusicBeatSubState
 			{
 				if (controls.UI_UP_P)
 				{
-					FlxG.sound.play(Paths.getSound('scrollMenu'));
 					changeSelection(-1);
 
 					holdTime = 0;
@@ -386,7 +393,6 @@ class OptionsSubState extends MusicBeatSubState
 
 				if (controls.UI_DOWN_P)
 				{
-					FlxG.sound.play(Paths.getSound('scrollMenu'));
 					changeSelection(1);
 
 					holdTime = 0;
@@ -406,8 +412,6 @@ class OptionsSubState extends MusicBeatSubState
 
 				if (FlxG.mouse.wheel != 0)
 				{
-					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
-
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
 			}

@@ -47,7 +47,7 @@ using StringTools;
 @:access(flixel.system.FlxSound._sound)
 @:access(openfl.media.Sound.__buffer)
 
-class ChartingState extends MusicBeatState
+class ChartingState extends MusicBeatUIState
 {
 	public static var noteTypeList:Array<String> =
 	[
@@ -181,7 +181,7 @@ class ChartingState extends MusicBeatState
 	public var mouseQuant:Bool = false;
 	public static var vortex:Bool = false;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -583,7 +583,7 @@ class ChartingState extends MusicBeatState
 		var loadAutosaveBtn:FlxButton = new FlxButton(200, reloadSongJson.y + 30, 'Load Autosave', function()
 		{
 			PlayState.SONG = Song.parseJSONshit(FlxG.save.data.autosave);
-			MusicBeatState.resetState();
+			FlxG.resetState();
 		});
 
 		var saveEvents:FlxButton = new FlxButton(200, loadAutosaveBtn.y + 30, 'Save Events', function()
@@ -1566,7 +1566,7 @@ class ChartingState extends MusicBeatState
 		};
 	}
 
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>)
+	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>)
 	{
 		if (id == FlxUICheckBox.CLICK_EVENT)
 		{
@@ -1708,7 +1708,7 @@ class ChartingState extends MusicBeatState
 	var lastConductorPos:Float;
 	var colorSine:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -3390,7 +3390,7 @@ class AttachedFlxText extends FlxText
 		super(X, Y, FieldWidth, Text, Size, EmbeddedFont);
 	}
 
-	override function update(elapsed:Float)
+	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 

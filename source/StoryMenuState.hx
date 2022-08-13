@@ -1,5 +1,9 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
@@ -9,7 +13,6 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxTween;
-import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -40,7 +43,7 @@ class StoryMenuState extends MusicBeatState
 
 	var grpWeekCharacters:FlxTypedGroup<MenuCharacter>;
 
-	override function create():Void
+	public override function create():Void
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
@@ -186,8 +189,7 @@ class StoryMenuState extends MusicBeatState
 		FlxTween.tween(textBG, {y: FlxG.height - 26}, 2, {ease: FlxEase.circOut});
 		FlxTween.tween(text, {y: FlxG.height - 26 + 4}, 2, {ease: FlxEase.circOut});
 
-		if (curDifficultyString == '')
-		{
+		if (curDifficultyString == '') {
 			curDifficultyString = weeksArray[curSelected].defaultDifficulty;
 		}
 
@@ -205,7 +207,7 @@ class StoryMenuState extends MusicBeatState
 	var holdTime:Float = 0;
 	var holdTimeHos:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -226,7 +228,7 @@ class StoryMenuState extends MusicBeatState
 			if (controls.BACK)
 			{
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
-				MusicBeatState.switchState(new MainMenuState());
+				FlxG.switchState(new MainMenuState());
 			}
 
 			if (weeksArray.length > 1)
@@ -334,8 +336,7 @@ class StoryMenuState extends MusicBeatState
 
 					var songArray:Array<String> = [];
 
-					for (i in 0...curWeek.songs.length)
-					{
+					for (i in 0...curWeek.songs.length) {
 						songArray.push(curWeek.songs[i].songID);
 					}
 
@@ -351,7 +352,7 @@ class StoryMenuState extends MusicBeatState
 					FlxG.sound.play(Paths.getSound('confirmMenu'));
 					
 					#if NO_PRELOAD_ALL
-					FlxTransitionableState.skipNextTransOut = true;
+					Transition.skipNextTransOut = true;
 					#end
 
 					new FlxTimer().start(1, function(tmr:FlxTimer)
@@ -368,7 +369,7 @@ class StoryMenuState extends MusicBeatState
 		}
 	}
 
-	override function closeSubState():Void
+	public override function closeSubState():Void
 	{
 		super.closeSubState();
 
@@ -401,8 +402,7 @@ class StoryMenuState extends MusicBeatState
 
 			item.alpha = 0.6;
 
-			if (item.targetY == 0)
-			{
+			if (item.targetY == 0) {
 				item.alpha = 1;
 			}
 		}
@@ -507,7 +507,7 @@ class StoryMenuState extends MusicBeatState
 		}
 	}
 
-	override function beatHit():Void
+	public override function beatHit():Void
 	{
 		super.beatHit();
 

@@ -1,5 +1,9 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 #if LUA_ALLOWED
 import llua.Lua;
 import llua.LuaL;
@@ -15,6 +19,10 @@ import sys.FileSystem;
 #if hscript
 import hscript.Parser;
 import hscript.Interp;
+#end
+
+#if VIDEOS_ALLOWED
+import webmlmfao.*;
 #end
 
 import Song;
@@ -53,7 +61,6 @@ import flixel.system.FlxAssets.FlxShader;
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
 #end
-import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -905,7 +912,7 @@ class FunkinLua
 
 		Lua_helper.add_callback(lua, "mouseReleased", function(button:String) {
 			var boobs = FlxG.mouse.justReleased;
-			switch(button){
+			switch (button) {
 				case 'middle':
 					boobs = FlxG.mouse.justReleasedMiddle;
 				case 'right':
@@ -916,7 +923,7 @@ class FunkinLua
 
 		Lua_helper.add_callback(lua, "mouseClicked", function(button:String) {
 			var boobs = FlxG.mouse.justPressed;
-			switch(button){
+			switch (button) {
 				case 'middle':
 					boobs = FlxG.mouse.justPressedMiddle;
 				case 'right':
@@ -927,7 +934,7 @@ class FunkinLua
 		});
 		Lua_helper.add_callback(lua, "mousePressed", function(button:String) {
 			var boobs = FlxG.mouse.pressed;
-			switch(button){
+			switch (button) {
 				case 'middle':
 					boobs = FlxG.mouse.pressedMiddle;
 				case 'right':
@@ -1137,7 +1144,7 @@ class FunkinLua
 
 		Lua_helper.add_callback(lua, "keyJustPressed", function(name:String) {
 			var key:Bool = false;
-			switch(name) {
+			switch (name) {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT_P');
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN_P');
 				case 'up': key = PlayState.instance.getControl('NOTE_UP_P');
@@ -1152,7 +1159,7 @@ class FunkinLua
 		});
 		Lua_helper.add_callback(lua, "keyPressed", function(name:String) {
 			var key:Bool = false;
-			switch(name) {
+			switch (name) {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT');
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN');
 				case 'up': key = PlayState.instance.getControl('NOTE_UP');
@@ -1163,7 +1170,7 @@ class FunkinLua
 		});
 		Lua_helper.add_callback(lua, "keyReleased", function(name:String) {
 			var key:Bool = false;
-			switch(name) {
+			switch (name) {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT_R');
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN_R');
 				case 'up': key = PlayState.instance.getControl('NOTE_UP_R');
@@ -1174,7 +1181,7 @@ class FunkinLua
 		});
 		Lua_helper.add_callback(lua, "addCharacterToList", function(name:String, type:String) {
 			var charType:Int = 0;
-			switch(type.toLowerCase()) {
+			switch (type.toLowerCase()) {
 				case 'dad': charType = 1;
 				case 'gf' | 'girlfriend': charType = 2;
 			}
@@ -1201,6 +1208,7 @@ class FunkinLua
 			PlayState.instance.startCountdown();
 			return true;
 		});
+
 		Lua_helper.add_callback(lua, "endSong", function() {
 			PlayState.instance.KillNotes();
 			PlayState.instance.endSong();
@@ -1214,16 +1222,16 @@ class FunkinLua
 		Lua_helper.add_callback(lua, "exitSong", function(?skipTransition:Bool = false) {
 			if (skipTransition)
 			{
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
+				Transition.skipNextTransIn = true;
+				Transition.skipNextTransOut = true;
 			}
 
 			PlayState.cancelMusicFadeTween();
 
-			CustomFadeTransition.nextCamera = PlayState.instance.camOther;
+			Transition.nextCamera = PlayState.instance.camOther;
 
-			if (FlxTransitionableState.skipNextTransIn) {
-				CustomFadeTransition.nextCamera = null;
+			if (Transition.skipNextTransIn) {
+				Transition.nextCamera = null;
 			}
 
 			PlayState.usedPractice = false;
@@ -1235,13 +1243,13 @@ class FunkinLua
 			switch (PlayState.gameMode)
 			{
 				case 'story':
-					MusicBeatState.switchState(new StoryMenuState());
+					FlxG.switchState(new StoryMenuState());
 				case 'freeplay':
-					MusicBeatState.switchState(new FreeplayMenuState());
+					FlxG.switchState(new FreeplayMenuState());
 				case 'replay':
-					MusicBeatState.switchState(new options.ReplaysState());
+					FlxG.switchState(new options.ReplaysState());
 				default:
-					MusicBeatState.switchState(new MainMenuState());
+					FlxG.switchState(new MainMenuState());
 			}
 
 			return true;
@@ -1251,7 +1259,7 @@ class FunkinLua
 		});
 
 		Lua_helper.add_callback(lua, "getCharacterX", function(type:String) {
-			switch(type.toLowerCase()) {
+			switch (type.toLowerCase()) {
 				case 'dad' | 'opponent':
 					return PlayState.instance.dadGroup.x;
 				case 'gf' | 'girlfriend':
@@ -1261,7 +1269,7 @@ class FunkinLua
 			}
 		});
 		Lua_helper.add_callback(lua, "setCharacterX", function(type:String, value:Float) {
-			switch(type.toLowerCase()) {
+			switch (type.toLowerCase()) {
 				case 'dad' | 'opponent':
 					PlayState.instance.dadGroup.x = value;
 				case 'gf' | 'girlfriend':
@@ -1271,7 +1279,7 @@ class FunkinLua
 			}
 		});
 		Lua_helper.add_callback(lua, "getCharacterY", function(type:String) {
-			switch(type.toLowerCase()) {
+			switch (type.toLowerCase()) {
 				case 'dad' | 'opponent':
 					return PlayState.instance.dadGroup.y;
 				case 'gf' | 'girlfriend':
@@ -1281,7 +1289,7 @@ class FunkinLua
 			}
 		});
 		Lua_helper.add_callback(lua, "setCharacterY", function(type:String, value:Float) {
-			switch(type.toLowerCase()) {
+			switch (type.toLowerCase()) {
 				case 'dad' | 'opponent':
 					PlayState.instance.dadGroup.y = value;
 				case 'gf' | 'girlfriend':
@@ -1390,8 +1398,8 @@ class FunkinLua
 
 			return 0;
 		});
-		Lua_helper.add_callback(lua, "characterDance", function(character:String) {
-			switch(character.toLowerCase()) {
+		Lua_helper.add_callback(lua, "characterDance", function(curCharacter:String) {
+			switch (curCharacter.toLowerCase()) {
 				case 'dad': PlayState.instance.dad.dance();
 				case 'gf' | 'girlfriend': if (PlayState.instance.gf != null) PlayState.instance.gf.dance();
 				default: PlayState.instance.boyfriend.dance();
@@ -2091,7 +2099,7 @@ class FunkinLua
 
 		Lua_helper.add_callback(lua, "setObjectCamera", function(obj:String, camera:String = '') {
 			var real = PlayState.instance.getLuaObject(obj);
-			if (real != null){
+			if (real != null) {
 				real.cameras = [cameraFromString(camera)];
 				return true;
 			}
@@ -2132,7 +2140,7 @@ class FunkinLua
 		Lua_helper.add_callback(lua, "screenCenter", function(obj:String, pos:String = 'xy') {
 			var spr:FlxSprite = PlayState.instance.getLuaObject(obj);
 
-			if (spr == null){
+			if (spr == null) {
 				var killMe:Array<String> = obj.split('.');
 				spr = getObjectDirectly(killMe[0]);
 				if (killMe.length > 1) {
@@ -2142,7 +2150,7 @@ class FunkinLua
 
 			if (spr != null)
 			{
-				switch(pos.trim().toLowerCase())
+				switch (pos.trim().toLowerCase())
 				{
 					case 'x':
 						spr.screenCenter(X);
@@ -2245,22 +2253,67 @@ class FunkinLua
 			}
 			return false;
 		});
-		Lua_helper.add_callback(lua, "startVideo", function(videoFile:String) {
+		Lua_helper.add_callback(lua, "startVideo", function(videoFile:String, type:String = 'mp4') {
 			#if VIDEOS_ALLOWED
-			if (FileSystem.exists(Paths.getVideo(videoFile))) {
-				PlayState.instance.startVideo(videoFile);
-				return true;
-			} else {
-				luaTrace('Video file not found: ' + videoFile, false, false, FlxColor.RED);
-			}
-			return false;
+			switch (type)
+			{
+				case 'webm':
+				{
+					if (FileSystem.exists(Paths.getWebm(videoFile)))
+					{
+						PlayState.instance.persistentDraw = false;
 
+						Transition.skipNextTransIn = true;
+						Transition.skipNextTransOut = true;
+
+						if (PlayState.instance.endingSong)
+						{
+							switch (PlayState.gameMode)
+							{
+								case 'story':
+									FlxG.switchState(new webmlmfao.VideoState(videoFile, new StoryMenuState()));
+								case 'freeplay':
+									FlxG.switchState(new webmlmfao.VideoState(videoFile, new FreeplayMenuState()));
+								default:
+									FlxG.switchState(new webmlmfao.VideoState(videoFile, new MainMenuState()));
+							}
+						}
+						else
+						{
+							FlxG.switchState(new VideoState(videoFile, new PlayState(), true));
+						}
+
+						return true;
+					}
+					else
+					{
+						luaTrace('Video file not found: ' + videoFile, false, false, FlxColor.RED);
+					}
+
+					return false;
+				}
+				default:
+				{
+					if (FileSystem.exists(Paths.getVideo(videoFile)))
+					{
+						PlayState.instance.startVideo(videoFile);
+						return true;
+					}
+					else
+					{
+						luaTrace('Video file not found: ' + videoFile, false, false, FlxColor.RED);
+					}
+
+					return false;
+				}
+			}
 			#else
 			if (PlayState.instance.endingSong) {
 				PlayState.instance.endSong();
 			} else {
 				PlayState.instance.startCountdown();
 			}
+
 			return true;
 			#end
 		});
@@ -2453,7 +2506,7 @@ class FunkinLua
 			if (obj != null)
 			{
 				obj.alignment = LEFT;
-				switch(alignment.trim().toLowerCase())
+				switch (alignment.trim().toLowerCase())
 				{
 					case 'right':
 						obj.alignment = RIGHT;
@@ -2643,9 +2696,9 @@ class FunkinLua
 			}
 			return false;
 		});
-		Lua_helper.add_callback(lua, "characterPlayAnim", function(character:String, anim:String, ?forced:Bool = false) {
+		Lua_helper.add_callback(lua, "characterPlayAnim", function(curCharacter:String, anim:String, ?forced:Bool = false) {
 			luaTrace("characterPlayAnim is deprecated! Use playAnim instead", false, true);
-			switch(character.toLowerCase()) {
+			switch (curCharacter.toLowerCase()) {
 				case 'dad':
 					if (PlayState.instance.dad.animOffsets.exists(anim))
 						PlayState.instance.dad.playAnim(anim, forced);
@@ -3437,7 +3490,7 @@ class DebugLuaText extends FlxText
 		borderSize = 1;
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

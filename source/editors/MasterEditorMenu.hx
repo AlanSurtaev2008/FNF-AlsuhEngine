@@ -1,7 +1,12 @@
 package editors;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup;
 
@@ -10,6 +15,8 @@ using StringTools;
 class MasterEditorMenu extends MusicBeatState
 {
 	private var curSelected:Int = 0;
+	private var curDirectory:Int = 0;
+
 	private var editorsArray:Array<String> =
 	[
 		'Week Editor',
@@ -19,10 +26,12 @@ class MasterEditorMenu extends MusicBeatState
 		'Character Editor',
 		'Chart Editor'
 	];
+	private var directories:Array<String> = [null];
 
 	private var grpEditors:FlxTypedGroup<Alphabet>;
+	private var directoryTxt:FlxText;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -56,20 +65,74 @@ class MasterEditorMenu extends MusicBeatState
 			grpEditors.add(editorText);
 		}
 
+		#if MODS_ALLOWED
+		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 42);
+		textBG.makeGraphic(FlxG.width, 42, 0xFF000000);
+		textBG.alpha = 0.6;
+		add(textBG);
+
+		directoryTxt = new FlxText(textBG.x, textBG.y + 4, FlxG.width, '', 32);
+		directoryTxt.setFormat(Paths.getFont("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		directoryTxt.scrollFactor.set();
+		add(directoryTxt);
+		
+		for (folder in Paths.getModDirectories())
+		{
+			directories.push(folder);
+		}
+
+		var found:Int = directories.indexOf(Paths.currentModDirectory);
+		if (found > -1) curDirectory = found;
+
+		changeDirectory();
+		#end
+
 		changeSelection();
 	}
 
 	var holdTime:Float = 0;
+	var holdTimeMod:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
 		if (controls.BACK)
 		{
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
-			MusicBeatState.switchState(new MainMenuState());
+			FlxG.switchState(new MainMenuState());
 		}
+
+		#if MODS_ALLOWED
+		if (directories.length > 1)
+		{
+			if (controls.UI_UP_P)
+			{
+				changeDirectory(-1);
+
+				holdTimeMod = 0;
+			}
+
+			if (controls.UI_DOWN_P)
+			{
+				changeDirectory(1);
+
+				holdTimeMod = 0;
+			}
+
+			if (controls.UI_DOWN || controls.UI_UP)
+			{
+				var checkLastHold:Int = Math.floor((holdTimeMod - 0.5) * 10);
+				holdTimeMod += elapsed;
+				var checkNewHold:Int = Math.floor((holdTimeMod - 0.5) * 10);
+
+				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+				{
+					changeDirectory((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
+				}
+			}
+		}
+		#end
 
 		if (editorsArray.length > 1)
 		{
@@ -101,8 +164,6 @@ class MasterEditorMenu extends MusicBeatState
 
 			if (FlxG.mouse.wheel != 0)
 			{
-				FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
-
 				changeSelection(-1 * FlxG.mouse.wheel);
 			}
 		}
@@ -121,9 +182,9 @@ class MasterEditorMenu extends MusicBeatState
 		switch (label)
 		{
 			case 'Week Editor':
-				MusicBeatState.switchState(new WeekEditorState());
+				FlxG.switchState(new WeekEditorState());
 			case 'Menu Character Editor':
-				MusicBeatState.switchState(new MenuCharacterEditorState());
+				FlxG.switchState(new MenuCharacterEditorState());
 			case 'Character Editor':
 				LoadingState.loadAndSwitchState(new CharacterEditorState(Character.DEFAULT_CHARACTER, false), true);
 			case 'Dialogue Editor':
@@ -164,4 +225,32 @@ class MasterEditorMenu extends MusicBeatState
 
 		FlxG.sound.play(Paths.getSound('scrollMenu'), 0.4);
 	}
+
+	#if MODS_ALLOWED
+	function changeDirectory(change:Int = 0):Void
+	{
+		curDirectory += change;
+
+		if (curDirectory < 0)
+			curDirectory = directories.length - 1;
+		if (curDirectory >= directories.length)
+			curDirectory = 0;
+	
+		WeekData.setDirectoryFromWeek();
+
+		if (directories[curDirectory] == null || directories[curDirectory].length < 1)
+		{
+			directoryTxt.text = '< No Mod Directory Loaded >';
+		}
+		else
+		{
+			Paths.currentModDirectory = directories[curDirectory];
+			directoryTxt.text = '< Loaded Mod Directory: ' + Paths.currentModDirectory + ' >';
+		}
+
+		directoryTxt.text = directoryTxt.text.toUpperCase();
+
+		FlxG.sound.play(Paths.getSound('scrollMenu'), 0.4);
+	}
+	#end
 }

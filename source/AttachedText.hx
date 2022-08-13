@@ -22,7 +22,7 @@ class AttachedText extends Alphabet
 		this.offsetY = offsetY;
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

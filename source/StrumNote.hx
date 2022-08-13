@@ -3,7 +3,6 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import shaders.ColorSwap;
-import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 
@@ -138,7 +137,7 @@ class StrumNote extends FlxSprite
 		ID = noteData;
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -158,9 +157,13 @@ class StrumNote extends FlxSprite
 		}
 	}
 
-	public function playAnim(anim:String, ?force:Bool = false):Void
+	public function playAnim(anim:String, ?force:Bool = false, ?finishCallback:Null<(name:String)->Void>):Void
 	{
 		animation.play(anim, force);
+
+		if (finishCallback != null) {
+			animation.finishCallback = finishCallback;
+		}
 
 		centerOffsets();
 		centerOrigin();

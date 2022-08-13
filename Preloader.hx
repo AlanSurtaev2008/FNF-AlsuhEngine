@@ -20,7 +20,7 @@ class Preloader extends FlxBasePreloader
 	 
 	var logo:Sprite;
 	 
-	override function create():Void 
+	public override function create():Void 
 	{
 		super.create();
 
@@ -37,7 +37,7 @@ class Preloader extends FlxBasePreloader
 		addChild(logo); //Adds the graphic to the NMEPreloader's buffer.
 	}
 	 
-	override function update(Percent:Float):Void 
+	public override function update(Percent:Float):Void 
 	{
 		if(Percent < 69)
 		{

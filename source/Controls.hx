@@ -381,7 +381,7 @@ class Controls extends FlxActionSet
 	}
 	#end
 
-	override function update():Void
+	public override function update():Void
 	{
 		super.update();
 	}
@@ -492,8 +492,7 @@ class Controls extends FlxActionSet
 
 	public function replaceBinding(control:Control, device:Device, ?toAdd:Int, ?toRemove:Int)
 	{
-		if (toAdd == toRemove)
-			return;
+		if (toAdd == toRemove) return;
 
 		switch (device)
 		{

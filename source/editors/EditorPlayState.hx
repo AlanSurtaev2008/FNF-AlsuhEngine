@@ -68,7 +68,7 @@ class EditorPlayState extends MusicBeatState
 
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -348,7 +348,7 @@ class EditorPlayState extends MusicBeatState
 	public var noteKillOffset:Float = 350;
 	public var spawnTime:Float = 2000;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -374,8 +374,6 @@ class EditorPlayState extends MusicBeatState
 			Conductor.songPosition += elapsed * 1000;
 		}
 
-		var roundedSpeed:Float = FlxMath.roundDecimal(PlayState.SONG.speed, 2);
-
 		if (unspawnNotes[0] != null)
 		{
 			var time:Float = spawnTime;
@@ -393,7 +391,6 @@ class EditorPlayState extends MusicBeatState
 				unspawnNotes.splice(index, 1);
 			}
 		}
-	
 
 		if (generatedMusic)
 		{
@@ -950,7 +947,7 @@ class EditorPlayState extends MusicBeatState
 		}
 	}
 
-	override function stepHit():Void
+	public override function stepHit():Void
 	{
 		super.stepHit();
 
@@ -960,7 +957,7 @@ class EditorPlayState extends MusicBeatState
 		}
 	}
 
-	override function beatHit():Void
+	public override function beatHit():Void
 	{
 		super.beatHit();
 
@@ -982,7 +979,7 @@ class EditorPlayState extends MusicBeatState
 		vocals.play();
 	}
 
-	override function destroy():Void
+	public override function destroy():Void
 	{
 		super.destroy();
 

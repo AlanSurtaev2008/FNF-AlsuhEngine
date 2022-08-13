@@ -10,7 +10,6 @@ import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import options.OptionsMenuState.OptionsSubState;
-import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -42,7 +41,7 @@ class PauseSubState extends MusicBeatSubState
 		this.fromOptions = fromOptions;
 	}
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -249,7 +248,7 @@ class PauseSubState extends MusicBeatSubState
 	var holdTime:Float = 0;
 	var cantUnpause:Float = 0.1;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -292,7 +291,7 @@ class PauseSubState extends MusicBeatSubState
 
 			if (FlxG.mouse.wheel != 0)
 			{
-				FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
+				FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 				changeSelection(-1 * FlxG.mouse.wheel);
 			}
@@ -354,15 +353,13 @@ class PauseSubState extends MusicBeatSubState
 					PlayState.usedPractice = PlayState.storyDifficulty != PlayState.lastDifficulty ? true : false;
 
 					FlxG.sound.music.volume = 0;
-					MusicBeatState.resetState();
+					FlxG.resetState();
 
 					return;
 				}
-				else
-				{
-					menuItems = menuItemsOG;
-					regenMenu();
-				}
+
+				menuItems = menuItemsOG;
+				regenMenu();
 			}
 
 			switch (daSelected)
@@ -440,9 +437,9 @@ class PauseSubState extends MusicBeatSubState
 					switch (PlayState.gameMode)
 					{
 						case 'story':
-							MusicBeatState.switchState(new StoryMenuState());
+							FlxG.switchState(new StoryMenuState());
 						case 'freeplay':
-							MusicBeatState.switchState(new FreeplayMenuState());
+							FlxG.switchState(new FreeplayMenuState());
 						case 'replay':
 						{
 							if (FlxG.save.data.scrollSpeed != null)
@@ -463,10 +460,10 @@ class PauseSubState extends MusicBeatSubState
 								OptionData.downScroll = false;
 							}
 
-							MusicBeatState.switchState(new options.ReplaysState());
+							FlxG.switchState(new options.ReplaysState());
 						}
 						default:
-							MusicBeatState.switchState(new MainMenuState());
+							FlxG.switchState(new MainMenuState());
 					}
 				}
 			}
@@ -482,16 +479,16 @@ class PauseSubState extends MusicBeatSubState
 
 		if (noTrans)
 		{
-			FlxTransitionableState.skipNextTransOut = true;
+			Transition.skipNextTransOut = true;
 			FlxG.resetState();
 		}
 		else
 		{
-			MusicBeatState.resetState();
+			FlxG.resetState();
 		}
 	}
 
-	override function destroy():Void
+	public override function destroy():Void
 	{
 		super.destroy();
 

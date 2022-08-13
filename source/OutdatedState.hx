@@ -15,7 +15,7 @@ class OutdatedState extends MusicBeatState
 	public static var newVersion:String = 'lol';
 	public static var curChanges:String = "dk";
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -33,7 +33,7 @@ class OutdatedState extends MusicBeatState
 		add(txt);
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -41,7 +41,7 @@ class OutdatedState extends MusicBeatState
 		{
 			leftState = true;
 
-			MusicBeatState.switchState(new MainMenuState());
+			FlxG.switchState(new MainMenuState());
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
 		}
 		else if (controls.ACCEPT)

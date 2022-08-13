@@ -2,11 +2,6 @@
 
 **Alsuh Engine** - This is modified connecting version of Psych Engine and Kade Engine by AlanSurtaev2008.
 
-## Tutorials:
-- [How to create a Custom Credits?](https://github.com/AlanSurtaev2008/FNF-AlsuhEngine/blob/main/docs/tutorials/customcredits.md)
-- [How to create difficulties?](https://github.com/AlanSurtaev2008/FNF-AlsuhEngine/blob/main/docs/tutorials/newdifficulty.md)
-- [How to create Menu Character and Week?](https://github.com/AlanSurtaev2008/FNF-AlsuhEngine/blob/main/docs/tutorials/weekEditor.md)
-
 ## Installation:
 You must have [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/), seriously, stop using 4.1.5, it misses some stuff.
 
@@ -15,7 +10,9 @@ Follow a Friday Night Funkin' source code compilation tutorial, after this you w
 To install LuaJIT do this: `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit` on a Command prompt/PowerShell
 ...Or if you don't want your mod to be able to run .lua scripts, delete the "LUA_ALLOWED" line on Project.xml
 
-If you want video support on your mod, simply do `haxelib git hxCodec https://github.com/polybiusproxy/hxCodec` install on a Command prompt/PowerShell
+Install Actuate do this: `haxelib install actuate` on a Command prompt/PowerShell.
+
+If you want video support on your mod, simply do `haxelib git hxCodec https://github.com/polybiusproxy/hxCodec` or `haxelib git extension-webm https://github.com/GrowtopiaFli/extension-webm` or generally install them both on a Command prompt/PowerShell
 otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ## Credits:

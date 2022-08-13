@@ -3,6 +3,10 @@ package editors;
 import haxe.Json;
 import haxe.format.JsonParser;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import DialogueBoxPsych;
 
 #if sys
@@ -34,7 +38,7 @@ import flixel.addons.ui.FlxUINumericStepper;
 
 using StringTools;
 
-class DialogueCharacterEditorState extends MusicBeatState
+class DialogueCharacterEditorState extends MusicBeatUIState
 {
 	var box:FlxSprite;
 	var daText:Alphabet = null;
@@ -72,7 +76,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 	var curAnim:Int = 0;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -562,7 +566,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 		DialogueBoxPsych.updateBoxOffsets(box);
 	}
 
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (id == FlxUIInputText.CHANGE_EVENT && sender == imageInputText)
 		{
@@ -592,7 +596,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 	var lastTab:String = 'Character';
 	var transitioning:Bool = false;
 
-	override function update(elapsed:Float)
+	public override function update(elapsed:Float)
 	{
 		if (transitioning)
 		{
@@ -827,7 +831,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.ESCAPE)
 			{
-				MusicBeatState.switchState(new MasterEditorMenu());
+				FlxG.switchState(new MasterEditorMenu());
 				transitioning = true;
 			}
 

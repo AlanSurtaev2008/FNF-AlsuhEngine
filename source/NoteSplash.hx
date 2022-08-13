@@ -70,7 +70,7 @@ class NoteSplash extends FlxSprite
 		animation.addByPrefix("note3-2", "note impact 2 red", 24, false);
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

@@ -1,5 +1,9 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 #if CRASH_HANDLER
 import sys.io.File;
 import haxe.io.Path;
@@ -8,6 +12,10 @@ import haxe.CallStack;
 import sys.io.Process;
 import lime.app.Application;
 import openfl.events.UncaughtErrorEvent;
+#end
+
+#if VIDEOS_ALLOWED
+import webmlmfao.*;
 #end
 
 #if !mobile
@@ -96,6 +104,16 @@ class Main extends Sprite
 
 		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 		addChild(game);
+
+		#if VIDEOS_ALLOWED
+		var str1:String = "WEBM SHIT";
+		var webmHandle = new WebmHandler();
+		webmHandle.source(Paths.getWebm("DO NOT DELETE OR GAME WILL CRASH/dontDelete"));
+		webmHandle.makePlayer();
+		webmHandle.webm.name = str1;
+		addChild(webmHandle.webm);
+		GlobalVideo.setWebm(webmHandle);
+		#end
 
 		#if !mobile
 		fpsCounter = new FPSCounter(10, 3, 0xFFFFFF);

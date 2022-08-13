@@ -1,5 +1,9 @@
 package options;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import options.OptionsMenuState;
 
 import flixel.FlxG;
@@ -68,9 +72,13 @@ class ControlsSubState extends MusicBeatSubState
 		this.isPause = isPause;
 	}
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
+
+		#if desktop
+		DiscordClient.changePresence("In the Options Menu - Controls", null);
+		#end
 
 		var bg:FlxSprite = new FlxSprite();
 
@@ -191,7 +199,7 @@ class ControlsSubState extends MusicBeatSubState
 	var holdTime:Float = 0;
 	var holdTimeHos:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -483,12 +491,12 @@ class ControlsSubState extends MusicBeatSubState
 	{
 		var keys:Array<FlxKey> = OptionData.keyBinds.get(optionShit[num][1]);
 
-		var text1 = new AttachedText(InputFormatter.getKeyName(keys[0]), 400, -55);
+		var text1 = new AttachedText(CoolUtil.getKeyName(keys[0]), 400, -55);
 		text1.setPosition(optionText.x + 400, optionText.y - 55);
 		text1.sprTracker = optionText;
 		grpInputs.add(text1);
 
-		var text2 = new AttachedText(InputFormatter.getKeyName(keys[1]), 650, -55);
+		var text2 = new AttachedText(CoolUtil.getKeyName(keys[1]), 650, -55);
 		text2.setPosition(optionText.x + 650, optionText.y - 55);
 		text2.sprTracker = optionText;
 		grpInputsAlt.add(text2);

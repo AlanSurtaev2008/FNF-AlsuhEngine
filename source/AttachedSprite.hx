@@ -37,7 +37,7 @@ class AttachedSprite extends FlxSprite
 		scrollFactor.set();
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

@@ -1,8 +1,5 @@
 package;
 
-import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
-
 using StringTools;
 
 class Boyfriend extends Character
@@ -14,7 +11,7 @@ class Boyfriend extends Character
 		super(x, y, char, true);
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

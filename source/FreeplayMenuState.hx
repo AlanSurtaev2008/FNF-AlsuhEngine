@@ -1,5 +1,9 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
@@ -9,7 +13,6 @@ import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
-import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -32,7 +35,7 @@ class FreeplayMenuState extends MusicBeatState
 	var scoreText:FlxText;
 	var diffText:FlxText;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -208,7 +211,7 @@ class FreeplayMenuState extends MusicBeatState
 	var holdTime:Float = 0;
 	var holdTimeHos:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -222,25 +225,21 @@ class FreeplayMenuState extends MusicBeatState
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
 		lerpAccuracy = FlxMath.lerp(lerpAccuracy, intendedAccuracy, CoolUtil.boundTo(elapsed * 12, 0, 1));
 
-		if (Math.abs(lerpScore - intendedScore) <= 10)
-		{
+		if (Math.abs(lerpScore - intendedScore) <= 10) {
 			lerpScore = intendedScore;
 		}
 
-		if (Math.abs(lerpAccuracy - intendedAccuracy) <= 0.01)
-		{
+		if (Math.abs(lerpAccuracy - intendedAccuracy) <= 0.01) {
 			lerpAccuracy = intendedAccuracy;
 		}
 
-		var ratingSplit:Array<String> = Std.string(CoolUtil.truncateFloat(lerpAccuracy * 100, 2)).split('.');
+		var ratingSplit:Array<String> = Std.string(CoolUtil.floorDecimal(lerpAccuracy, 2)).split('.');
 
-		if (ratingSplit.length < 2) // No decimals, add an empty space
-		{
+		if (ratingSplit.length < 2) { // No decimals, add an empty space
 			ratingSplit.push('');
 		}
 		
-		while (ratingSplit[1].length < 2) // Less than 2 decimals in it, add decimals then
-		{
+		while (ratingSplit[1].length < 2) { // Less than 2 decimals in it, add decimals then
 			ratingSplit[1] += '0';
 		}
 
@@ -252,7 +251,7 @@ class FreeplayMenuState extends MusicBeatState
 			persistentUpdate = false;
 
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
-			MusicBeatState.switchState(new MainMenuState());
+			FlxG.switchState(new MainMenuState());
 		}
 
 		var shiftMult:Int = FlxG.keys.pressed.SHIFT ? 3 : 1;
@@ -380,7 +379,7 @@ class FreeplayMenuState extends MusicBeatState
 			destroyFreeplayVocals();
 
 			#if NO_PRELOAD_ALL
-			FlxTransitionableState.skipNextTransOut = true;
+			Transition.skipNextTransOut = true;
 			#end
 
 			LoadingState.loadAndSwitchState(new PlayState(), true);
@@ -394,7 +393,7 @@ class FreeplayMenuState extends MusicBeatState
 		}
 	}
 
-	override function closeSubState():Void
+	public override function closeSubState():Void
 	{
 		super.closeSubState();
 

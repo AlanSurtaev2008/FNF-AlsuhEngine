@@ -3,8 +3,8 @@ package;
 import flixel.FlxG;
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.FlxCamera;
+import flixel.FlxSprite;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
@@ -14,7 +14,6 @@ import flixel.group.FlxSpriteGroup;
 import animateatlas.AtlasFrameMaker;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 
@@ -51,7 +50,7 @@ class CutsceneHandler extends FlxBasic
 	private var cutsceneTime:Float = 0;
 	private var firstFrame:Bool = false;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

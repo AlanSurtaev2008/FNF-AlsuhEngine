@@ -51,6 +51,8 @@
 
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
+
+	<library name="videos"       preload="true" />
 	
 	<section if="PRELOAD_ALL">
 		<library name="songs"    preload="true" />
@@ -78,6 +80,7 @@
 		<library name="week7"    preload="false" />
 	</section>
 	
+	<assets path="assets/videos"   library="videos"   if="VIDEOS_ALLOWED"/>
 	<assets path="assets/songs"    library="songs"    exclude="*.ogg" if="web"/>
 	<assets path="assets/songs"    library="songs"    exclude="*.mp3" unless="web"/>
 	<assets path="assets/shared"   library="shared"   exclude="*.ogg" if="web"/>
@@ -127,6 +130,8 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="faxe" if='switch'/>
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
+	<haxelib name="actuate" if="VIDEOS_ALLOWED"/>
+	<haxelib name="extension-webm" if="VIDEOS_ALLOWED"/>
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="discord_rpc" if="desktop"/>
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->

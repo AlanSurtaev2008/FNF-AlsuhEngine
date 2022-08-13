@@ -106,7 +106,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 
 	var practiceText:FlxText;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -218,7 +218,7 @@ class GameplayChangersSubState extends MusicBeatSubState
 
 	var holdValue:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

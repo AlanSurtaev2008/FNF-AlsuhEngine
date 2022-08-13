@@ -1,8 +1,12 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
@@ -31,12 +35,12 @@ class MainMenuState extends MusicBeatState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.3';
+	public static var engineVersion:String = '1.4';
 	public static var gameVersion:String = '0.2.8';
 
 	var debugKeys:Array<FlxKey>;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -113,9 +117,10 @@ class MainMenuState extends MusicBeatState
 		add(versionShit);
 
 		#if MODS_ALLOWED
-		var keyShit:String = InputFormatter.getKeyName(OptionData.keyBinds.get('mods')[0]) + ' or ' + InputFormatter.getKeyName(OptionData.keyBinds.get('mods')[1]);
+		var keyShit:String = CoolUtil.getKeyName(OptionData.keyBinds.get('mods')[0]) + ' or ' + CoolUtil.getKeyName(OptionData.keyBinds.get('mods')[1]);
 
-		if (keyShit.contains('---')) {
+		if (keyShit.contains('---'))
+		{
 			keyShit = StringTools.replace(keyShit, '---', '');
 			keyShit = StringTools.replace(keyShit, ' or ', '');
 		}
@@ -136,11 +141,11 @@ class MainMenuState extends MusicBeatState
 	var selectedSomethin:Bool = false;
 	var holdTime:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
-		var lerpVal:Float = CoolUtil.boundTo(elapsed * 4.0, 0, 1);
+		var lerpVal:Float = CoolUtil.boundTo(elapsed * 4, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
 		if (FlxG.sound.music.volume < 0.8)
@@ -154,7 +159,7 @@ class MainMenuState extends MusicBeatState
 			if (controls.BACK)
 			{
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
-				MusicBeatState.switchState(new TitleState());
+				FlxG.switchState(new TitleState());
 			}
 
 			if (menuItems.length > 1)
@@ -201,7 +206,7 @@ class MainMenuState extends MusicBeatState
 			{
 				selectedSomethin = true;
 
-				MusicBeatState.switchState(new ModsMenuState());
+				FlxG.switchState(new ModsMenuState());
 			}
 			#end
 
@@ -262,7 +267,7 @@ class MainMenuState extends MusicBeatState
 			{
 				selectedSomethin = true;
 
-				MusicBeatState.switchState(new editors.MasterEditorMenu());
+				FlxG.switchState(new editors.MasterEditorMenu());
 			}
 			#end
 		}
@@ -278,9 +283,9 @@ class MainMenuState extends MusicBeatState
 		switch (daChoice)
 		{
 			case 'story_mode':
-				MusicBeatState.switchState(new StoryMenuState());
+				FlxG.switchState(new StoryMenuState());
 			case 'freeplay':
-				MusicBeatState.switchState(new FreeplayMenuState());
+				FlxG.switchState(new FreeplayMenuState());
 			case 'options':
 				LoadingState.loadAndSwitchState(new options.OptionsMenuState());
 		}

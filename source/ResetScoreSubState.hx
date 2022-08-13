@@ -80,7 +80,7 @@ class ResetScoreSubState extends MusicBeatSubState
 		updateOptions();
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

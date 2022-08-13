@@ -191,7 +191,7 @@ class Paths
 		return getPath('$key.lua', TEXT, library);
 	}
 
-	static public function getSound(key:String, ?library:String):Sound
+	public static function getSound(key:String, ?library:String):Sound
 	{
 		return returnSound('sounds', key, library);
 	}
@@ -221,7 +221,7 @@ class Paths
 		return returnGraphic(key, library);
 	}
 
-	public static function getVideo(key:String, ?library:Null<String> = null):String
+	public static function getVideo(key:String):String
 	{
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
@@ -231,12 +231,25 @@ class Paths
 		}
 		#end
 
-		if (fileExists('videos/$key.$VIDEO_EXT', BINARY, false, library) && library != null)
-		{
-			return 'assets/' + library + '/videos/$key.$VIDEO_EXT';
-		}
-
 		return 'assets/videos/$key.$VIDEO_EXT';
+	}
+
+	public static function getWebmSound(key:String):Sound
+	{
+		return returnSound('videos', key);
+	}
+
+	public static function getWebm(key:String):String
+	{
+		#if MODS_ALLOWED
+		var file:String = modsWebm(key);
+
+		if (FileSystem.exists(file)) {
+			return file;
+		}
+		#end
+
+		return 'assets/videos/$key.webm';
 	}
 
 	public static function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
@@ -272,6 +285,7 @@ class Paths
 			}
 		}
 		#end
+
 		return Assets.getText(getPath(key, TEXT));
 	}
 
@@ -408,7 +422,7 @@ class Paths
 		return path.toLowerCase().replace(' ', '-');
 	}
 
-	public static function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?library:String):Bool
+	public static function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false):Bool
 	{
 		#if MODS_ALLOWED
 		if (FileSystem.exists(mods(currentModDirectory + '/' + key)) || FileSystem.exists(mods(key)))
@@ -444,6 +458,11 @@ class Paths
 	public static function modsVideo(key:String):String
 	{
 		return modFolders('videos/' + key + '.' + VIDEO_EXT);
+	}
+
+	public static function modsWebm(key:String):String
+	{
+		return modFolders('videos/' + key + '.webm');
 	}
 
 	public static function modsSounds(path:String, key:String):String

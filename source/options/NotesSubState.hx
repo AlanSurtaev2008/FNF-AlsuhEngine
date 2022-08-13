@@ -1,5 +1,9 @@
 package options;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import options.OptionsMenuState;
 
 import shaders.ColorSwap;
@@ -39,10 +43,14 @@ class NotesSubState extends MusicBeatSubState
 		this.isPause = isPause;
 	}
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 		
+		#if desktop
+		DiscordClient.changePresence("In the Options Menu - Notes", null);
+		#end
+
 		var bg:FlxSprite = new FlxSprite();
 
 		if (isPause)
@@ -162,7 +170,7 @@ class NotesSubState extends MusicBeatSubState
 	var flickering:Bool = false;
 	var changingNote:Bool = false;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

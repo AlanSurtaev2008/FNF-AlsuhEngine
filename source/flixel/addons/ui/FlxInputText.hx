@@ -2,11 +2,11 @@ package flixel.addons.ui;
 
 import lime.system.Clipboard;
 import flash.errors.Error;
+import flixel.FlxSprite;
 import flash.events.KeyboardEvent;
 import flash.geom.Rectangle;
 import flixel.addons.ui.FlxUI.NamedString;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.text.FlxText;
@@ -287,15 +287,15 @@ class FlxInputText extends FlxText
 
 	/**
 	 * Helper function that makes sure sprites are drawn up even though they haven't been added.
-	 * @param	Sprite		The Sprite to be drawn.
+	 * @param	FlxSprite		The FlxSprite to be drawn.
 	 */
-	private function drawSprite(Sprite:FlxSprite):Void
+	private function drawSprite(FlxSprite:FlxSprite):Void
 	{
-		if (Sprite != null && Sprite.visible)
+		if (FlxSprite != null && FlxSprite.visible)
 		{
-			Sprite.scrollFactor = scrollFactor;
-			Sprite.cameras = cameras;
-			Sprite.draw();
+			FlxSprite.scrollFactor = scrollFactor;
+			FlxSprite.cameras = cameras;
+			FlxSprite.draw();
 		}
 	}
 

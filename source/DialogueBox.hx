@@ -120,9 +120,7 @@ class DialogueBox extends FlxSpriteGroup
 
 		this.dialogueList = dialogueList;
 		
-		if (!hasDialog) {
-			return;
-		}
+		if (!hasDialog) return;
 		
 		box.animation.play('normalOpen');
 		box.setGraphicSize(Std.int(box.width * PlayState.daPixelZoom * 0.9));
@@ -157,7 +155,7 @@ class DialogueBox extends FlxSpriteGroup
 	var dialogueStarted:Bool = false;
 	var dialogueEnded:Bool = false;
 
-	override function update(elapsed:Float)
+	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
@@ -221,9 +219,12 @@ class DialogueBox extends FlxSpriteGroup
 						dropText.alpha = swagDialogue.alpha;
 					}, 5);
 
-					new FlxTimer().start(1.2, function(tmr:FlxTimer)
+					new FlxTimer().start(1.2, function(tmr:FlxTimer):Void
 					{
-						finishThing();
+						if (finishThing != null) {
+							finishThing();
+						}
+
 						kill();
 					});
 				}

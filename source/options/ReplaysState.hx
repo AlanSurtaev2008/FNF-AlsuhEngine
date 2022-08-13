@@ -1,5 +1,9 @@
 package options;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import flixel.FlxG;
 #if sys
 import sys.io.File;
@@ -7,7 +11,6 @@ import sys.FileSystem;
 #end
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -20,7 +23,7 @@ class ReplaysState extends MusicBeatState
 
 	var grpReplays:FlxTypedGroup<Alphabet>;
 
-	override function create():Void
+	public override function create():Void
 	{
 		super.create();
 
@@ -78,14 +81,14 @@ class ReplaysState extends MusicBeatState
 
 	var holdTime:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
 		if (controls.BACK)
 		{
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
-			MusicBeatState.switchState(new OptionsMenuState());
+			FlxG.switchState(new OptionsMenuState());
 		}
 
 		if (controls.UI_DOWN || controls.UI_UP)
@@ -140,7 +143,7 @@ class ReplaysState extends MusicBeatState
 				FreeplayMenuState.destroyFreeplayVocals();
 
 				#if NO_PRELOAD_ALL
-				FlxTransitionableState.skipNextTransOut = true;
+				Transition.skipNextTransOut = true;
 				#end
 
 				LoadingState.loadAndSwitchState(new PlayState(), true);

@@ -1,5 +1,9 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -58,7 +62,7 @@ class TitleState extends MusicBeatState
 
 	var titleJSON:TitleData;
 
-	override function create():Void
+	public override function create():Void
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
@@ -88,8 +92,7 @@ class TitleState extends MusicBeatState
 		PlayStateChangeables.loadChangeables();
 
 		#if sys
-		if (!FileSystem.exists(Sys.getCwd() + "\\assets\\replays"))
-		{
+		if (!FileSystem.exists(Sys.getCwd() + "\\assets\\replays")) {
 			FileSystem.createDirectory(Sys.getCwd() + "\\assets\\replays");
 		}
 		#end
@@ -127,6 +130,8 @@ class TitleState extends MusicBeatState
 		}
 		else
 		{
+			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
+
 			persistentUpdate = true;
 			persistentDraw = true;
 
@@ -155,11 +160,6 @@ class TitleState extends MusicBeatState
 
 	function startIntro():Void
 	{
-		if (initialized == false)
-		{		
-			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
-		}
-
 		Conductor.changeBPM(titleJSON.bpm);
 		persistentUpdate = true;
 
@@ -254,12 +254,9 @@ class TitleState extends MusicBeatState
 
 		FlxG.mouse.visible = false;
 
-		if (initialized)
-		{
+		if (initialized) {
 			skipIntro();
-		}
-		else
-		{
+		} else {
 			initialized = true;
 		}
 	}
@@ -285,7 +282,7 @@ class TitleState extends MusicBeatState
 	var newTitle:Bool = false;
 	var titleTimer:Float = 0;
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -333,10 +330,8 @@ class TitleState extends MusicBeatState
 		if (initialized && !transitioning && skippedIntro)
 		{
 			#if sys
-			if (controls.BACK)
-			{
-				persistentUpdate = false;
-				openSubState(new ExitSubState());
+			if (controls.BACK) {
+				Sys.exit(0);
 			}
 			#end
 
@@ -374,12 +369,12 @@ class TitleState extends MusicBeatState
 					if (OptionData.checkForUpdates && OutdatedState.newVersion != MainMenuState.engineVersion && !OutdatedState.leftState)
 					{
 						trace('There is a new version ' + OutdatedState.newVersion + '!');
-						MusicBeatState.switchState(new OutdatedState());
+						FlxG.switchState(new OutdatedState());
 					}
 					else
 					{
 						trace('You now have the latest version');
-						MusicBeatState.switchState(new MainMenuState());
+						FlxG.switchState(new MainMenuState());
 					}
 				});
 			}
@@ -435,7 +430,7 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	override function beatHit():Void
+	public override function beatHit():Void
 	{
 		super.beatHit();
 

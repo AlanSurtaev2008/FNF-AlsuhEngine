@@ -1,5 +1,9 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import haxe.Json;
 
 import sys.io.File;
@@ -46,7 +50,7 @@ class ModsMenuState extends MusicBeatState
 	var visibleWhenNoMods:Array<FlxBasic> = [];
 	var visibleWhenHasMods:Array<FlxBasic> = [];
 
-	override function create()
+	public override function create()
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
@@ -383,7 +387,7 @@ class ModsMenuState extends MusicBeatState
 	var holdTime:Float = 0;
 	var noModsSine:Float = 0;
 	var canExit:Bool = true;
-	override function update(elapsed:Float)
+	public override function update(elapsed:Float)
 	{
 		if (bg.color != defaultColor) {
 			bg.color = FlxColor.interpolate(bg.color, (mods[curSelected].color != null ? mods[curSelected].color : defaultColor), CoolUtil.boundTo(elapsed * 2.45, 0, 1));
@@ -413,7 +417,7 @@ class ModsMenuState extends MusicBeatState
 			}
 			else
 			{
-				MusicBeatState.switchState(new MainMenuState());
+				FlxG.switchState(new MainMenuState());
 			}
 		}
 

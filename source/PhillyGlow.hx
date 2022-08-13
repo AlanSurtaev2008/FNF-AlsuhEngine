@@ -8,6 +8,7 @@ class PhillyGlowParticle extends FlxSprite
 {
 	var lifeTime:Float = 0;
 	var decay:Float = 0;
+
 	var originalScale:Float = 1;
 
 	public function new(x:Float, y:Float, color:FlxColor):Void
@@ -37,7 +38,7 @@ class PhillyGlowParticle extends FlxSprite
 		acceleration.set(FlxG.random.float(-10, 10), 25);
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
@@ -60,6 +61,7 @@ class PhillyGlowGradient extends FlxSprite
 {
 	public var originalY:Float;
 	public var originalHeight:Int = 400;
+
 	public var intendedAlpha:Float = 1;
 
 	public function new(x:Float, y:Float):Void
@@ -77,7 +79,7 @@ class PhillyGlowGradient extends FlxSprite
 		updateHitbox();
 	}
 
-	override function update(elapsed:Float):Void
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

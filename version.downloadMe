@@ -1,7 +1,6 @@
-1.3;
-- Added Mods Menu
-- Added Icons Zooms Option
-- Changed Icons Zooming
-- Fixed Camera Zooms Option
-- Fixed Pause Menu Song Option (I had to make it unavailable in the pause menu)
-- Fixed Camera Position on middle of the song and more on week
+1.4;
+- Added .webm Cutscenes support
+- Fixed Credits for Modchart
+- Added GWeb on Credits
+- Fixed Accuracy's Save
+- CoolUtil.floorDecimal() has replaced CoolUtil.truncateFloat()

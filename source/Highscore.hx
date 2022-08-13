@@ -1,6 +1,6 @@
 package;
 
-import flixel.FlxG;
+import flixel.util.FlxSave;
 
 class Highscore
 {
@@ -23,8 +23,7 @@ class Highscore
 	{
 		if (weekScores.exists(week) == true)
 		{
-			if (weekScores.get(week) < score)
-			{
+			if (weekScores.get(week) < score) {
 				setWeekScore(week, score);
 			}
 		}
@@ -36,8 +35,7 @@ class Highscore
 
 	public static function getWeekScore(week:String):Int
 	{
-		if (weekScores.exists(week) == false)
-		{
+		if (weekScores.exists(week) == false) {
 			weekScores.set(week, 0);
 		}
 
@@ -48,29 +46,34 @@ class Highscore
 	{
 		weekScores.set(week, score);
 
-		FlxG.save.data.weekScores = weekScores;
-		FlxG.save.flush();
+		var save:FlxSave = new FlxSave();
+		save.bind('highscore_v2', 'afford-set');
+		
+		save.data.weekScores = weekScores;
+		save.flush();
 	}
 
-	public static function saveScore(daSong:String, score:Int = 0):Void
+	public static function saveScore(daSong:String, score:Int = 0, accuracy:Float = 0):Void
 	{
 		if (songScores.exists(daSong) == true)
 		{
-			if (songScores.get(daSong) < score)
-			{
+			if (songScores.get(daSong) < score) {
 				setScore(daSong, score);
+
+				if (accuracy >= 0) setAccuracy(daSong, accuracy);
 			}
 		}
 		else
 		{
 			setScore(daSong, score);
+
+			if (accuracy >= 0) setAccuracy(daSong, accuracy);
 		}
 	}
 
 	public static function getScore(daSong:String):Int
 	{
-		if (songScores.exists(daSong) == false)
-		{
+		if (songScores.exists(daSong) == false) {
 			songScores.set(daSong, 0);
 		}
 
@@ -81,19 +84,16 @@ class Highscore
 	{
 		songScores.set(daSong, score);
 
-		FlxG.save.data.songScores = songScores;
-		FlxG.save.flush();
-	}
+		var save:FlxSave = new FlxSave();
+		save.bind('highscore_v2', 'afford-set');
 
-	public static function saveAccuracy(daSong:String, accuracy:Float):Void
-	{
-		if (accuracy >= 0) setAccuracy(daSong, accuracy);
+		save.data.songScores = songScores;
+		save.flush();
 	}
 
 	public static function getAccuracy(daSong:String):Float 
 	{
-		if (songAccuracy.exists(daSong) == false)
-		{
+		if (songAccuracy.exists(daSong) == false) {
 			songAccuracy.set(daSong, 0);
 		}
 
@@ -104,20 +104,34 @@ class Highscore
 	{
 		songAccuracy.set(daSong, accuracy);
 
-		FlxG.save.data.songAccuracy = songAccuracy;
-		FlxG.save.flush();
+		var save:FlxSave = new FlxSave();
+		save.bind('highscore_v2', 'afford-set');
+
+		save.data.songAccuracy = songAccuracy;
+		save.flush();
 	}
 
 	public static function load():Void 
 	{
-		if (FlxG.save.data.weekScores != null){
-			weekScores = FlxG.save.data.weekScores;
+		var save:FlxSave = new FlxSave();
+		save.bind('highscore_v2', 'afford-set');
+
+		if (save.data.weekScores != null) {
+			weekScores = save.data.weekScores;
 		}
-		if (FlxG.save.data.songScores != null) {
-			songScores = FlxG.save.data.songScores;
+
+		if (save.data.songScores != null) {
+			songScores = save.data.songScores;
 		}
-		if (FlxG.save.data.songAccuracy != null) {
-			songAccuracy = FlxG.save.data.songAccuracy;
+
+		if (save.data.songAccuracy != null) {
+			songAccuracy = save.data.songAccuracy;
 		}
+	}
+
+	public static function scoreText(deaths:Int, accuracy:Float, rating:String, comboRank:String, health:Float, misses:Int, score:Int):String
+	{
+		return 'DEATHS: ' + deaths + ' | ACCURACY: ' + CoolUtil.floorDecimal(accuracy, 2) + '% | RATING: ' + rating +
+			(rating != 'N/A' ? ' (' + comboRank + ')' : '') + ' | HEALTH: ' + Math.floor(health * 50) + '% | COMBO BREAKS: ' + misses + ' | SCORE: ' + score;
 	}
 }

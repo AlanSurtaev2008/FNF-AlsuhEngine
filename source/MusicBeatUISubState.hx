@@ -1,11 +1,11 @@
 package;
 
-import flixel.FlxSubState;
 import flixel.util.FlxColor;
+import flixel.addons.ui.FlxUISubState;
 
 using StringTools;
 
-class MusicBeatSubState extends FlxSubState
+class MusicBeatUISubState extends FlxUISubState
 {
 	private var stepsToDo:Int = 0;
 
@@ -114,6 +114,6 @@ class MusicBeatSubState extends FlxSubState
 
 	public function beatHit():Void
 	{
-		//do literally nothing dumbass
+		// do literally nothing dumbass
 	}
 }
