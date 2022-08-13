@@ -1,6 +1,7 @@
 1.4;
-- Added .webm Cutscenes support
+- Fixed Songs's Names on Week Editor
 - Fixed Credits for Modchart
-- Added GWeb on Credits
 - Fixed Accuracy's Save
+- Added .webm Cutscenes support
+- Added GWeb on Credits
 - CoolUtil.floorDecimal() has replaced CoolUtil.truncateFloat()
