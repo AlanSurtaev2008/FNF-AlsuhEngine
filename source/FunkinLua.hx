@@ -1240,6 +1240,9 @@ class FunkinLua
 
 			WeekData.loadTheFirstEnabledMod();
 
+			PlayState.prevCamFollowPos = null;
+			PlayState.prevCamFollow = null;
+
 			switch (PlayState.gameMode)
 			{
 				case 'story':

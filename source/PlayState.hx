@@ -134,8 +134,6 @@ class PlayState extends MusicBeatState
 	public static var debugKeysChart:Array<FlxKey>;
 	public static var debugKeysCharacter:Array<FlxKey>;
 
-	private var iconsZooming:Bool = false;
-
 	public var boyfriendGroup:FlxSpriteGroup;
 	public var boyfriend:Boyfriend;
 
@@ -840,6 +838,8 @@ class PlayState extends MusicBeatState
 
 	public var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 
+	public var iconsZooming:Bool = false;
+
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 1;
@@ -852,13 +852,13 @@ class PlayState extends MusicBeatState
 	public var camFollowPos:FlxObject;
 	public var camFollow:FlxPoint;
 
-	private static var prevCamFollowPos:FlxObject;
-	private static var prevCamFollow:FlxPoint;
+	public static var prevCamFollowPos:FlxObject;
+	public static var prevCamFollow:FlxPoint;
 
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
 	public var eventNotes:Array<Dynamic> = [];
-	private var saveNotes:Array<Float> = [];
+	public var saveNotes:Array<Float> = [];
 
 	public var combo:Int = 0;
 
@@ -4212,6 +4212,9 @@ class PlayState extends MusicBeatState
 
 		seenCutscene = false;
 		deathCounter = 0;
+
+		prevCamFollowPos = null;
+		prevCamFollow = null;
 
 		var ret:Dynamic = callOnLuas('onEndSong', [], false);
 

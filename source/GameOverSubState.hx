@@ -165,6 +165,9 @@ class GameOverSubState extends MusicBeatSubState
 						PlayState.seenCutscene = false;
 
 						WeekData.loadTheFirstEnabledMod();
+
+						PlayState.prevCamFollowPos = null;
+						PlayState.prevCamFollow = null;
 			
 						switch (PlayState.gameMode)
 						{
