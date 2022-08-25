@@ -5887,7 +5887,7 @@ class PlayState extends MusicBeatState
 
 		BackgroundVideo.setWebm(webmHandler);
 
-		BackgroundVideo.get().source(source);
+		BackgroundVideo.get().source(Paths.getWebm(source));
 		BackgroundVideo.get().clearPause();
 
 		if (BackgroundVideo.isWebm) {
@@ -5934,7 +5934,7 @@ class PlayState extends MusicBeatState
 
 		BackgroundVideo.setWebm(webmHandler);
 
-		BackgroundVideo.get().source(source);
+		BackgroundVideo.get().source(Paths.getWebm(source));
 		BackgroundVideo.get().clearPause();
 
 		if (BackgroundVideo.isWebm) {
