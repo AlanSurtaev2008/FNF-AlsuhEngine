@@ -8,8 +8,8 @@ import flixel.group.FlxGroup;
 import flixel.tweens.FlxEase;
 import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
+import options.OptionsMenuState;
 import flixel.util.FlxStringUtil;
-import options.OptionsMenuState.OptionsSubState;
 
 using StringTools;
 
@@ -22,7 +22,7 @@ class PauseSubState extends MusicBeatSubState
 
 	var menuItems:Array<String> = [];
 
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Gameplay Changeables', 'Options', 'Exit to menu'];
+	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
 	var difficultyChoices:Array<String> = [];
 
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
@@ -62,6 +62,7 @@ class PauseSubState extends MusicBeatSubState
 			}
 	
 			menuItemsOG.insert(3 + num, 'End Song');
+			menuItemsOG.insert(4 + num, 'Gameplay Changeables');
 		}
 
 		if (PlayState.gameMode == 'replay') {
@@ -425,17 +426,16 @@ class PauseSubState extends MusicBeatSubState
 				}
 				case 'Exit to menu':
 				{
-					PlayState.cancelMusicFadeTween();
-
 					FlxG.sound.music.volume = 0;
 
+					PlayState.cancelMusicFadeTween();
+
 					PlayState.deathCounter = 0;
+
 					PlayState.seenCutscene = false;
+					PlayState.chartingMode = false;
 
 					WeekData.loadTheFirstEnabledMod();
-
-					PlayState.prevCamFollowPos = null;
-					PlayState.prevCamFollow = null;
 
 					switch (PlayState.gameMode)
 					{
@@ -445,6 +445,15 @@ class PauseSubState extends MusicBeatSubState
 							FlxG.switchState(new FreeplayMenuState());
 						case 'replay':
 						{
+							if (FlxG.save.data.botPlay != null)
+							{
+								PlayStateChangeables.botPlay = FlxG.save.data.botPlay;
+							}
+							else
+							{
+								PlayStateChangeables.botPlay = false;
+							}
+
 							if (FlxG.save.data.scrollSpeed != null)
 							{
 								PlayStateChangeables.scrollSpeed = FlxG.save.data.scrollSpeed;

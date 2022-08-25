@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
 
 using StringTools;
 
@@ -15,36 +15,49 @@ class OutdatedState extends MusicBeatState
 	public static var newVersion:String = 'lol';
 	public static var curChanges:String = "dk";
 
+	var bg:FlxSprite;
+	var txt:FlxText;
+
 	public override function create():Void
 	{
 		super.create();
 
-		var bg:FlxSprite = new FlxSprite();
+		bg = new FlxSprite();
 		bg.loadGraphic(Paths.getImage('bg/menuDesat'));
 		bg.antialiasing = OptionData.globalAntialiasing;
 		bg.color = 0xFF0F0F0F;
 		add(bg);
 
-		var txt:FlxText = new FlxText(0, 0, FlxG.width, "Your used version " + MainMenuState.engineVersion + "\nof Alsuh Engine is outdated."
+		txt = new FlxText(0, 0, FlxG.width, "Your used version " + MainMenuState.engineVersion + "\nof Alsuh Engine is outdated."
 			+ "\nUse the latest version " + newVersion
-			+ ".\n\nWhat new?\n\n" + curChanges + "\n\nPress ENTER to download latest version\nor ESCAPE to ignorite this message.", 32);
+			+ "." + (curChanges != '- dk' ? "\n\nWhat new?\n\n" + curChanges : '') + "\n\nPress ENTER to download latest version\nor ESCAPE to ignorite this message.", 32);
 		txt.setFormat(Paths.getFont('vcr.ttf'), 32, FlxColor.WHITE, CENTER);
 		txt.screenCenter();
 		add(txt);
 	}
 
+	var exitingToMenu:Bool = false;
+
 	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
-		if (controls.BACK)
+		if (controls.BACK && !exitingToMenu)
 		{
+			exitingToMenu = true;
 			leftState = true;
 
-			FlxG.switchState(new MainMenuState());
+			FlxTween.tween(txt, {alpha: 0}, 1, {onComplete: function(tween:FlxTween):Void
+			{
+				FlxG.switchState(new MainMenuState());
+			}});
+
+			FlxTween.tween(bg, {alpha: 0}, 0.5);
+
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
 		}
-		else if (controls.ACCEPT)
+
+		if (controls.ACCEPT)
 		{
 			CoolUtil.browserLoad('https://github.com/AlanSurtaev2008/FNF-AlsuhEngine/releases/latest');
 		}

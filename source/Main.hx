@@ -14,7 +14,7 @@ import lime.app.Application;
 import openfl.events.UncaughtErrorEvent;
 #end
 
-#if VIDEOS_ALLOWED
+#if WEBM_ALLOWED
 import webmlmfao.*;
 #end
 
@@ -105,7 +105,7 @@ class Main extends Sprite
 		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 		addChild(game);
 
-		#if VIDEOS_ALLOWED
+		#if WEBM_ALLOWED
 		var str1:String = "WEBM SHIT";
 		var webmHandle = new WebmHandler();
 		webmHandle.source(Paths.getWebm("DO NOT DELETE OR GAME WILL CRASH/dontDelete"));

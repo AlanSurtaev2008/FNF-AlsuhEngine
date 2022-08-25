@@ -6,7 +6,7 @@ class Highscore
 {
 	private static var weekScores:Map<String, Int> = #if (haxe >= "4.0.0") new Map() #else new Map<String, Int>() #end;
 	private static var songScores:Map<String, Int> = #if (haxe >= "4.0.0") new Map() #else new Map<String, Int>() #end;
-	private static var songAccuracy:Map<String, Float> #if (haxe >= "4.0.0") = new Map() #else new Map<String, Float>() #end;
+	private static var songAccuracy:Map<String, Float> = #if (haxe >= "4.0.0") new Map() #else new Map<String, Float>() #end;
 
 	public static function resetSong(song:String):Void
 	{

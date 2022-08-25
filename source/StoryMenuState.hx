@@ -13,6 +13,7 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxTween;
+import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
@@ -58,7 +59,7 @@ class StoryMenuState extends MusicBeatState
 
 		persistentUpdate = persistentDraw = true;
 
-		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0)
 		{
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
@@ -333,6 +334,8 @@ class StoryMenuState extends MusicBeatState
 
 					PlayState.SONG = Song.loadFromJson(curWeek.songs[0].songID + diffic, curWeek.songs[0].songID);
 					PlayState.gameMode = 'story';
+					PlayState.isStoryMode = true;
+					PlayState.firstSong = curWeek.songs[0].songID;
 
 					var songArray:Array<String> = [];
 
@@ -346,7 +349,11 @@ class StoryMenuState extends MusicBeatState
 					PlayState.storyWeek = curWeek.weekID;
 					PlayState.storyWeekName = curWeek.weekName;
 					PlayState.difficulties = curWeek.difficulties;
+
 					PlayState.campaignScore = 0;
+					PlayState.campaignMisses = 0;
+					PlayState.campaignAccuracy = 0;
+
 					PlayState.seenCutscene = false;
 
 					FlxG.sound.play(Paths.getSound('confirmMenu'));
@@ -412,6 +419,7 @@ class StoryMenuState extends MusicBeatState
 		#end
 
 		updateText();
+
 		changeDifficulty();
 	}
 

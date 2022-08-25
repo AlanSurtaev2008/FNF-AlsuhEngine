@@ -25,7 +25,7 @@ class ControlsSubState extends MusicBeatSubState
 	private static var defaultKey:String = 'Reset to Default Keys';
 	private var bindLength:Int = 0;
 
-	var optionShit:Array<Dynamic> =
+	var optionShit:Array<Array<String>> =
 	[
 		['NOTES'],
 		['Left', 'note_left'],
@@ -212,6 +212,13 @@ class ControlsSubState extends MusicBeatSubState
 
 			if (isPause)
 			{
+				PlayState.instance.keysArray = [
+					OptionData.copyKey(OptionData.keyBinds.get('note_left')),
+					OptionData.copyKey(OptionData.keyBinds.get('note_down')),
+					OptionData.copyKey(OptionData.keyBinds.get('note_up')),
+					OptionData.copyKey(OptionData.keyBinds.get('note_right'))
+				];
+
 				PlayState.isNextSubState = true;
 
 				FlxG.state.closeSubState();

@@ -30,6 +30,8 @@ class MusicBeatState extends FlxState
 
 		if (!Transition.skipNextTransOut)
 		{
+			onTransOut();
+
 			openSubState(new Transition(0.7, true));
 		}
 
@@ -76,6 +78,7 @@ class MusicBeatState extends FlxState
 			}
 		}
 
+		#if !mobile
 		if (OptionData.rainFPS && skippedFrames >= 6)
 		{
 			if (currentColor >= array.length) {
@@ -107,6 +110,17 @@ class MusicBeatState extends FlxState
 		{
 			skippedFrames2++;
 		}
+		#end
+	}
+
+	public function onTransIn():Void
+	{
+		// override per subclass
+	}
+
+	public function onTransOut():Void
+	{
+		// override per subclass
 	}
 
 	var exiting:Bool = false;
@@ -115,6 +129,8 @@ class MusicBeatState extends FlxState
 	{
 		if (!Transition.skipNextTransIn)
 		{
+			onTransIn();
+
 			if (!exiting)
 			{
 				openSubState(new Transition(0.6, false));

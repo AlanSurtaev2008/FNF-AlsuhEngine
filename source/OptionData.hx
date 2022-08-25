@@ -20,7 +20,7 @@ class OptionData
 	public static var controllerMode:Bool = false;
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
-	public static var cpuStrumsType:String = 'Lighting Up';
+	public static var cpuStrumsType:String = 'Light Up';
 	public static var hitsoundType:String = 'Kade';
 	public static var hitsoundVolume:Float = 0;
 	public static var noReset:Bool = false;
@@ -33,16 +33,18 @@ class OptionData
 	public static var noteOffset:Int = 0;
 
 	public static var camZooms:Bool = true;
+	public static var camShakes:Bool = true;
+
 	public static var iconZooms:Bool = true;
+	public static var sustainsType:String = 'New';
 	public static var noteSplashes:Bool = true;
+	public static var danceOffset:Int = 2;
 	public static var songPositionType:String = 'Time Left';
 	public static var scoreText:Bool = true;
 	public static var naughtyness:Bool = true;
 
 	public static var showRatings:Bool = true;
-	public static var ratingOnCamera:Bool = true;
 	public static var showNumbers:Bool = true;
-	public static var numbersOnCamera:Bool = true;
 
 	public static var healthBarAlpha:Float = 1;
 	public static var pauseMusic:String = 'Tea Time';
@@ -82,15 +84,16 @@ class OptionData
 		FlxG.save.data.safeFrames = safeFrames;
 		FlxG.save.data.noteOffset = noteOffset;
 		FlxG.save.data.camZooms = camZooms;
+		FlxG.save.data.camShakes = camShakes;
 		FlxG.save.data.iconZooms = iconZooms;
+		FlxG.save.data.sustainsType = sustainsType;
 		FlxG.save.data.noteSplashes = noteSplashes;
+		FlxG.save.data.danceOffset = danceOffset;
 		FlxG.save.data.songPositionType = songPositionType;
 		FlxG.save.data.scoreText = scoreText;
 		FlxG.save.data.naughtyness = naughtyness;
 		FlxG.save.data.showRatings = showRatings;
-		FlxG.save.data.ratingOnCamera = ratingOnCamera;
 		FlxG.save.data.showNumbers = showNumbers;
-		FlxG.save.data.numbersOnCamera = numbersOnCamera;
 		FlxG.save.data.noReset = noReset;
 		FlxG.save.data.healthBarAlpha = healthBarAlpha;
 		FlxG.save.data.hitsoundType = hitsoundType;
@@ -190,11 +193,21 @@ class OptionData
 		if (FlxG.save.data.camZooms != null) {
 			camZooms = FlxG.save.data.camZooms;
 		}
+		if (FlxG.save.data.camShakes != null) {
+			camShakes = FlxG.save.data.camShakes;
+		}
+
 		if (FlxG.save.data.iconZooms != null) {
 			iconZooms = FlxG.save.data.iconZooms;
 		}
 		if (FlxG.save.data.noteSplashes != null) {
 			noteSplashes = FlxG.save.data.noteSplashes;
+		}
+		if (FlxG.save.data.sustainsType != null) {
+			sustainsType = FlxG.save.data.sustainsType;
+		}
+		if (FlxG.save.data.danceOffset != null) {
+			danceOffset = FlxG.save.data.danceOffset;
 		}
 		if (FlxG.save.data.songPositionType != null) {
 			songPositionType = FlxG.save.data.songPositionType;
@@ -208,14 +221,8 @@ class OptionData
 		if (FlxG.save.data.showRatings != null) {
 			showRatings = FlxG.save.data.showRatings;
 		}
-		if (FlxG.save.data.ratingOnCamera != null) {
-			ratingOnCamera = FlxG.save.data.ratingOnCamera;
-		}
 		if (FlxG.save.data.showNumbers != null) {
 			showNumbers = FlxG.save.data.showNumbers;
-		}
-		if (FlxG.save.data.numbersOnCamera != null) {
-			numbersOnCamera = FlxG.save.data.numbersOnCamera;
 		}
 		if (FlxG.save.data.noReset != null) {
 			noReset = FlxG.save.data.noReset;
@@ -291,14 +298,24 @@ class OptionData
 		}
 	}
 
-	public static function getValue(variable:String):Dynamic
+	public static function field(variable:String):Dynamic
 	{
 		return Reflect.field(OptionData, variable);
 	}
 
-	public static function setValue(variable:String, value:Dynamic):Void
+	public static function setField(variable:String, value:Dynamic):Void
 	{
 		Reflect.setField(OptionData, variable, value);
+	}
+
+	public static function getProperty(variable:String):Dynamic
+	{
+		return Reflect.getProperty(OptionData, variable);
+	}
+
+	public static function setProperty(variable:String, value:Dynamic):Void
+	{
+		Reflect.setProperty(OptionData, variable, value);
 	}
 
 	public static var keyBinds:Map<String, Array<FlxKey>> =
@@ -338,7 +355,7 @@ class OptionData
 	public static function saveCtrls():Void
 	{
 		var save:FlxSave = new FlxSave();
-		save.bind('controls_v2', 'afford-set');
+		save.bind('controls_v3', 'afford-set');
 		save.data.keyBinds = keyBinds;
 		save.flush();
 	}
@@ -346,7 +363,7 @@ class OptionData
 	public static function loadCtrls():Void
 	{
 		var save:FlxSave = new FlxSave();
-		save.bind('controls_v2', 'afford-set');
+		save.bind('controls_v3', 'afford-set');
 
 		if (save != null && save.data.keyBinds != null)
 		{
@@ -364,8 +381,6 @@ class OptionData
 	public static function reloadControls():Void
 	{
 		PlayerSettings.player1.controls.setKeyboardScheme(KeyboardScheme.Solo);
-
-		MainMenuState.modsKeys = copyKey(keyBinds.get('mods'));
 
 		TitleState.muteKeys = copyKey(keyBinds.get('volume_mute'));
 		TitleState.volumeDownKeys = copyKey(keyBinds.get('volume_down'));

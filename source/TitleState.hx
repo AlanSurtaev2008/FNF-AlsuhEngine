@@ -86,9 +86,10 @@ class TitleState extends MusicBeatState
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		Highscore.load();
-		PlayerSettings.init();
 
+		PlayerSettings.init();
 		OptionData.loadCtrls();
+
 		PlayStateChangeables.loadChangeables();
 
 		#if sys
@@ -130,10 +131,10 @@ class TitleState extends MusicBeatState
 		}
 		else
 		{
-			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
-
 			persistentUpdate = true;
 			persistentDraw = true;
+
+			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 
 			startIntro();
 		}
@@ -263,7 +264,7 @@ class TitleState extends MusicBeatState
 
 	function getIntroTextShit():Array<Array<String>>
 	{
-		var fullText:String = Assets.getText(Paths.getTxt('introText'));
+		var fullText:String = Paths.getTextFromFile('data/introText.txt');
 
 		var firstArray:Array<String> = fullText.split('\n');
 		var swagGoodArray:Array<Array<String>> = [];

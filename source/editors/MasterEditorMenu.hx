@@ -37,7 +37,7 @@ class MasterEditorMenu extends MusicBeatState
 
 		FlxG.camera.bgColor = FlxColor.BLACK;
 
-		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0)
 		{
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}

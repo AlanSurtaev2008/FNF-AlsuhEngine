@@ -49,8 +49,7 @@ class PhillyGlowParticle extends FlxSprite
 			lifeTime = 0;
 			alpha -= decay * elapsed;
 
-			if (alpha > 0)
-			{
+			if (alpha > 0) {
 				scale.set(originalScale * alpha, originalScale * alpha);
 			}
 		}
@@ -88,8 +87,10 @@ class PhillyGlowGradient extends FlxSprite
 		if (newHeight > 0)
 		{
 			alpha = intendedAlpha;
+
 			setGraphicSize(2000, newHeight);
 			updateHitbox();
+
 			y = originalY + (originalHeight - height);
 		}
 		else

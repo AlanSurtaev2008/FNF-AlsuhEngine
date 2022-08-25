@@ -33,7 +33,9 @@ typedef SwagSong =
 	var stage:String;
 
 	var arrowSkin:String;
+	var arrowSkin2:String;
 	var splashSkin:String;
+	var splashSkin2:String;
 }
 
 class Song
@@ -48,6 +50,26 @@ class Song
 		if (songJson.songName == null)
 		{
 			songJson.songName = StringTools.replace(songJson.song, '-', ' ');
+		}
+
+		if (songJson.arrowSkin == null)
+		{
+			songJson.arrowSkin = '';
+		}
+
+		if (songJson.arrowSkin2 == null)
+		{
+			songJson.arrowSkin2 = songJson.arrowSkin;
+		}
+
+		if (songJson.splashSkin == null)
+		{
+			songJson.splashSkin = 'noteSplashes';
+		}
+
+		if (songJson.splashSkin2 == null)
+		{
+			songJson.splashSkin2 = songJson.splashSkin;
 		}
 
 		if (songJson.gfVersion == null) // from Psych Chars

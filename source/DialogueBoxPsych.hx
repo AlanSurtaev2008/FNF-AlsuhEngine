@@ -10,12 +10,8 @@ import sys.FileSystem;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
-import flixel.text.FlxText;
 import openfl.utils.Assets;
 import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
-import flixel.input.FlxKeyManager;
 import flixel.group.FlxSpriteGroup;
 
 using StringTools;

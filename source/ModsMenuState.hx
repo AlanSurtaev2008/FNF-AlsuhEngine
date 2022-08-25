@@ -390,7 +390,7 @@ class ModsMenuState extends MusicBeatState
 	public override function update(elapsed:Float)
 	{
 		if (bg.color != defaultColor) {
-			bg.color = FlxColor.interpolate(bg.color, (mods[curSelected].color != null ? mods[curSelected].color : defaultColor), CoolUtil.boundTo(elapsed * 2.45, 0, 1));
+			bg.color = CoolUtil.smoothColorChange(bg.color, (mods[curSelected].color != null ? mods[curSelected].color : defaultColor), elapsed * 2.45);
 		}
 
 		if(noModsTxt.visible)

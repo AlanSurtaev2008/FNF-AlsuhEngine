@@ -43,6 +43,8 @@ class MenuCharacterEditorState extends MusicBeatUIState
 	{
 		super.create();
 
+		persistentUpdate = true;
+
 		Conductor.changeBPM(102);
 
 		characterFile = {
@@ -247,7 +249,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 			reloadSelectedCharacter();
 		});
 		
-		scaleStepper = new FlxUINumericStepper(190, imageInputText.y, 0.05, 1, 0.1, 30, 2);
+		scaleStepper = new FlxUINumericStepper(190, imageInputText.y, 1, 1, 0.1, 30, 2);
 
 		fpsStepper = new FlxUINumericStepper(190, scaleStepper.y + 100, 1, 24, 1, 120, 2);
 		fpsAltStepper = new FlxUINumericStepper(190, fpsStepper.y + 40, 1, 24, 1, 120, 2);
@@ -257,7 +259,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Start Press animation on the .XML:');
 		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
 		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
-		tab_group.add(new FlxText(10, idleAltInputText.y - 26, 0, 'Alternative idle animation on the .XML\n(type this first, if "Is GF?" checked):'));
+		tab_group.add(new FlxText(10, idleAltInputText.y - 26, 0, 'Alternative idle animation on the .XML:'));
 		tab_group.add(new FlxText(scaleStepper.x, scaleStepper.y - 18, 0, 'Scale:'));
 		tab_group.add(new FlxText(10, animationIndicesInputText.y - 18, 0, 'Animation Indices:'));
 		tab_group.add(new FlxText(10, animationAltIndicesInputText.y - 18, 0, 'Alternative Animation Indices:'));

@@ -2,11 +2,14 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 
 using StringTools;
 
@@ -22,6 +25,10 @@ class GameOverSubState extends MusicBeatSubState
 	var updateCamera:Bool = false;
 	var playingDeathSound:Bool = false;
 
+	public static var colorStartFlash:FlxColor = FlxColor.RED;
+	public static var colorFlash:FlxColor = FlxColor.WHITE;
+	public static var colorConfirmFlash:FlxColor = 0x85FFFFFF;
+	public static var flashStart:Float = 1;
 	public static var characterName:String = 'bf-dead';
 	public static var deathSoundName:String = 'fnf_loss_sfx';
 	public static var loopSoundName:String = 'gameOver';
@@ -29,6 +36,10 @@ class GameOverSubState extends MusicBeatSubState
 
 	public static function resetVariables():Void
 	{
+		colorStartFlash = FlxColor.RED;
+		colorFlash = FlxColor.WHITE;
+		colorConfirmFlash = 0x85FFFFFF;
+		flashStart = 1;
 		characterName = 'bf-dead';
 		deathSoundName = 'fnf_loss_sfx';
 		loopSoundName = 'gameOver';
@@ -43,6 +54,8 @@ class GameOverSubState extends MusicBeatSubState
 		PlayState.instance.callOnLuas('onGameOverStart', []);
 	}
 
+	var bg:FlxSprite;
+
 	public function new(x:Float, y:Float):Void
 	{
 		super();
@@ -51,6 +64,15 @@ class GameOverSubState extends MusicBeatSubState
 
 		Conductor.changeBPM(100);
 		Conductor.songPosition = 0;
+
+		bg = new FlxSprite();
+		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
+		bg.scrollFactor.set();
+		bg.scale.set(100, 100);
+		bg.screenCenter();
+		bg.color = colorStartFlash;
+		bg.alpha = 1 - (OptionData.flashingLights ? 0 : 0.5);
+		add(bg);
 
 		boyfriend = new Boyfriend(x, y, characterName);
 		boyfriend.x += boyfriend.positionArray[0];
@@ -69,28 +91,34 @@ class GameOverSubState extends MusicBeatSubState
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 		camFollowPos.setPosition(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2));
 		add(camFollowPos);
+
+		new FlxTimer().start(flashStart, function(tmr:FlxTimer)
+		{
+			bg.color = colorFlash;
+			bg.alpha = 1 - (OptionData.flashingLights ? 0 : 0.5);
+
+			micIsDown = true;
+		});
 	}
 
+	var micIsDown:Bool = false;
 	var isFollowingAlready:Bool = false;
 
 	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
+		bg.alpha = FlxMath.lerp(bg.alpha, 0, CoolUtil.boundTo(elapsed * 2.4, 0, 1));
+
 		if (updateCamera)
 		{
-			var lerpVal:Float = CoolUtil.boundTo(elapsed * 2.4, 0, 1);
+			var lerpVal:Float = CoolUtil.boundTo(elapsed * 0.6, 0, 1);
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 		}
 
-		if (controls.ACCEPT)
+		if (controls.ACCEPT || controls.BACK)
 		{
-			endBullshit(false);
-		}
-
-		if (controls.BACK)
-		{
-			endBullshit(true);
+			endBullshit(controls.BACK);
 		}
 
 		if (boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name == 'firstDeath')
@@ -150,6 +178,9 @@ class GameOverSubState extends MusicBeatSubState
 		{
 			isEnding = true;
 
+			bg.alpha = 0.5 - (OptionData.flashingLights ? 0 : 0.3);
+			bg.color = colorConfirmFlash;
+
 			boyfriend.playAnim('deathConfirm', true);
 
 			FlxG.sound.music.stop();
@@ -162,12 +193,11 @@ class GameOverSubState extends MusicBeatSubState
 					if (toMenu)
 					{
 						PlayState.deathCounter = 0;
+
 						PlayState.seenCutscene = false;
+						PlayState.chartingMode = false;
 
 						WeekData.loadTheFirstEnabledMod();
-
-						PlayState.prevCamFollowPos = null;
-						PlayState.prevCamFollow = null;
 			
 						switch (PlayState.gameMode)
 						{
@@ -177,6 +207,15 @@ class GameOverSubState extends MusicBeatSubState
 								FlxG.switchState(new FreeplayMenuState());
 							case 'replay':
 							{
+								if (FlxG.save.data.botPlay != null)
+								{
+									PlayStateChangeables.botPlay = FlxG.save.data.botPlay;
+								}
+								else
+								{
+									PlayStateChangeables.botPlay = false;
+								}
+
 								if (FlxG.save.data.scrollSpeed != null)
 								{
 									PlayStateChangeables.scrollSpeed = FlxG.save.data.scrollSpeed;

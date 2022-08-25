@@ -30,7 +30,7 @@ class Conductor
 
 		for (i in 0...timingWindows.length)
 		{
-			if (diff <= timingWindows[Math.round(Math.min(i, timingWindows.length - 1))])
+			if (diff / (note.isSustainNote ? 2 : 1) <= (timingWindows[Math.round(Math.min(i, timingWindows.length - 1))] / (note.isSustainNote ? 2 : 1)))
 			{
 				return windowNames[i];
 			}

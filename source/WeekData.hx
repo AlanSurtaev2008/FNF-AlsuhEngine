@@ -278,7 +278,7 @@ class WeekData
 		{
 			var week:WeekFile = getWeekFile(path);
 		
-			if(week != null)
+			if (week != null)
 			{
 				var weekFile:WeekData = new WeekData(week, weekToCheck);
 			

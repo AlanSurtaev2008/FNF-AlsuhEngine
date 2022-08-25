@@ -148,15 +148,17 @@ class LoadingState extends MusicBeatState
 		FlxG.switchState(target);
 	}
 	
+	#if NO_PRELOAD_ALL
 	static function getSongPath():Any
 	{
-		return Paths.getInst(PlayState.SONG.songID);
+		return Paths.getInst(PlayState.SONG.songID, CoolUtil.getDifficultySuffix(PlayState.lastDifficulty));
 	}
 	
 	static function getVocalPath():Any
 	{
-		return Paths.getVoices(PlayState.SONG.songID);
+		return Paths.getVoices(PlayState.SONG.songID, CoolUtil.getDifficultySuffix(PlayState.lastDifficulty));
 	}
+	#end
 	
 	public static function loadAndSwitchState(target:FlxState, stopMusic:Bool = false, skip:Bool = false):Void
 	{

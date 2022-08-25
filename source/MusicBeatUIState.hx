@@ -110,6 +110,16 @@ class MusicBeatUIState extends FlxUIState
 		}
 	}
 
+	public function onTransIn():Void
+	{
+		// override per subclass
+	}
+
+	public function onTransOut():Void
+	{
+		// override per subclass
+	}
+
 	private function updateSection():Void
 	{
 		if (stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);

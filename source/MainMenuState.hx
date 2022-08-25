@@ -23,11 +23,18 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var modsKeys:Array<FlxKey> = [M, NONE];
-
 	private static var curSelected:Int = 0;
 
-	var menuItems:Array<String> = ['story_mode', 'freeplay', #if !switch 'donate', 'options' #end];
+	var menuItems:Array<String> =
+	[
+		'story_mode',
+		'freeplay'
+		#if !switch ,
+		'donate',
+		'options'
+		#end
+	];
+
 	var grpMenuItems:FlxTypedGroup<FlxSprite>;
 
 	var magenta:FlxSprite;
@@ -35,7 +42,7 @@ class MainMenuState extends MusicBeatState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.4';
+	public static var engineVersion:String = '1.5';
 	public static var gameVersion:String = '0.2.8';
 
 	var debugKeys:Array<FlxKey>;
@@ -56,8 +63,7 @@ class MainMenuState extends MusicBeatState
 
 		debugKeys = OptionData.copyKey(OptionData.keyBinds.get('debug_1'));
 
-		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
-		{
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0) {
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
@@ -73,11 +79,6 @@ class MainMenuState extends MusicBeatState
 		bg.antialiasing = OptionData.globalAntialiasing;
 		add(bg);
 
-		camFollow = new FlxPoint(0, 0);
-
-		camFollowPos = new FlxObject(0, 0, 1, 1);
-		add(camFollowPos);
-
 		magenta = new FlxSprite(-80);
 		magenta.loadGraphic(Paths.getImage('bg/menuDesat'));
 		magenta.scrollFactor.x = 0;
@@ -89,6 +90,11 @@ class MainMenuState extends MusicBeatState
 		magenta.antialiasing = OptionData.globalAntialiasing;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
+
+		camFollow = new FlxPoint(0, 0);
+
+		camFollowPos = new FlxObject(0, 0, 1, 1);
+		add(camFollowPos);
 
 		grpMenuItems = new FlxTypedGroup<FlxSprite>();
 		add(grpMenuItems);
@@ -109,31 +115,15 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
+		camFollow.y = bg.getMidpoint().y;
+		camFollowPos.y = bg.getMidpoint().y;
+
 		var text:String = 'v ' + gameVersion + (OptionData.watermarks ? ' - FNF | v ' + engineVersion + ' - Alsuh Engine' : '');
 
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 24, 0, text, 12);
 		versionShit.setFormat(Paths.getFont('vcr.ttf'), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		versionShit.scrollFactor.set();
 		add(versionShit);
-
-		#if MODS_ALLOWED
-		var keyShit:String = CoolUtil.getKeyName(OptionData.keyBinds.get('mods')[0]) + ' or ' + CoolUtil.getKeyName(OptionData.keyBinds.get('mods')[1]);
-
-		if (keyShit.contains('---'))
-		{
-			keyShit = StringTools.replace(keyShit, '---', '');
-			keyShit = StringTools.replace(keyShit, ' or ', '');
-		}
-
-		if (keyShit != '---')
-		{
-			var modsShit:FlxText = new FlxText(0, FlxG.height - 24, 0, 'Press ' + keyShit + ' to Mods Menu', 12);
-			modsShit.setFormat(Paths.getFont('vcr.ttf'), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			modsShit.x = FlxG.width - (modsShit.width + 12);
-			modsShit.scrollFactor.set();
-			add(modsShit);
-		}
-		#end
 
 		changeSelection();
 	}
@@ -145,14 +135,14 @@ class MainMenuState extends MusicBeatState
 	{
 		super.update(elapsed);
 
-		var lerpVal:Float = CoolUtil.boundTo(elapsed * 4, 0, 1);
-		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
-
 		if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 			if (FreeplayMenuState.vocals != null) FreeplayMenuState.vocals.volume += 0.5 * elapsed;
 		}
+
+		var lerpVal:Float = CoolUtil.boundTo(elapsed * 4, 0, 1);
+		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
 		if (!selectedSomethin)
 		{
@@ -202,7 +192,7 @@ class MainMenuState extends MusicBeatState
 			}
 
 			#if MODS_ALLOWED
-			if (FlxG.keys.anyJustPressed(OptionData.copyKey(modsKeys)))
+			if (FlxG.keys.anyJustPressed(OptionData.copyKey(OptionData.keyBinds.get('mods'))))
 			{
 				selectedSomethin = true;
 
@@ -287,7 +277,13 @@ class MainMenuState extends MusicBeatState
 			case 'freeplay':
 				FlxG.switchState(new FreeplayMenuState());
 			case 'options':
+			{
+				#if NO_PRELOAD_ALL
+				Transition.skipNextTransOut = true;
+				#end
+
 				LoadingState.loadAndSwitchState(new options.OptionsMenuState());
+			}
 		}
 	}
 

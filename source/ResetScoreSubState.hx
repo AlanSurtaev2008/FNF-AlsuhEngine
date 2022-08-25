@@ -111,12 +111,9 @@ class ResetScoreSubState extends MusicBeatSubState
 		{
 			if (onYes)
 			{
-				if (mode == 'freeplay')
-				{
+				if (mode == 'freeplay') {
 					Highscore.resetSong(CoolUtil.formatSong(songID, difficulty));
-				}
-				else
-				{
+				} else {
 					Highscore.resetWeek(CoolUtil.formatSong(songID, difficulty));
 				}
 			}

@@ -62,7 +62,7 @@ class Character extends FlxSprite
 	public var specialAnim:Bool = false;
 	public var animationNotes:Array<Dynamic> = [];
 	public var stunned:Bool = false;
-	public var singDuration:Float = 4; //Multiplier of how long a curCharacter holds the sing pose
+	public var singDuration:Float = 4; //Multiplier of how long a character holds the sing pose
 	public var idleSuffix:String = '';
 	public var danceIdle:Bool = false; //Character use "danceLeft" and "danceRight" instead of "idle"
 	public var skipDance:Bool = false;
@@ -82,7 +82,7 @@ class Character extends FlxSprite
 	public var originalFlipX:Bool = false;
 	public var healthColorArray:Array<Int> = [255, 0, 0];
 
-	public static var DEFAULT_CHARACTER:String = 'bf'; //In case a curCharacter is missing, it will use BF on its place
+	public static var DEFAULT_CHARACTER:String = 'bf'; //In case a character is missing, it will use BF on its place
 
 	public function new(x:Float, y:Float, ?curCharacter:String = 'bf', ?isPlayer:Bool = false):Void
 	{
@@ -101,7 +101,7 @@ class Character extends FlxSprite
 
 		switch (curCharacter)
 		{
-			// case 'your curCharacter name in case you want to hardcode them instead':
+			// case 'your character name in case you want to hardcode them instead':
 			// {
 			// }
 			default:
@@ -122,7 +122,7 @@ class Character extends FlxSprite
 				if (!Assets.exists(path))
 				#end
 				{
-					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a curCharacter couldn't be found, change him to BF just to prevent a crash
+					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 				}
 
 				#if MODS_ALLOWED
@@ -415,8 +415,7 @@ class Character extends FlxSprite
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1[0], Obj2[0]);
 	}
 
-	public var danceEveryNumBeats:Int = 2;
-
+	public var danceEveryNumBeats:Int = OptionData.danceOffset;
 	private var settingCharacterUp:Bool = true;
 
 	public function recalculateDanceIdle():Void
@@ -426,7 +425,7 @@ class Character extends FlxSprite
 
 		if (settingCharacterUp)
 		{
-			danceEveryNumBeats = (danceIdle ? 1 : 2);
+			danceEveryNumBeats = (danceIdle ? 1 : OptionData.danceOffset);
 		}
 		else if (lastDanceIdle != danceIdle)
 		{

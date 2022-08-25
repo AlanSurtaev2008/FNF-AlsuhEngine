@@ -12,6 +12,7 @@ class AttachedSprite extends FlxSprite
 	public var yAdd:Float = 0;
 
 	public var angleAdd:Float = 0;
+
 	public var alphaMult:Float = 1;
 
 	public var copyAngle:Bool = true;

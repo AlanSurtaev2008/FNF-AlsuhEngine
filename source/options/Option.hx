@@ -13,7 +13,13 @@ class Option
 	// Everything else will use a text
 
 	public var selected:Bool = false; // If false, then skip the label.
+
+	public var onPause:Bool = false;
+	public var luaAllowed:Bool = false;
+	public var luaVarAltShit:String = '';
+
 	public var isPause(default, set):Bool = false;
+
 	public var isIgnoriteFunctionOnReset:Bool = false;
 
 	public var showBoyfriend:Bool = false;
@@ -107,12 +113,20 @@ class Option
 	public function setValue(value:Dynamic):Void
 	{
 		Reflect.setProperty(OptionData, variable, value);
+
+		if (onPause && luaAllowed) // for lua shit
+		{
+			PlayState.instance.setOnLuas(variable, getValue());
+
+			if (luaVarAltShit != null || luaVarAltShit.length > 0) {
+				PlayState.instance.setOnLuas(luaVarAltShit, getValue());
+			}
+		}
 	}
 
 	private function set_isPause(value:Bool):Bool
 	{
-		if (value)
-		{
+		if (value) {
 			description = 'This preference cannot be toggled in the pause menu.';
 		}
 

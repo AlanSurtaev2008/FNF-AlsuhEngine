@@ -31,7 +31,7 @@ class ReplaysState extends MusicBeatState
 		DiscordClient.changePresence("In the Replays Menu", null); // Updating Discord Rich Presence
 		#end
 
-		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0)
 		{
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
@@ -134,6 +134,7 @@ class ReplaysState extends MusicBeatState
 
 				PlayState.SONG = Song.loadFromJson(PlayState.rep.replay.songID  + diffic, PlayState.rep.replay.songID);
 				PlayState.gameMode = 'replay';
+				PlayState.isStoryMode = false;
 				PlayState.difficulties = PlayState.rep.replay.difficulties;
 				PlayState.lastDifficulty = PlayState.rep.replay.songDiff;
 				PlayState.storyDifficulty = PlayState.rep.replay.songDiff;

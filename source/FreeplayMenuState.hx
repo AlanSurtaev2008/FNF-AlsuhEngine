@@ -43,7 +43,7 @@ class FreeplayMenuState extends MusicBeatState
 		DiscordClient.changePresence("In the Freeplay Menu", null); // Updating Discord Rich Presence
 		#end
 
-		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0)
 		{
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
@@ -88,7 +88,6 @@ class FreeplayMenuState extends MusicBeatState
 
 		bg = new FlxSprite();
 		bg.loadGraphic(Paths.getImage('bg/menuDesat'));
-		bg.color = 0xFFFFFFFF;
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.scrollFactor.set();
@@ -172,8 +171,7 @@ class FreeplayMenuState extends MusicBeatState
 		FlxTween.tween(textBG, {y: FlxG.height - 26}, 2, {ease: FlxEase.circOut});
 		FlxTween.tween(text, {y: FlxG.height - 26 + 4}, 2, {ease: FlxEase.circOut});
 
-		if (curDifficultyString == '')
-		{
+		if (curDifficultyString == '') {
 			curDifficultyString = songsArray[curSelected].defaultDifficulty;
 		}
 
@@ -215,12 +213,11 @@ class FreeplayMenuState extends MusicBeatState
 	{
 		super.update(elapsed);
 
-		if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.7)
-		{
+		if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.7) {
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
 
-		bg.color = FlxColor.interpolate(bg.color, curSong.color, CoolUtil.boundTo(elapsed * 2.45, 0, 1));
+		bg.color = CoolUtil.smoothColorChange(bg.color, curSong.color, elapsed * 2.45);
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
 		lerpAccuracy = FlxMath.lerp(lerpAccuracy, intendedAccuracy, CoolUtil.boundTo(elapsed * 12, 0, 1));
@@ -238,7 +235,7 @@ class FreeplayMenuState extends MusicBeatState
 		if (ratingSplit.length < 2) { // No decimals, add an empty space
 			ratingSplit.push('');
 		}
-		
+
 		while (ratingSplit[1].length < 2) { // Less than 2 decimals in it, add decimals then
 			ratingSplit[1] += '0';
 		}
@@ -341,12 +338,12 @@ class FreeplayMenuState extends MusicBeatState
 				PlayState.SONG = Song.loadFromJson(curSong.songID + diffic, curSong.songID);
 
 				if (PlayState.SONG.needsVoices)
-					vocals = new FlxSound().loadEmbedded(Paths.getVoices(PlayState.SONG.songID));
+					vocals = new FlxSound().loadEmbedded(Paths.getVoices(PlayState.SONG.songID, CoolUtil.getDifficultySuffix(curDifficultyString, curSong.difficulties)));
 				else
 					vocals = new FlxSound();
 
 				FlxG.sound.list.add(vocals);
-				FlxG.sound.playMusic(Paths.getInst(PlayState.SONG.songID), 0.7);
+				FlxG.sound.playMusic(Paths.getInst(PlayState.SONG.songID, CoolUtil.getDifficultySuffix(curDifficultyString, curSong.difficulties)), 0.7);
 
 				vocals.play();
 				vocals.persist = true;
@@ -365,6 +362,7 @@ class FreeplayMenuState extends MusicBeatState
 
 			PlayState.SONG = Song.loadFromJson(curSong.songID + diffic, curSong.songID);
 			PlayState.gameMode = 'freeplay';
+			PlayState.isStoryMode = false;
 			PlayState.difficulties = curSong.difficulties;
 			PlayState.storyDifficulty = curDifficultyString;
 			PlayState.lastDifficulty = curDifficultyString;
@@ -440,7 +438,7 @@ class FreeplayMenuState extends MusicBeatState
 				icon.alpha = 1;
 			}
 		}
-
+		
 		Paths.currentModDirectory = curSong.folder;
 
 		#if !switch
@@ -448,9 +446,8 @@ class FreeplayMenuState extends MusicBeatState
 		intendedAccuracy = Highscore.getAccuracy(CoolUtil.formatSong(curSong.songID, curDifficultyString));
 		#end
 
-		if (playSound)
-		{
-			FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
+		if (playSound) {
+			FlxG.sound.play(Paths.getSound('scrollMenu'), 0.4);
 		}
 
 		changeDifficulty();
@@ -507,7 +504,7 @@ class SongMetaData
 
 	public var folder:String = "";
 
-	public function new(songID:String = '', songName:String = '', songCharacter:String = '',color:FlxColor = 0xFFFFFFFF):Void
+	public function new(songID:String = '', songName:String = '', songCharacter:String = '', color:FlxColor = 0xFFFFFFFF):Void
 	{
 		this.songID = songID;
 		this.songName = songName;

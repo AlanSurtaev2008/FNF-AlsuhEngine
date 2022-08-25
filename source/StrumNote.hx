@@ -9,15 +9,15 @@ using StringTools;
 class StrumNote extends FlxSprite
 {
 	private var colorSwap:ColorSwap;
-	private var noteData:Int = 0;
 
+	public var noteData:Int = 0;
 	public var resetAnim:Float = 0;
 
 	public var direction:Float = 90;//plan on doing scroll directions soon -bb
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
 	public var sustainReduce:Bool = true;
 
-	private var player:Int;
+	public var player:Int;
 
 	public function new(x:Float, y:Float, leData:Int, player:Int):Void
 	{
@@ -32,7 +32,19 @@ class StrumNote extends FlxSprite
 		super(x, y);
 
 		var skin:String = 'NOTE_assets';
-		if (PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
+
+		if (player == 1)
+		{
+			if (PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) {
+				skin = PlayState.SONG.arrowSkin;
+			}
+		}
+		else
+		{
+			if (PlayState.SONG.arrowSkin2 != null && PlayState.SONG.arrowSkin2.length > 1) {
+				skin = PlayState.SONG.arrowSkin2;
+			}
+		}
 
 		if (PlayState.isPixelStage)
 		{

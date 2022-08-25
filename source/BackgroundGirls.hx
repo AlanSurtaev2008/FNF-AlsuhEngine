@@ -6,7 +6,7 @@ class BackgroundGirls extends FlxSprite
 {
 	var isPissed:Bool = true;
 
-	public function new(x:Float, y:Float)
+	public function new(x:Float, y:Float):Void
 	{
 		super(x, y);
 

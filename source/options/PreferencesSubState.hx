@@ -8,6 +8,7 @@ import options.OptionsMenuState;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.ui.FlxBar;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -80,6 +81,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 		option.minValue = 60;
 		option.maxValue = 240;
+		option.luaAllowed = true;
 		option.displayFormat = '%v FPS';
 		option.onChange = onChangeFramerate;
 		#end
@@ -92,6 +94,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'ghostTapping',
 			'bool',
 			true);
+		option.luaAllowed = true;
 		addOption(option);
 
 		var option:Option = new Option('Controller Mode',
@@ -128,15 +131,16 @@ class PreferencesSubState extends MusicBeatSubState
 			'What should the opponent (CPU) notes?',
 			'cpuStrumsType',
 			'string',
-			'Lighting Up',
-			['Lighting Up', 'Normal', 'Disabled']);
+			'Light Up',
+			['Light Up', 'Normal', 'Disabled']);
 
 		if (isPause)
 		{
 			if (option.getValue() == 'Disabled') {
 				option.isPause = isPause;
 			} else {
-				option.options = ['Lighting Up', 'Normal'];
+				option.options = ['Light Up', 'Normal'];
+				option.luaAllowed = true;
 			}
 		}
 
@@ -148,6 +152,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'noReset',
 			'bool',
 			false);
+		option.luaAllowed = true;
 		addOption(option);
 
 		var option:Option = new Option('Hitsound Type:',
@@ -181,6 +186,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'int',
 			0);
 		option.displayFormat = '%vms';
+		option.luaAllowed = true;
 		option.scrollSpeed = 20;
 		option.minValue = -30;
 		option.maxValue = 30;
@@ -193,6 +199,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'int',
 			45);
 		option.displayFormat = '%vms';
+		option.luaAllowed = true;
 		option.scrollSpeed = 15;
 		option.minValue = 15;
 		option.maxValue = 45;
@@ -205,6 +212,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'int',
 			90);
 		option.displayFormat = '%vms';
+		option.luaAllowed = true;
 		option.scrollSpeed = 30;
 		option.minValue = 15;
 		option.maxValue = 90;
@@ -217,6 +225,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'int',
 			135);
 		option.displayFormat = '%vms';
+		option.luaAllowed = true;
 		option.scrollSpeed = 60;
 		option.minValue = 15;
 		option.maxValue = 135;
@@ -229,6 +238,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'int',
 			160);
 		option.displayFormat = '%vms';
+		option.luaAllowed = true;
 		option.scrollSpeed = 60;
 		option.minValue = 15;
 		option.maxValue = 160;
@@ -240,24 +250,12 @@ class PreferencesSubState extends MusicBeatSubState
 			'safeFrames',
 			'float',
 			10);
+		option.luaAllowed = true;
 		option.scrollSpeed = 5;
 		option.minValue = 2;
 		option.maxValue = 10;
 		option.changeValue = 0.1;
 		option.onChange = onChangeSafeFrames;
-		addOption(option);
-
-		var option:Option = new Option('Note Delay',
-			true,
-			'Changes how late a note is spawned.\nUseful for preventing audio lag from wireless earphones.',
-			'noteOffset',
-			'int',
-			0);
-		option.displayFormat = '%vms';
-		option.scrollSpeed = 100;
-		option.minValue = 0;
-		option.maxValue = 500;
-		option.isPause = isPause;
 		addOption(option);
 
 		addOption(new Option('Visuals and UI', false));
@@ -268,7 +266,16 @@ class PreferencesSubState extends MusicBeatSubState
 			'camZooms',
 			'bool',
 			true);
-		option.onChange = onChangeCameraZoom;
+		addOption(option);
+
+		var option:Option = new Option('Camera Shakes',
+			true,
+			"Uncheck this if you're sensitive to camera shake!",
+			'camShakes',
+			'bool',
+			true);
+		option.luaAllowed = true;
+		option.luaVarAltShit = 'cameraZoomOnBeat';
 		addOption(option);
 
 		var option:Option = new Option('Icon Zooms',
@@ -277,6 +284,17 @@ class PreferencesSubState extends MusicBeatSubState
 			'iconZooms',
 			'bool',
 			true);
+		option.luaAllowed = true;
+		addOption(option);
+
+		var option:Option = new Option('Consume Notes\'s Sustains:',
+			true,
+			"What should the Consume Notes's Sustains?",
+			'sustainsType',
+			'string',
+			'New',
+			['New', 'Old']);
+		option.isPause = isPause;
 		addOption(option);
 
 		var option:Option = new Option('Note Splashes',
@@ -285,6 +303,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'noteSplashes',
 			'bool',
 			true);
+		option.luaAllowed = true;
 		addOption(option);
 
 		var option:Option = new Option('Time Bar:',
@@ -295,6 +314,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'Time Left',
 			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		option.onChange = onChangeSongPosition;
+		option.luaAllowed = true;
 		addOption(option);
 
 		var option:Option = new Option('Score Text',
@@ -304,6 +324,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'bool',
 			true);
 		option.onChange = onChangeScoreText;
+		option.luaAllowed = true;
 		addOption(option);
 
 		var option:Option = new Option('Naughtyness',
@@ -312,14 +333,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'naughtyness',
 			'bool',
 			true);
-		addOption(option);
-
-		var option:Option = new Option('Combo Position',
-			true,
-			'If press this, you will be transferred to the menu for the desired position of the combo ratings and numbers.');
-		option.onChange = openComboPosition;
-		option.type = 'menu';
-		option.isIgnoriteFunctionOnReset = true;
+		option.luaAllowed = true;
 		addOption(option);
 
 		var option:Option = new Option('Show Ratings',
@@ -328,14 +342,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'showRatings',
 			'bool',
 			true);
-		addOption(option);
-
-		var option:Option = new Option('Ratings on Camera',
-			true,
-			"If unchecked, then the combo ratings will not be in the HUD, where there are UI elements.",
-			'ratingOnCamera',
-			'bool',
-			true);
+		option.onChange = onChangeRating;
 		addOption(option);
 
 		var option:Option = new Option('Show Numbers',
@@ -344,14 +351,7 @@ class PreferencesSubState extends MusicBeatSubState
 			'showNumbers',
 			'bool',
 			true);
-		addOption(option);
-
-		var option:Option = new Option('Numbers on Camera',
-			true,
-			"If unchecked, then the combo numbers will not be in the HUD, where there are UI elements.",
-			'numbersOnCamera',
-			'bool',
-			true);
+		option.onChange = onChangeNumbers;
 		addOption(option);
 
 		var option:Option = new Option('Health Bar Transparency',
@@ -366,6 +366,7 @@ class PreferencesSubState extends MusicBeatSubState
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		option.onChange = onChangeHealthBarColor;
+		option.luaAllowed = true;
 		addOption(option);
 
 		var option:Option = new Option('Pause Screen Song:',
@@ -568,6 +569,8 @@ class PreferencesSubState extends MusicBeatSubState
 		for (i in 0...optionsArray.length)
 		{
 			var leOption:Option = optionsArray[i];
+			leOption.onPause = isPause;
+
 			var isCentered:Bool = unselectableCheck(i, true);
 
 			var optionText:Alphabet = new Alphabet(0, 70 * i, leOption.name, isCentered, false);
@@ -952,8 +955,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 	function reloadCheckboxes():Void
 	{
-		for (checkbox in checkboxGroup)
-		{
+		for (checkbox in checkboxGroup) {
 			checkbox.daValue = (optionsArray[checkbox.ID].getValue() == true);
 		}
 	}
@@ -1020,29 +1022,6 @@ class PreferencesSubState extends MusicBeatSubState
 		Conductor.safeZoneOffset = (OptionData.safeFrames / 60) * 1000;
 	}
 
-	var lastZoom:Float = 0;
-	var lastZoomHUD:Float = 0;
-
-	function onChangeCameraZoom():Void
-	{
-		if (isPause)
-		{
-			if (OptionData.camZooms)
-			{
-				FlxG.camera.zoom = lastZoom;
-				PlayState.instance.camHUD.zoom = lastZoomHUD;
-			}
-			else
-			{
-				lastZoom = FlxG.camera.zoom;
-				lastZoomHUD = PlayState.instance.camHUD.zoom;
-
-				FlxG.camera.zoom = PlayState.instance.defaultCamZoom;
-				PlayState.instance.camHUD.zoom = 0;
-			}
-		}
-	}
-
 	function onChangeScoreText():Void
 	{
 		if (isPause) {
@@ -1054,9 +1033,11 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		if (isPause)
 		{
-			PlayState.instance.songPosBG.visible = OptionData.songPositionType != 'Disabled';
-			PlayState.instance.songPosBar.visible = OptionData.songPositionType != 'Disabled';
-			PlayState.instance.songPosName.visible = OptionData.songPositionType != 'Disabled';
+			var showTime:Bool = OptionData.songPositionType != 'Disabled';
+
+			PlayState.instance.songPosBG.visible = showTime;
+			PlayState.instance.songPosBar.visible = showTime;
+			PlayState.instance.songPosName.visible = showTime;
 
 			var curTime:Float = Conductor.songPosition - OptionData.noteOffset;
 			if (curTime < 0) curTime = 0;
@@ -1071,7 +1052,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 			PlayState.instance.songPosName.text = PlayState.SONG.songName + " - " + CoolUtil.getDifficultyName(PlayState.lastDifficulty, PlayState.difficulties);
 
-			if (OptionData.songPositionType == 'Time Left' || OptionData.songPositionType == 'Time Elapsed') {
+			if (OptionData.songPositionType != 'Song Name') {
 				PlayState.instance.songPosName.text += ' (' + FlxStringUtil.formatTime(secondsTotal, false) + ')';
 			}
 		}
@@ -1088,14 +1069,26 @@ class PreferencesSubState extends MusicBeatSubState
 		}
 	}
 
-	function openComboPosition():Void
+	function onChangeRating():Void
 	{
-		if (isPause) {
-			PlayState.isNextSubState = true;
+		if (isPause)
+		{
+			for (rating in PlayState.instance.grpRatings)
+			{
+				rating.goToVisible();
+			}
 		}
+	}
 
-		FlxG.state.closeSubState();
-		FlxG.state.openSubState(new ComboSubState(isPause));
+	function onChangeNumbers():Void
+	{
+		if (isPause)
+		{
+			for (number in PlayState.instance.grpNumbers)
+			{
+				number.goToVisible();
+			}
+		}
 	}
 
 	function onChangeAutoPause():Void

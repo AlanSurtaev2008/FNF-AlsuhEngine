@@ -61,6 +61,7 @@ class Note extends FlxSprite
 
 	// Lua shit
 	public var quickNoteSplash:Bool = false;
+	public var noteSplashHitByOpponent:Bool = false;
 	public var noteSplashDisabled:Bool = false;
 	public var noteSplashTexture:String = null;
 
@@ -83,10 +84,19 @@ class Note extends FlxSprite
 
 	public var copyX:Bool = true;
 	public var copyY:Bool = true;
+
 	public var copyAngle:Bool = true;
 	public var copyAlpha:Bool = true;
 
-	public var hitHealth:Float = 0.023;
+	public var hitHealthSick:Float = 0.025;
+	public var hitHealthSickSus:Float = 0.0125;
+	public var hitHealthGood:Float = 0.020;
+	public var hitHealthGoodSus:Float = 0.010;
+	public var hitHealthBad:Float = 0.010;
+	public var hitHealthBadSus:Float = 0.005;
+	public var hitHealthShit:Float = 0;
+	public var hitHealthShitSus:Float = 0;
+
 	public var missHealth:Float = 0.0475;
 
 	public var animSuffix:String = '';
@@ -187,7 +197,7 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?isSustainNote:Bool = false, ?inEditor:Bool = false):Void
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?isSustainNote:Bool = false, ?inEditor:Bool = false, ?mustPress:Bool = false):Void
 	{
 		super();
 
@@ -198,6 +208,7 @@ class Note extends FlxSprite
 		this.prevNote = prevNote;
 		this.isSustainNote = isSustainNote;
 		this.inEditor = inEditor;
+		this.mustPress = mustPress;
 
 		x += (OptionData.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50;
 
@@ -245,7 +256,7 @@ class Note extends FlxSprite
 
 			hitsoundDisabled = true;
 
-			if (OptionData.downScroll) flipY = true;
+			if (OptionData.downScroll == true) flipY = true;
 
 			offsetX += width / 2;
 			copyAngle = false;
@@ -318,7 +329,7 @@ class Note extends FlxSprite
 
 		if (texture.length < 1)
 		{
-			skin = PlayState.SONG.arrowSkin;
+			skin = mustPress ? PlayState.SONG.arrowSkin : PlayState.SONG.arrowSkin2;
 	
 			if (skin == null || skin.length < 1)
 			{
@@ -374,8 +385,7 @@ class Note extends FlxSprite
 			antialiasing = OptionData.globalAntialiasing;
 		}
 
-		if (isSustainNote)
-		{
+		if (isSustainNote) {
 			scale.y = lastScaleY;
 		}
 

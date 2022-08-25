@@ -1,17 +1,11 @@
 package webmlmfao;
 
-import openfl.Lib;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
-import openfl.utils.Assets;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
-import lime.app.Application;
 import flixel.system.FlxSound;
-import openfl.utils.AssetType;
 
 using StringTools;
 
@@ -131,17 +125,9 @@ class VideoState extends MusicBeatState
 			if (holdTimer > 100)
 			{
 				skipTxt.visible = false;
-				txt.text = pauseText;
-
 				GlobalVideo.get().stop();
 
-				if (goToPlayState)
-				{
-					Transition.skipNextTransIn = true;
-					Transition.skipNextTransOut = true;
-				}
-	
-				FlxG.switchState(transClass);
+				end();
 			}
 		}
 		else if (!GlobalVideo.get().paused)
@@ -152,21 +138,8 @@ class VideoState extends MusicBeatState
 			itsTooLate = false;
 		}
 		
-		if (GlobalVideo.get().ended)
-		{
-			txt.text = pauseText;
-
-			FlxG.sound.music.volume = 0;
-
-			if (goToPlayState)
-			{
-				Transition.skipNextTransIn = true;
-				Transition.skipNextTransOut = true;
-			}
-
-			trace('video ended');
-			
-			FlxG.switchState(transClass);
+		if (GlobalVideo.get().ended) {
+			end();
 		}
 
 		if (GlobalVideo.get().played || GlobalVideo.get().restarted) {
@@ -178,5 +151,20 @@ class VideoState extends MusicBeatState
 
 		GlobalVideo.get().stopped = false;
 		GlobalVideo.get().ended = false;
+	}
+
+	public function end():Void
+	{
+		txt.text = pauseText;
+
+		FlxG.sound.music.volume = 0;
+
+		if (goToPlayState)
+		{
+			Transition.skipNextTransIn = true;
+			Transition.skipNextTransOut = true;
+		}
+		
+		FlxG.switchState(transClass);
 	}
 }

@@ -14,6 +14,8 @@ import openfl.utils.Dictionary;
 import openfl.net.FileReference;
 import openfl.events.IOErrorEvent;
 
+using StringTools;
+
 typedef KeyPress =
 {
 	public var time:Float;

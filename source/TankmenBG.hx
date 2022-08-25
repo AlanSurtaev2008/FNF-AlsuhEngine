@@ -7,14 +7,20 @@ class TankmenBG extends FlxSprite
 {
 	public static var animationNotes:Array<Dynamic> = [];
 
-	public var strumTime:Float = 0;
-	public var goingRight:Bool = false;
-	public var tankSpeed:Float = 0.7;
+	public var strumTime:Float;
 
-	var endingOffset:Float;
+	private var tankSpeed:Float;
+	private var endingOffset:Float;
+	private var goingRight:Bool;
 
-	public function new(x:Float, y:Float, uhh:Bool):Void
+	public function new(x:Float, y:Float, facingRight:Bool):Void
 	{
+		tankSpeed = 0.7;
+		goingRight = false;
+
+		strumTime = 0;
+		goingRight = facingRight;
+
 		super(x, y);
 
 		frames = Paths.getSparrowAtlas('tankmanKilled1');
@@ -28,66 +34,52 @@ class TankmenBG extends FlxSprite
 		antialiasing = OptionData.globalAntialiasing;
 
 		updateHitbox();
-		setGraphicSize(Std.int(width * 0.8));
+		setGraphicSize(Std.int(0.8 * width));
 		updateHitbox();
 	}
 
-	public function resetShit(x:Float, y:Float, goRight:Bool)
+	public function resetShit(x:Float, y:Float, goingRight:Bool):Void
 	{
-		setPosition(x, y);
+		this.x = x;
+		this.y = y;
 
-		goingRight = goRight;
+		this.goingRight = goingRight;
+
 		endingOffset = FlxG.random.float(50, 200);
 		tankSpeed = FlxG.random.float(0.6, 1);
 
-		if (goingRight)
-		{
-			flipX = true;
-		}
+		flipX = goingRight;
 	}
 
-	public override function update(elapsed:Float)
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
-		if (x >= FlxG.width * 1.2 || x <= FlxG.width * -0.5)
-		{
-			visible = false;
-		}
-		else
-		{
-			visible = true;
-		}
 
-		if (animation.curAnim.name == 'run')
+		visible = (x > -0.5 * FlxG.width && x < 1.2 * FlxG.width);
+
+		if (animation.curAnim.name == "run")
 		{
-			var wackyShit:Float = FlxG.width * 0.74 + endingOffset;
+			var speed:Float = (Conductor.songPosition - strumTime) * tankSpeed;
 
 			if (goingRight)
-			{
-				wackyShit = FlxG.width * 0.02 - endingOffset;
-				x = wackyShit + (Conductor.songPosition - strumTime) * tankSpeed;
-			}
+				x = (0.02 * FlxG.width - endingOffset) + speed;
 			else
-			{
-				x = wackyShit - (Conductor.songPosition - strumTime) * tankSpeed;
-			}
+				x = (0.74 * FlxG.width + endingOffset) - speed;
 		}
-		
+		else if(animation.curAnim.finished)
+		{
+			kill();
+		}
+
 		if (Conductor.songPosition > strumTime)
 		{
 			animation.play('shot');
-
-			if (goingRight)
+	
+			if(goingRight)
 			{
-				offset.y = 200;
 				offset.x = 300;
+				offset.y = 200;
 			}
-		}
-		
-		if (animation.curAnim.name == 'shot' && animation.curAnim.curFrame >= animation.curAnim.frames.length - 1)
-		{
-			kill();
 		}
 	}
 }

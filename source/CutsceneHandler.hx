@@ -2,18 +2,8 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxBasic;
-import flixel.FlxObject;
-import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.util.FlxSort;
-import flixel.util.FlxTimer;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.system.FlxSound;
-import flixel.group.FlxSpriteGroup;
-import animateatlas.AtlasFrameMaker;
-import flixel.graphics.atlas.FlxAtlas;
-import flixel.group.FlxGroup.FlxTypedGroup;
 
 using StringTools;
 

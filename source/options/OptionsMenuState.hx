@@ -17,7 +17,7 @@ class OptionsMenuState extends MusicBeatState
 {
 	public static var curSelected:Int = 0;
 
-	private var options:Array<String> = ['Preferences', 'Controls', 'Note Colors', #if sys 'Replays', #end 'Credits', 'Exit'];
+	private var options:Array<String> = ['Preferences', 'Controls', 'Note Colors', 'Adjust Delay and Combo', 'Credits', #if sys 'Replays' #end];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 
 	var selectorLeft:Alphabet;
@@ -39,6 +39,19 @@ class OptionsMenuState extends MusicBeatState
 			{
 				openSubState(new NotesSubState(false));
 			}
+			case 'Adjust Delay and Combo':
+			{
+				FlxG.sound.music.pause();
+				FlxG.sound.music.volume = 0;
+
+				FlxG.sound.play(Paths.getSound('cancelMenu'));
+				FlxG.switchState(new NoteOffsetState());
+			}
+			case 'Credits':
+			{
+				FlxG.sound.play(Paths.getSound('cancelMenu'));
+				FlxG.switchState(new CreditsMenuState());
+			}
 			#if sys
 			case 'Replays':
 			{
@@ -46,11 +59,6 @@ class OptionsMenuState extends MusicBeatState
 				FlxG.switchState(new ReplaysState());
 			}
 			#end
-			case 'Credits':
-			{
-				FlxG.sound.play(Paths.getSound('cancelMenu'));
-				FlxG.switchState(new CreditsMenuState());
-			}
 			case 'Exit':
 			{
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
@@ -63,7 +71,7 @@ class OptionsMenuState extends MusicBeatState
 	{
 		super.create();
 
-		if (!FlxG.sound.music.playing || FlxG.sound.music.volume == 0)
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0)
 		{
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
@@ -136,7 +144,6 @@ class OptionsMenuState extends MusicBeatState
 			{
 				if (controls.UI_UP_P)
 				{
-					FlxG.sound.play(Paths.getSound('scrollMenu'));
 					changeSelection(-1);
 
 					holdTime = 0;
@@ -144,7 +151,6 @@ class OptionsMenuState extends MusicBeatState
 
 				if (controls.UI_DOWN_P)
 				{
-					FlxG.sound.play(Paths.getSound('scrollMenu'));
 					changeSelection(1);
 
 					holdTime = 0;
@@ -227,7 +233,7 @@ class OptionsSubState extends MusicBeatSubState
 {
 	private static var curSelected:Int = -1;
 
-	private var options:Array<String> = ['Preferences', 'Controls', 'Note Colors', 'Exit'];
+	private var options:Array<String> = ['Preferences', 'Controls', 'Note Colors', 'Combo Position'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 
 	var selectorLeft:Alphabet;
@@ -258,20 +264,12 @@ class OptionsSubState extends MusicBeatSubState
 				FlxG.state.closeSubState();
 				FlxG.state.openSubState(new NotesSubState(true));
 			}
-			case 'Exit':
+			case 'Combo Position':
 			{
-				OptionsMenuState.curSelected = curSelected;
-				
-				OptionData.savePrefs();
-
-				FlxG.sound.play(Paths.getSound('cancelMenu'));
-
 				PlayState.isNextSubState = true;
-	
+
 				FlxG.state.closeSubState();
-				FlxG.state.openSubState(new PauseSubState(true));
-	
-				curSelected = -1;
+				FlxG.state.openSubState(new ComboSubState());
 			}
 		}
 	}

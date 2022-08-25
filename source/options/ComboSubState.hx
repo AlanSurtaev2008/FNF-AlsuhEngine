@@ -4,14 +4,14 @@ package options;
 import Discord.DiscordClient;
 #end
 
-import options.OptionsMenuState;
-
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.text.FlxText;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.group.FlxGroup;
+import options.OptionsMenuState;
 import flixel.group.FlxSpriteGroup;
 
 using StringTools;
@@ -22,15 +22,7 @@ class ComboSubState extends MusicBeatSubState
 
 	var rating:FlxSprite;
 	var comboNums:FlxSpriteGroup;
-
-	var isPause:Bool = false;
-
-	public function new(?isPause:Bool = false):Void
-	{
-		super();
-
-		this.isPause = isPause;
-	}
+	var dumbTexts:FlxTypedGroup<FlxText>;
 
 	public override function create():Void
 	{
@@ -43,66 +35,50 @@ class ComboSubState extends MusicBeatSubState
 		FlxG.mouse.visible = true;
 
 		var bg:FlxSprite = new FlxSprite();
-
-		if (isPause)
-		{
-			bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-			bg.alpha = 0.6;
-			bg.scrollFactor.set();
-		}
-		else
-		{
-			bg.loadGraphic(Paths.getImage('bg/menuDesat'));
-			bg.color = 0xFFea71fd;
-			bg.updateHitbox();
-			bg.screenCenter();
-			bg.antialiasing = OptionData.globalAntialiasing;
-		}
-
+		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		bg.alpha = 0.6;
+		bg.scrollFactor.set();
 		add(bg);
 
-		if (isPause)
-		{
-			var levelInfo:FlxText = new FlxText(20, 20, 0, '', 32);
-			levelInfo.text += PlayState.SONG.songName;
-			levelInfo.scrollFactor.set();
-			levelInfo.setFormat(Paths.getFont('vcr.ttf'), 32);
-			levelInfo.updateHitbox();
-			levelInfo.x = FlxG.width - (levelInfo.width + 20);
-			add(levelInfo);
-	
-			var levelDifficulty:FlxText = new FlxText(20, 20 + 32, 0, '', 32);
-			levelDifficulty.text += CoolUtil.getDifficultyName(PlayState.lastDifficulty, PlayState.difficulties).toUpperCase();
-			levelDifficulty.scrollFactor.set();
-			levelDifficulty.setFormat(Paths.getFont('vcr.ttf'), 32);
-			levelDifficulty.updateHitbox();
-			levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
-			add(levelDifficulty);
-	
-			var blueballedTxt:FlxText = new FlxText(20, 20 + 64, 0, '', 32);
-			blueballedTxt.text = 'Blue balled: ' + PlayState.deathCounter;
-			blueballedTxt.scrollFactor.set();
-			blueballedTxt.setFormat(Paths.getFont('vcr.ttf'), 32);
-			blueballedTxt.updateHitbox();
-			blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
-			add(blueballedTxt);
-	
-			var chartingText:FlxText = new FlxText(20, 20 + 96, 0, "CHARTING MODE", 32);
-			chartingText.scrollFactor.set();
-			chartingText.setFormat(Paths.getFont('vcr.ttf'), 32);
-			chartingText.x = FlxG.width - (chartingText.width + 20);
-			chartingText.updateHitbox();
-			chartingText.visible = PlayState.chartingMode;
-			add(chartingText);
-	
-			var practiceText:FlxText = new FlxText(20, 20 + (PlayState.chartingMode ? 128 : 96), 0, 'PRACTICE MODE', 32);
-			practiceText.scrollFactor.set();
-			practiceText.setFormat(Paths.getFont('vcr.ttf'), 32);
-			practiceText.x = FlxG.width - (practiceText.width + 20);
-			practiceText.updateHitbox();
-			practiceText.alpha = PlayStateChangeables.practiceMode ? 1 : 0;
-			add(practiceText);
-		}
+		var levelInfo:FlxText = new FlxText(20, 20, 0, '', 32);
+		levelInfo.text += PlayState.SONG.songName;
+		levelInfo.scrollFactor.set();
+		levelInfo.setFormat(Paths.getFont('vcr.ttf'), 32);
+		levelInfo.updateHitbox();
+		levelInfo.x = FlxG.width - (levelInfo.width + 20);
+		add(levelInfo);
+
+		var levelDifficulty:FlxText = new FlxText(20, 20 + 32, 0, '', 32);
+		levelDifficulty.text += CoolUtil.getDifficultyName(PlayState.lastDifficulty, PlayState.difficulties).toUpperCase();
+		levelDifficulty.scrollFactor.set();
+		levelDifficulty.setFormat(Paths.getFont('vcr.ttf'), 32);
+		levelDifficulty.updateHitbox();
+		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
+		add(levelDifficulty);
+
+		var blueballedTxt:FlxText = new FlxText(20, 20 + 64, 0, '', 32);
+		blueballedTxt.text = 'Blue balled: ' + PlayState.deathCounter;
+		blueballedTxt.scrollFactor.set();
+		blueballedTxt.setFormat(Paths.getFont('vcr.ttf'), 32);
+		blueballedTxt.updateHitbox();
+		blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
+		add(blueballedTxt);
+
+		var chartingText:FlxText = new FlxText(20, 20 + 96, 0, "CHARTING MODE", 32);
+		chartingText.scrollFactor.set();
+		chartingText.setFormat(Paths.getFont('vcr.ttf'), 32);
+		chartingText.x = FlxG.width - (chartingText.width + 20);
+		chartingText.updateHitbox();
+		chartingText.visible = PlayState.chartingMode;
+		add(chartingText);
+
+		var practiceText:FlxText = new FlxText(20, 20 + (PlayState.chartingMode ? 128 : 96), 0, 'PRACTICE MODE', 32);
+		practiceText.scrollFactor.set();
+		practiceText.setFormat(Paths.getFont('vcr.ttf'), 32);
+		practiceText.x = FlxG.width - (practiceText.width + 20);
+		practiceText.updateHitbox();
+		practiceText.alpha = PlayStateChangeables.practiceMode ? 1 : 0;
+		add(practiceText);
 
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
@@ -111,7 +87,7 @@ class ComboSubState extends MusicBeatSubState
 		camera = camHUD;
 
 		rating = new FlxSprite();
-		rating.loadGraphic(Paths.getImage('ratings/sick', 'shared'));
+		rating.loadGraphic(Paths.getImage('ratings/sick'));
 		rating.screenCenter();
 		rating.setGraphicSize(Std.int(rating.width * 0.7));
 		rating.updateHitbox();
@@ -134,7 +110,7 @@ class ComboSubState extends MusicBeatSubState
 		for (i in seperatedScore)
 		{
 			var numScore:FlxSprite = new FlxSprite(43 * daLoop);
-			numScore.loadGraphic(Paths.getImage('numbers/num' + i, 'shared'));
+			numScore.loadGraphic(Paths.getImage('numbers/num' + i));
 			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			numScore.updateHitbox();
 			numScore.antialiasing = OptionData.globalAntialiasing;
@@ -144,8 +120,13 @@ class ComboSubState extends MusicBeatSubState
 			daLoop++;
 		}
 
-		if (isPause) cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+		dumbTexts = new FlxTypedGroup<FlxText>();
+		dumbTexts.cameras = [camHUD];
+		add(dumbTexts);
 
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
+		createTexts();
 		repositionCombo();
 	}
 
@@ -273,12 +254,42 @@ class ComboSubState extends MusicBeatSubState
 
 			FlxG.mouse.visible = false;
 
-			if (isPause) {
-				PlayState.isNextSubState = true;
-			}
+			PlayState.isNextSubState = true;
 			
 			FlxG.state.closeSubState();
-			FlxG.state.openSubState(new PreferencesSubState(isPause));
+			FlxG.state.openSubState(new OptionsSubState());
+		}
+	}
+
+	function createTexts():Void
+	{
+		for (i in 0...4)
+		{
+			var text:FlxText = new FlxText(10, 48 + (i * 30), 0, '', 24);
+			text.setFormat(Paths.getFont("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			text.scrollFactor.set();
+			text.borderSize = 2;
+			dumbTexts.add(text);
+			text.cameras = [camHUD];
+
+			if (i > 1)
+			{
+				text.y += 24;
+			}
+		}
+	}
+
+	function reloadTexts():Void
+	{
+		for (i in 0...dumbTexts.length)
+		{
+			switch (i)
+			{
+				case 0: dumbTexts.members[i].text = 'Rating Offset:';
+				case 1: dumbTexts.members[i].text = '[' + OptionData.comboOffset[0] + ', ' + OptionData.comboOffset[1] + ']';
+				case 2: dumbTexts.members[i].text = 'Numbers Offset:';
+				case 3: dumbTexts.members[i].text = '[' + OptionData.comboOffset[2] + ', ' + OptionData.comboOffset[3] + ']';
+			}
 		}
 	}
 
@@ -291,5 +302,7 @@ class ComboSubState extends MusicBeatSubState
 		comboNums.screenCenter();
 		comboNums.x = FlxG.width * 0.55 - 175 + OptionData.comboOffset[2];
 		comboNums.y += 80 - OptionData.comboOffset[3];
+
+		reloadTexts();
 	}
 }

@@ -17,14 +17,12 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.FlxObject;
-import openfl.utils.Assets;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import openfl.events.Event;
 import flixel.util.FlxColor;
 import lime.system.Clipboard;
 import flixel.group.FlxGroup;
-import openfl.net.FileFilter;
 import flixel.addons.ui.FlxUI;
 import openfl.net.FileReference;
 import openfl.events.IOErrorEvent;
@@ -77,7 +75,7 @@ class CharacterEditorState extends MusicBeatUIState
 
 	public override function create():Void
 	{
-		super.create();
+		persistentUpdate = true;
 
 		camEditor = new FlxCamera();
 		camHUD = new FlxCamera();
@@ -89,6 +87,8 @@ class CharacterEditorState extends MusicBeatUIState
 		FlxG.cameras.add(camHUD);
 		FlxG.cameras.add(camMenu);
 		FlxCamera.defaultCameras = [camEditor];
+
+		super.create();
 
 		bgLayer = new FlxTypedGroup<FlxSprite>();
 		add(bgLayer);

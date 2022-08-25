@@ -3,13 +3,13 @@ package webmlmfao;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import openfl.display.Sprite;
-#if VIDEOS_ALLOWED
+#if WEBM_ALLOWED
 import webm.*;
 #end
 
 class WebmHandler
 {
-	#if VIDEOS_ALLOWED
+	#if WEBM_ALLOWED
 	public var webm:WebmPlayer;
 	public var vidPath:String = "";
 	public var io:WebmIo;

@@ -43,8 +43,7 @@ class Paths
 		'stages',
 		'weeks',
 		'fonts',
-		'scripts',
-		'achievements'
+		'scripts'
 	];
 	#end
 
@@ -206,14 +205,20 @@ class Paths
 		return returnSound('music', key, library);
 	}
 
-	public static function getVoices(song:String):Any
+	public static function getInst(song:String, ?difficulty:String = ''):Any
 	{
-		return returnSound('songs', song.toLowerCase() + '/Voices');
+		return if (Paths.fileExists('songs/' + song.toLowerCase() + '/Inst' + difficulty, SOUND) || Paths.fileExists('songs/' + song.toLowerCase() + '/Inst' + difficulty, MUSIC))
+			returnSound('songs', song.toLowerCase() + '/Inst' + difficulty)
+		else
+			returnSound('songs', song.toLowerCase() + '/Inst');
 	}
 
-	public static function getInst(song:String):Any
+	public static function getVoices(song:String, ?difficulty:String = ''):Any
 	{
-		return returnSound('songs', song.toLowerCase() + '/Inst');
+		return if (Paths.fileExists('songs/' + song.toLowerCase() + '/Voices' + difficulty, SOUND) || Paths.fileExists('songs/' + song.toLowerCase() + '/Voices' + difficulty, MUSIC))
+			returnSound('songs', song.toLowerCase() + '/Voices' + difficulty)
+		else
+			returnSound('songs', song.toLowerCase() + '/Voices');
 	}
 
 	public static function getImage(key:String, ?library:String):FlxGraphic
@@ -419,7 +424,12 @@ class Paths
 
 	public static function formatToSongPath(path:String):String
 	{
-		return path.toLowerCase().replace(' ', '-');
+		var invalidChars = ~/[~&\\;:<>#]/;
+		var hideChars = ~/[.,'"%?!]/;
+
+		var path = invalidChars.split(path.replace(' ', '-')).join("-");
+
+		return hideChars.split(path).join("").toLowerCase();
 	}
 
 	public static function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false):Bool

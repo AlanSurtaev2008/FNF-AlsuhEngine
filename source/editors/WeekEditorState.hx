@@ -65,6 +65,8 @@ class WeekEditorState extends MusicBeatUIState
 	{
 		super.create();
 
+		persistentUpdate = true;
+
 		Conductor.changeBPM(102);
 
 		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
@@ -858,6 +860,8 @@ class WeekEditorFreeplayState extends MusicBeatUIState
 	public override function create():Void
 	{
 		super.create();
+
+		persistentUpdate = true;
 
 		bg = new FlxSprite();
 		bg.loadGraphic(Paths.getImage('bg/menuDesat'));

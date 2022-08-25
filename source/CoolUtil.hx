@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import openfl.utils.Assets;
+import flixel.util.FlxColor;
 import flixel.system.FlxSound;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
@@ -50,9 +51,14 @@ class CoolUtil
 		return difficulties[2][difficulties[isName ? 0 : 1].indexOf(diff)];
 	}
 
+	public static function quantize(f:Float, snap:Float):Float
+	{
+		return (Math.fround(f * snap) / snap);
+	}
+
 	public static function formatSong(song:String, diff:String):String
 	{
-		return song + '-' + diff;
+		return Paths.formatToSongPath(song + '-' + diff);
 	}
 
 	public static function getKeyName(key:FlxKey):String
@@ -108,6 +114,17 @@ class CoolUtil
 		}
 	}
 
+	public static function smoothColorChange(from:FlxColor, to:FlxColor, speed:Float = 0.045):FlxColor
+	{
+		var lerpVal:Float = CoolUtil.boundTo(speed, 0, 1);
+
+		return FlxColor.fromRGBFloat(
+			FlxMath.lerp(from.redFloat, to.redFloat, lerpVal),
+			FlxMath.lerp(from.greenFloat, to.greenFloat, lerpVal),
+			FlxMath.lerp(from.blueFloat, to.blueFloat, lerpVal)
+		);
+	}
+
 	public static function boundTo(value:Float, min:Float, max:Float):Float
 	{
 		return Math.max(min, Math.min(max, value));
@@ -126,8 +143,10 @@ class CoolUtil
 		return num;
 	}
 
-	public static function floorDecimal(number:Float, precision:Int):Float
+	public static function floorDecimal(number:Float, precision:Int = 0):Float
 	{
+		if (Math.isNaN(number)) number = 0;
+
 		if (precision < 1) {
 			return Math.floor(number);
 		}
