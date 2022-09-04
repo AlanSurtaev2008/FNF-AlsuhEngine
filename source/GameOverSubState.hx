@@ -108,12 +108,10 @@ class GameOverSubState extends MusicBeatSubState
 	{
 		super.update(elapsed);
 
-		bg.alpha = FlxMath.lerp(bg.alpha, 0, CoolUtil.boundTo(elapsed * 2.4, 0, 1));
+		bg.alpha = CoolUtil.coolLerp(bg.alpha, 0, 0.04);
 
-		if (updateCamera)
-		{
-			var lerpVal:Float = CoolUtil.boundTo(elapsed * 0.6, 0, 1);
-			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
+		if (updateCamera) {
+			camFollowPos.setPosition(CoolUtil.coolLerp(camFollowPos.x, camFollow.x, 0.01), CoolUtil.coolLerp(camFollowPos.y, camFollow.y, 0.01));
 		}
 
 		if (controls.ACCEPT || controls.BACK)

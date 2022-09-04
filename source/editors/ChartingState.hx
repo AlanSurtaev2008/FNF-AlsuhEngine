@@ -1160,7 +1160,7 @@ class ChartingState extends MusicBeatUIState
 
 		tab_group_note.add(new FlxText(74, 10, 0, 'Note Sustain Length'));
 		tab_group_note.add(new FlxText(10, 45, 0, 'Strum Time (in miliseconds):'));
-		tab_group_note.add(new FlxText(10, 90, 0, 'Note Type:'));
+		tab_group_note.add(new FlxText(10, 0, 0, 'Note Type:'));
 
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(strumTimeInputText);
@@ -1239,7 +1239,7 @@ class ChartingState extends MusicBeatUIState
 
 		blockPressWhileScrolling.push(eventDropDown);
 
-		var text:FlxText = new FlxText(20, 90, 0, "Value 1:");
+		var text:FlxText = new FlxText(20, 0, 0, "Value 1:");
 		tab_group_event.add(text);
 
 		value1InputText = new FlxUIInputText(20, 110, 100, "");
@@ -2039,15 +2039,19 @@ class ChartingState extends MusicBeatUIState
 				}
 			}
 
+			#if MODS_ALLOWED
 			if (FlxG.keys.justPressed.BACKSPACE)
 			{
 				FlxG.sound.music.volume = 0;
+
+				PlayState.chartingMode = false;
 
 				FlxG.switchState(new editors.MasterEditorMenu());
 				FlxG.mouse.visible = false;
 
 				return;
 			}
+			#end
 
 			if (FlxG.keys.pressed.W || FlxG.keys.pressed.S)
 			{

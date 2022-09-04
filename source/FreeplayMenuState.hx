@@ -16,7 +16,7 @@ import flixel.system.FlxSound;
 
 using StringTools;
 
-class FreeplayMenuState extends MusicBeatState
+class FreeplayMenuState extends TransitionableState
 {
 	private static var curSelected:Int = -1;
 	private static var curDifficultyString:String = '';
@@ -103,21 +103,15 @@ class FreeplayMenuState extends MusicBeatState
 		{
 			var leSong:SongMetaData = songsArray[i];
 
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, leSong.songName, true, false);
+			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, leSong.songName, true);
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpSongs.add(songText);
 
-			if (songText.width > 980)
-			{
-				var textScale:Float = 980 / songText.width;
-				songText.scale.x = textScale;
-
-				for (letter in songText.lettersArray)
-				{
-					letter.x *= textScale;
-					letter.offset.x *= textScale;
-				}
+			var maxWidth:Float = 980;
+	
+			if (songText.width > maxWidth) {
+				songText.scaleX = maxWidth / songText.width;
 			}
 
 			Paths.currentModDirectory = songsArray[i].folder;
@@ -217,10 +211,10 @@ class FreeplayMenuState extends MusicBeatState
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
 
-		bg.color = CoolUtil.smoothColorChange(bg.color, curSong.color, elapsed * 2.45);
+		bg.color = CoolUtil.interpolateColor(bg.color, curSong.color, 0.045);
 
-		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
-		lerpAccuracy = FlxMath.lerp(lerpAccuracy, intendedAccuracy, CoolUtil.boundTo(elapsed * 12, 0, 1));
+		lerpScore = Math.floor(CoolUtil.coolLerp(lerpScore, intendedScore, 0.4));
+		lerpAccuracy = CoolUtil.coolLerp(lerpAccuracy, intendedAccuracy, 0.2);
 
 		if (Math.abs(lerpScore - intendedScore) <= 10) {
 			lerpScore = intendedScore;

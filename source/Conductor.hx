@@ -1,6 +1,7 @@
 package;
 
 import Song.SwagSong;
+import Rating.RatingData;
 
 typedef BPMChangeEvent =
 {
@@ -23,20 +24,41 @@ class Conductor
 
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
 
-	public static function judgeNote(note:Note, diff:Float = 0):String
+	public static function judgeNote(note:Note, diff:Float = 0, ?pisspoop:Null<Bool> = false):Any
 	{
-		var timingWindows:Array<Int> = [OptionData.sickWindow, OptionData.goodWindow, OptionData.badWindow, OptionData.shitWindow];
-		var windowNames:Array<String> = ['sick', 'good', 'bad', 'shit'];
+		var data:Array<RatingData> = PlayState.instance.ratingsData; // shortening cuz fuck u
 
-		for (i in 0...timingWindows.length)
+		if (data == null)
 		{
-			if (diff / (note.isSustainNote ? 2 : 1) <= (timingWindows[Math.round(Math.min(i, timingWindows.length - 1))] / (note.isSustainNote ? 2 : 1)))
-			{
-				return windowNames[i];
-			}
+			var good:RatingData = new RatingData('good');
+			good.ratingMod = 0.7;
+			good.score = 200;
+			good.noteSplash = false;
+			data.push(good);
+	
+			var bad:RatingData = new RatingData('bad');
+			bad.ratingMod = 0.4;
+			bad.score = 100;
+			bad.noteSplash = false;
+			data.push(bad);
+	
+			var shit:RatingData = new RatingData('shit');
+			shit.ratingMod = 0;
+			shit.score = 50;
+			shit.noteSplash = false;
+			data.push(shit);
+
+			data = [new RatingData('sick'), good, bad, shit];
 		}
 
-		return 'shit';
+		for (i in 0...data.length - 1) // skips last window (Shit)
+		{
+			if (diff <= data[i].hitWindow) {
+				return pisspoop ? data[i].image : data[i];
+			}
+		}
+	
+		return pisspoop ? data[data.length - 1].image : data[data.length - 1];
 	}
 
 	public static function getCrotchetAtTime(time:Float)

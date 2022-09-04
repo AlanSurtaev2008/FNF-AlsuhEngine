@@ -249,6 +249,16 @@ class FunkinLua
 		set('buildTarget', 'unknown');
 		#end
 
+		Lua_helper.add_callback(lua, "coolLerp", function(a:Float, b:Float, ratio:Float, ?multiplier:Float = 54.5):Float
+		{
+			return CoolUtil.coolLerp(a, b, ratio, multiplier);
+		});
+
+		Lua_helper.add_callback(lua, "boundTo", function(value:Float, min:Float, max:Float):Float
+		{
+			return CoolUtil.boundTo(value, min, max);
+		});
+
 		Lua_helper.add_callback(lua, "openCustomSubstate", function(name:String, pauseGame:Bool = false)
 		{
 			if (pauseGame)
@@ -956,6 +966,93 @@ class FunkinLua
 			}
 		});
 
+		Lua_helper.add_callback(lua, "noteTweenX", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			cancelTween(tag);
+			if(note < 0) note = 0;
+			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+
+			if(testicle != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {x: value}, duration, {ease: getFlxEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			}
+		});
+		Lua_helper.add_callback(lua, "noteTweenY", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			cancelTween(tag);
+			if(note < 0) note = 0;
+			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+
+			if(testicle != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {y: value}, duration, {ease: getFlxEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			}
+		});
+		Lua_helper.add_callback(lua, "noteTweenAngle", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			cancelTween(tag);
+			if(note < 0) note = 0;
+			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+
+			if(testicle != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {angle: value}, duration, {ease: getFlxEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			}
+		});
+		Lua_helper.add_callback(lua, "noteTweenDirection", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			cancelTween(tag);
+			if(note < 0) note = 0;
+			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+
+			if(testicle != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {direction: value}, duration, {ease: getFlxEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			}
+		});
+
+		Lua_helper.add_callback(lua, "noteTweenAngle", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			cancelTween(tag);
+			if(note < 0) note = 0;
+			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+
+			if(testicle != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {angle: value}, duration, {ease: getFlxEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			}
+		});
+		Lua_helper.add_callback(lua, "noteTweenAlpha", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			cancelTween(tag);
+			if(note < 0) note = 0;
+			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+
+			if(testicle != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {alpha: value}, duration, {ease: getFlxEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			}
+		});
+
+
 		Lua_helper.add_callback(lua, "mouseReleased", function(button:String) {
 			var boobs = FlxG.mouse.justReleased;
 			switch (button) {
@@ -1273,11 +1370,15 @@ class FunkinLua
 			CoolUtil.precacheMusic(name);
 		});
 		Lua_helper.add_callback(lua, "triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic) {
-			var value1:String = arg1;
-			var value2:String = arg2;
-			PlayState.instance.triggerEventNote(name, value1, value2);
-			//trace('Triggered event: ' + name + ', ' + value1 + ', ' + value2);
-			return true;
+			if (OptionData.events) {
+				var value1:String = arg1;
+				var value2:String = arg2;
+				PlayState.instance.triggerEventNote(name, value1, value2);
+
+				return true;
+			}
+
+			return false;
 		});
 
 		Lua_helper.add_callback(lua, "startCountdown", function() {
@@ -1285,21 +1386,9 @@ class FunkinLua
 			return true;
 		});
 
-		Lua_helper.add_callback(lua, "songComplete", function()
-		{
-			PlayState.instance.onSongComplete();
-			return true;
-		});
-
 		Lua_helper.add_callback(lua, "finishSong", function()
 		{
 			PlayState.instance.finishSong();
-			return true;
-		});
-
-		Lua_helper.add_callback(lua, "callbackOnEnd", function()
-		{
-			PlayState.instance.callbackOnEnd();
 			return true;
 		});
 
@@ -2952,7 +3041,6 @@ class FunkinLua
 		Lua_helper.add_callback(lua, "musicFadeIn", function(duration:Float, fromValue:Float = 0, toValue:Float = 1) {
 			FlxG.sound.music.fadeIn(duration, fromValue, toValue);
 			luaTrace('musicFadeIn is deprecated! Use soundFadeIn instead.', false, true);
-
 		});
 		Lua_helper.add_callback(lua, "musicFadeOut", function(duration:Float, toValue:Float = 0) {
 			FlxG.sound.music.fadeOut(duration, toValue);
@@ -3012,13 +3100,13 @@ class FunkinLua
 		#end
 	}
 
-	public function isOfTypes(value:Any, types:Array<Dynamic>)
+	public static function isOfTypes(value:Any, types:Array<Dynamic>):Bool
 	{
 		for (type in types)
 		{
 			if (Std.isOfType(value, type)) return true;
 		}
-
+	
 		return false;
 	}
 
@@ -3037,44 +3125,67 @@ class FunkinLua
 	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic):Any
 	{
 		var shit:Array<String> = variable.split('[');
-
-		if (shit.length > 1)
+		if(shit.length > 1)
 		{
-			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
-	
+			var blah:Dynamic = null;
+			if(PlayState.instance.variables.exists(shit[0]))
+			{
+				var retVal:Dynamic = PlayState.instance.variables.get(shit[0]);
+				if(retVal != null)
+					blah = retVal;
+			}
+			else
+				blah = Reflect.getProperty(instance, shit[0]);
+
 			for (i in 1...shit.length)
 			{
 				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
-
-				if (i >= shit.length-1) // Last array
+				if(i >= shit.length-1) //Last array
 					blah[leNum] = value;
-				else // Anything else
+				else //Anything else
 					blah = blah[leNum];
 			}
-	
 			return blah;
+		}
+			
+		if(PlayState.instance.variables.exists(variable))
+		{
+			PlayState.instance.variables.set(variable, value);
+			return true;
 		}
 
 		Reflect.setProperty(instance, variable, value);
-
 		return true;
 	}
 
 	public static function getVarInArray(instance:Dynamic, variable:String):Any
 	{
 		var shit:Array<String> = variable.split('[');
-
-		if (shit.length > 1)
+		if(shit.length > 1)
 		{
-			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
+			var blah:Dynamic = null;
+			if(PlayState.instance.variables.exists(shit[0]))
+			{
+				var retVal:Dynamic = PlayState.instance.variables.get(shit[0]);
+				if(retVal != null)
+					blah = retVal;
+			}
+			else
+				blah = Reflect.getProperty(instance, shit[0]);
 
 			for (i in 1...shit.length)
 			{
 				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
 				blah = blah[leNum];
 			}
-
 			return blah;
+		}
+
+		if(PlayState.instance.variables.exists(variable))
+		{
+			var retVal:Dynamic = PlayState.instance.variables.get(variable);
+			if(retVal != null)
+				return retVal;
 		}
 
 		return Reflect.getProperty(instance, variable);
@@ -3669,7 +3780,7 @@ class CustomSubState extends MusicBeatSubState
 	{
 		CustomSubState.name = name;
 		super();
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+		
 	}
 
 	override function update(elapsed:Float)
@@ -3732,6 +3843,16 @@ class HScript
 			var result:Dynamic = null;
 			if(PlayState.instance.variables.exists(name)) result = PlayState.instance.variables.get(name);
 			return result;
+		});
+
+		interp.variables.set('removeVar', function(name:String)
+		{
+			if(PlayState.instance.variables.exists(name))
+			{
+				PlayState.instance.variables.remove(name);
+				return true;
+			}
+			return false;
 		});
 	}
 

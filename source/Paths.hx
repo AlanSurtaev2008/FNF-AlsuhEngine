@@ -37,6 +37,7 @@ class Paths
 		'songs',
 		'music',
 		'sounds',
+		'title',
 		'videos',
 		'images',
 		'portraits',
@@ -207,18 +208,20 @@ class Paths
 
 	public static function getInst(song:String, ?difficulty:String = ''):Any
 	{
-		return if (Paths.fileExists('songs/' + song.toLowerCase() + '/Inst' + difficulty, SOUND) || Paths.fileExists('songs/' + song.toLowerCase() + '/Inst' + difficulty, MUSIC))
-			returnSound('songs', song.toLowerCase() + '/Inst' + difficulty)
-		else
-			returnSound('songs', song.toLowerCase() + '/Inst');
+		if (fileExists('songs/' + song.toLowerCase() + '/Inst' + difficulty + '.' + SOUND_EXT, SOUND) || fileExists('songs/' + song.toLowerCase() + '/Inst' + difficulty + '.' + SOUND_EXT, MUSIC)) {
+			return returnSound('songs', song.toLowerCase() + '/Inst' + difficulty);
+		}
+
+		return returnSound('songs', song.toLowerCase() + '/Inst');
 	}
 
 	public static function getVoices(song:String, ?difficulty:String = ''):Any
 	{
-		return if (Paths.fileExists('songs/' + song.toLowerCase() + '/Voices' + difficulty, SOUND) || Paths.fileExists('songs/' + song.toLowerCase() + '/Voices' + difficulty, MUSIC))
-			returnSound('songs', song.toLowerCase() + '/Voices' + difficulty)
-		else
-			returnSound('songs', song.toLowerCase() + '/Voices');
+		if (fileExists('songs/' + song.toLowerCase() + '/Voices' + difficulty + '.' + SOUND_EXT, SOUND) || fileExists('songs/' + song.toLowerCase() + '/Voices' + difficulty + '.' + SOUND_EXT, MUSIC)) {
+			return returnSound('songs', song.toLowerCase() + '/Voices' + difficulty);
+		}
+
+		return returnSound('songs', song.toLowerCase() + '/Voices');
 	}
 
 	public static function getImage(key:String, ?library:String):FlxGraphic

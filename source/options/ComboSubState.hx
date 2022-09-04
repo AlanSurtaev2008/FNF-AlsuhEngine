@@ -124,8 +124,6 @@ class ComboSubState extends MusicBeatSubState
 		dumbTexts.cameras = [camHUD];
 		add(dumbTexts);
 
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-
 		createTexts();
 		repositionCombo();
 	}

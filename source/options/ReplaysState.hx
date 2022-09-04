@@ -14,7 +14,7 @@ import flixel.group.FlxGroup;
 
 using StringTools;
 
-class ReplaysState extends MusicBeatState
+class ReplaysState extends TransitionableState
 {
 	var curSelected:Int = 0;
 
@@ -69,10 +69,10 @@ class ReplaysState extends MusicBeatState
 
 		for (i in 0...replaysArray.length)
 		{
-			var replayText:Alphabet = new Alphabet(0, (100 * i) + 210, replaysArray[i], false, false);
+			var replayText:Alphabet = new Alphabet(0, (100 * i) + 210, replaysArray[i], false);
 			replayText.isMenuItem = true;
 			replayText.targetY = i;
-			replayText.yAdd = -70;
+			replayText.startPosition.y = -70;
 			grpReplays.add(replayText);
 		}
 

@@ -28,7 +28,7 @@ import haxe.xml.Fast as Access;
  * @author Lars Doucet
  */
 
-class FlxUIState extends FlxState implements IEventGetter implements IFlxUIState
+class FlxUIState extends TransitionableState implements IEventGetter implements IFlxUIState
 {
 	public var destroyed:Bool;
 	#if FLX_MOUSE
@@ -264,7 +264,7 @@ class FlxUIState extends FlxState implements IEventGetter implements IFlxUIState
 			#end */
 	}
 
-	public override function openSubState(SubState:FlxSubState):Void
+	public override function openSubState(BaseSubState:FlxSubState):Void
 	{
 		#if FLX_MOUSE
 		if (cursor != null && hideCursorOnSubstate && cursor.visible == true)
@@ -273,7 +273,7 @@ class FlxUIState extends FlxState implements IEventGetter implements IFlxUIState
 			cursor.visible = false;
 		}
 		#end
-		super.openSubState(SubState);
+		super.openSubState(BaseSubState);
 	}
 
 	public override function closeSubState():Void

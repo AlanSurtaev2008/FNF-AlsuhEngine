@@ -41,7 +41,7 @@ using StringTools;
 class DialogueCharacterEditorState extends MusicBeatUIState
 {
 	var box:FlxSprite;
-	var daText:Alphabet = null;
+	var daText:Null<TypedAlphabet> = null;
 
 	private static var TIP_TEXT_MAIN:String =
 		'JKLI - Move camera (Hold Shift to move 4x faster)
@@ -65,7 +65,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 	var animText:FlxText;
 
 	var camGame:FlxCamera;
-	var camOther:FlxCamera;
+	var camHUD:FlxCamera;
 
 	var mainGroup:FlxSpriteGroup;
 	var hudGroup:FlxSpriteGroup;
@@ -80,19 +80,16 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 	{
 		super.create();
 
-		Alphabet.setDialogueSound();
-
 		persistentUpdate = persistentDraw = true;
 
 		camGame = new FlxCamera();
+		camHUD = new FlxCamera();
 		camGame.bgColor = FlxColor.fromHSL(0, 0, 0.5);
+		camHUD.bgColor.alpha = 0;
+
 		FlxG.cameras.reset(camGame);
-
-		camOther = new FlxCamera();
-		camOther.bgColor.alpha = 0;
-
-		FlxG.cameras.add(camOther);
-		FlxCamera.defaultCameras = [camOther];
+		FlxG.cameras.add(camHUD, false);
+		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
 		mainGroup = new FlxSpriteGroup();
 		mainGroup.cameras = [camGame];
@@ -135,20 +132,20 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 
 		tipText = new FlxText(10, 10, FlxG.width - 20, TIP_TEXT_MAIN, 8);
 		tipText.setFormat(Paths.getFont("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		tipText.cameras = [camOther];
+		tipText.cameras = [camHUD];
 		tipText.scrollFactor.set();
 		add(tipText);
 
 		offsetLoopText = new FlxText(10, 10, 0, '', 32);
 		offsetLoopText.setFormat(Paths.getFont("vcr.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		offsetLoopText.cameras = [camOther];
+		offsetLoopText.cameras = [camHUD];
 		offsetLoopText.scrollFactor.set();
 		offsetLoopText.visible = false;
 		add(offsetLoopText);
 
 		offsetIdleText = new FlxText(10, 46, 0, '', 32);
 		offsetIdleText.setFormat(Paths.getFont("vcr.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		offsetIdleText.cameras = [camOther];
+		offsetIdleText.cameras = [camHUD];
 		offsetIdleText.scrollFactor.set();
 		offsetIdleText.visible = false;
 		add(offsetIdleText);
@@ -483,15 +480,14 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 	{
 		if (daText != null)
 		{
-			daText.killTheTimer();
 			daText.kill();
 			hudGroup.remove(daText);
 			daText.destroy();
 		}
 
-		daText = new Alphabet(0, 0, DEFAULT_TEXT, false, true, 0.05, 0.7);
-		daText.x = DialogueBoxPsych.DEFAULT_TEXT_X;
-		daText.y = DialogueBoxPsych.DEFAULT_TEXT_Y;
+		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, DEFAULT_TEXT, 0.05, false);
+		daText.scaleX = 0.7;
+		daText.scaleY = 0.7;
 		hudGroup.add(daText);
 	}
 

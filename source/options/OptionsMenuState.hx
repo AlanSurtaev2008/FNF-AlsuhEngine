@@ -13,7 +13,7 @@ import flixel.effects.FlxFlicker;
 
 using StringTools;
 
-class OptionsMenuState extends MusicBeatState
+class OptionsMenuState extends TransitionableState
 {
 	public static var curSelected:Int = 0;
 
@@ -95,17 +95,17 @@ class OptionsMenuState extends MusicBeatState
 
 		for (i in 0...options.length)
 		{
-			var optionText:Alphabet = new Alphabet(0, 0, options[i], true, false);
+			var optionText:Alphabet = new Alphabet(0, 0, options[i], true);
 			optionText.screenCenter();
 			optionText.y += (100 * (i - (options.length / 2))) + 50;
 			optionText.ID = i;
 			grpOptions.add(optionText);
 		}
 
-		selectorLeft = new Alphabet(0, 0, '>', true, false);
+		selectorLeft = new Alphabet(0, 0, '>', true);
 		add(selectorLeft);
 
-		selectorRight = new Alphabet(0, 0, '<', true, false);
+		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
 		changeSelection();
@@ -337,20 +337,18 @@ class OptionsSubState extends MusicBeatSubState
 
 		for (i in 0...options.length)
 		{
-			var optionText:Alphabet = new Alphabet(0, 0, options[i], true, false);
+			var optionText:Alphabet = new Alphabet(0, 0, options[i], true);
 			optionText.screenCenter();
 			optionText.y += (100 * (i - (options.length / 2))) + 50;
 			optionText.ID = i;
 			grpOptions.add(optionText);
 		}
 
-		selectorLeft = new Alphabet(0, 0, '>', true, false);
+		selectorLeft = new Alphabet(0, 0, '>', true);
 		add(selectorLeft);
 
-		selectorRight = new Alphabet(0, 0, '<', true, false);
+		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
-
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		changeSelection();
 	}

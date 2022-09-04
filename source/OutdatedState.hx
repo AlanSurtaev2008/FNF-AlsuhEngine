@@ -8,7 +8,7 @@ import flixel.tweens.FlxTween;
 
 using StringTools;
 
-class OutdatedState extends MusicBeatState
+class OutdatedState extends TransitionableState
 {
 	public static var leftState:Bool = false;
 
@@ -47,10 +47,12 @@ class OutdatedState extends MusicBeatState
 			exitingToMenu = true;
 			leftState = true;
 
-			FlxTween.tween(txt, {alpha: 0}, 1, {onComplete: function(tween:FlxTween):Void
+			FlxTween.tween(txt, {alpha: 0}, 1,
 			{
-				FlxG.switchState(new MainMenuState());
-			}});
+				onComplete: function(tween:FlxTween):Void {
+					FlxG.switchState(new MainMenuState());
+				}
+			});
 
 			FlxTween.tween(bg, {alpha: 0}, 0.5);
 

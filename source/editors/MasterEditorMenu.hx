@@ -12,7 +12,7 @@ import flixel.group.FlxGroup;
 
 using StringTools;
 
-class MasterEditorMenu extends MusicBeatState
+class MasterEditorMenu extends TransitionableState
 {
 	private var curSelected:Int = 0;
 	private var curDirectory:Int = 0;
@@ -37,8 +37,7 @@ class MasterEditorMenu extends MusicBeatState
 
 		FlxG.camera.bgColor = FlxColor.BLACK;
 
-		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0)
-		{
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0) {
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
@@ -59,7 +58,7 @@ class MasterEditorMenu extends MusicBeatState
 
 		for (i in 0...editorsArray.length)
 		{
-			var editorText:Alphabet = new Alphabet(0, (70 * i) + 30, editorsArray[i], true, false);
+			var editorText:Alphabet = new Alphabet(0, (70 * i) + 30, editorsArray[i], true);
 			editorText.isMenuItem = true;
 			editorText.targetY = i;
 			grpEditors.add(editorText);

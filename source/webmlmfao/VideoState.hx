@@ -9,7 +9,7 @@ import flixel.system.FlxSound;
 
 using StringTools;
 
-class VideoState extends MusicBeatState
+class VideoState extends TransitionableState
 {
 	public var leSource:String = "";
 

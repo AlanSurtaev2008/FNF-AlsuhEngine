@@ -19,7 +19,7 @@ import flixel.effects.FlxFlicker;
 
 using StringTools;
 
-class CreditsMenuState extends MusicBeatState
+class CreditsMenuState extends TransitionableState
 {
 	private static var curSelected:Int = -1;
 
@@ -128,11 +128,11 @@ class CreditsMenuState extends MusicBeatState
 			var leCredit:Array<String> = creditsArray[i];
 			var isCentered:Bool = unselectableCheck(i);
 
-			var creditText:Alphabet = new Alphabet(0, 70 * i, leCredit[0], isCentered, false);
+			var creditText:Alphabet = new Alphabet(0, 70 * i, leCredit[0], isCentered);
 			creditText.isMenuItem = true;
+			creditText.startPosition.y = -70;
 			creditText.screenCenter(X);
-			creditText.yAdd -= 70;
-			creditText.forceX = creditText.x;
+			creditText.changeX = false;
 			creditText.targetY = i;
 			grpCredits.add(creditText);
 
@@ -142,7 +142,8 @@ class CreditsMenuState extends MusicBeatState
 					Paths.currentModDirectory = leCredit[5];
 				}
 
-				creditText.x -= 70;
+				creditText.x = -70;
+				creditText.startPosition.x = -70;
 
 				if (leCredit[1] != '')
 				{
@@ -159,8 +160,6 @@ class CreditsMenuState extends MusicBeatState
 				if (curSelected < 0) curSelected = i;
 			}
 		}
-
-		bg.color = getCurrentBGColor();
 
 		descBox = new FlxSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
@@ -184,7 +183,7 @@ class CreditsMenuState extends MusicBeatState
 	{
 		super.update(elapsed);
 
-		bg.color = CoolUtil.smoothColorChange(bg.color, getCurrentBGColor(), elapsed * 2.45);
+		bg.color = CoolUtil.interpolateColor(bg.color, getCurrentBGColor(), 0.045);
 
 		if (controls.BACK)
 		{
@@ -196,15 +195,17 @@ class CreditsMenuState extends MusicBeatState
 		{
 			if (creditsArray.length > 1)
 			{
+				var shiftMult:Int = FlxG.keys.pressed.SHIFT ? 3 : 1;
+
 				if (controls.UI_UP_P)
 				{
-					changeSelection(-1);
+					changeSelection(-shiftMult);
 					holdTime = 0;
 				}
 	
 				if (controls.UI_DOWN_P)
 				{
-					changeSelection(1);
+					changeSelection(shiftMult);
 					holdTime = 0;
 				}
 	
@@ -216,7 +217,7 @@ class CreditsMenuState extends MusicBeatState
 	
 					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 					{
-						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
+						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 					}
 				}
 	
@@ -226,7 +227,7 @@ class CreditsMenuState extends MusicBeatState
 				}
 			}
 
-			if (controls.ACCEPT && nextAccept <= 0 && curCredit[3] != '')
+			if (controls.ACCEPT && nextAccept <= 0 && (curCredit[3] == null || curCredit[3].length > 4))
 			{
 				if (OptionData.flashingLights)
 				{
@@ -249,22 +250,18 @@ class CreditsMenuState extends MusicBeatState
 
 		for (item in grpCredits.members)
 		{
-			if (!item.isBold)
+			if (!item.bold)
 			{
-				var lerpVal:Float = CoolUtil.boundTo(elapsed * 12, 0, 1);
-	
 				if (item.targetY == 0)
 				{
 					var lastX:Float = item.x;
 				
 					item.screenCenter(X);
-					item.x = FlxMath.lerp(lastX, item.x - 70, lerpVal);
-					item.forceX = item.x;
+					item.x = CoolUtil.coolLerp(lastX, item.x - 70, 0.2);
 				}
 				else
 				{
-					item.x = FlxMath.lerp(item.x, 200 + -40 * Math.abs(item.targetY), lerpVal);
-					item.forceX = item.x;
+					item.x = CoolUtil.coolLerp(item.x, 200 + -40 * Math.abs(item.targetY), 0.2);
 				}
 			}
 		}

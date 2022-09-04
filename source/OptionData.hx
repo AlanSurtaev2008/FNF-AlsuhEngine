@@ -13,14 +13,15 @@ class OptionData
 	public static var fullScreen:Bool = false;
 	public static var lowQuality:Bool = false;
 	public static var globalAntialiasing:Bool = true;
-	public static var shaders:Bool = true;
+	public static var events:Bool = true;
 	public static var framerate:Int = 60;
 
 	public static var ghostTapping:Bool = true;
 	public static var controllerMode:Bool = false;
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
-	public static var cpuStrumsType:String = 'Light Up';
+	public static var shaders:Bool = true;
+	public static var cpuStrumsType:String = 'Glow';
 	public static var hitsoundType:String = 'Kade';
 	public static var hitsoundVolume:Float = 0;
 	public static var noReset:Bool = false;
@@ -29,6 +30,7 @@ class OptionData
 	public static var goodWindow:Int = 90;
 	public static var badWindow:Int = 135;
 	public static var shitWindow:Int = 160;
+	public static var comboStacking:Bool = true;
 	public static var safeFrames:Float = 10;
 	public static var noteOffset:Int = 0;
 
@@ -39,7 +41,7 @@ class OptionData
 	public static var sustainsType:String = 'New';
 	public static var noteSplashes:Bool = true;
 	public static var danceOffset:Int = 2;
-	public static var songPositionType:String = 'Time Left';
+	public static var songPositionType:String = 'Multiplicative';
 	public static var scoreText:Bool = true;
 	public static var naughtyness:Bool = true;
 
@@ -69,6 +71,7 @@ class OptionData
 		FlxG.save.data.lowQuality = lowQuality;
 		FlxG.save.data.globalAntialiasing = globalAntialiasing;
 		FlxG.save.data.shaders = shaders;
+		FlxG.save.data.events = events;
 		FlxG.save.data.framerate = framerate;
 
 		FlxG.save.data.ghostTapping = ghostTapping;
@@ -81,6 +84,7 @@ class OptionData
 		FlxG.save.data.goodWindow = goodWindow;
 		FlxG.save.data.badWindow = badWindow;
 		FlxG.save.data.shitWindow = shitWindow;
+		FlxG.save.data.comboStacking = comboStacking;
 		FlxG.save.data.safeFrames = safeFrames;
 		FlxG.save.data.noteOffset = noteOffset;
 		FlxG.save.data.camZooms = camZooms;
@@ -134,6 +138,9 @@ class OptionData
 		if (FlxG.save.data.shaders != null) {
 			shaders = FlxG.save.data.shaders;
 		}
+		if (FlxG.save.data.events != null) {
+			events = FlxG.save.data.events;
+		}
 		if (FlxG.save.data.framerate != null) {
 			framerate = FlxG.save.data.framerate;
 			if (framerate > FlxG.drawFramerate) {
@@ -166,6 +173,14 @@ class OptionData
 			middleScroll = FlxG.save.data.middleScroll;
 		}
 		if (FlxG.save.data.cpuStrumsType != null) {
+			if (FlxG.save.data.cpuStrumsType == 'Light Up') {
+				FlxG.save.data.cpuStrumsType = 'Glow';
+			}
+
+			if (FlxG.save.data.cpuStrumsType == 'Normal') {
+				FlxG.save.data.cpuStrumsType = 'Static';
+			}
+
 			cpuStrumsType = FlxG.save.data.cpuStrumsType;
 		}
 		if (FlxG.save.data.ratingOffset != null) {
@@ -182,6 +197,9 @@ class OptionData
 		}
 		if (FlxG.save.data.shitWindow != null) {
 			shitWindow = FlxG.save.data.shitWindow;
+		}
+		if (FlxG.save.data.comboStacking != null) {
+			comboStacking = FlxG.save.data.comboStacking;
 		}
 		if (FlxG.save.data.safeFrames != null) {
 			safeFrames = FlxG.save.data.safeFrames;

@@ -48,6 +48,8 @@ typedef TitleData =
 
 class TitleState extends MusicBeatState
 {
+	public static var instance:TitleState;
+
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
@@ -73,7 +75,11 @@ class TitleState extends MusicBeatState
 
 		WeekData.loadTheFirstEnabledMod();
 
+		Transition.skipNextTransOut = true;
+
 		super.create();
+
+		instance = this;
 
 		OptionData.loadPrefs();
 
@@ -331,8 +337,13 @@ class TitleState extends MusicBeatState
 		if (initialized && !transitioning && skippedIntro)
 		{
 			#if sys
-			if (controls.BACK) {
-				Sys.exit(0);
+			if (controls.BACK)
+			{
+				if (FlxG.random.bool(25)) {
+					CoolUtil.browserLoad('https://youtu.be/dQw4w9WgXcQ'); // lololololololol
+				} else {
+					Sys.exit(0);
+				}
 			}
 			#end
 
@@ -401,7 +412,7 @@ class TitleState extends MusicBeatState
 		{
 			for (i in 0...textArray.length)
 			{
-				var money:Alphabet = new Alphabet(0, 0, textArray[i], true, false);
+				var money:Alphabet = new Alphabet(0, 0, textArray[i], true);
 				money.screenCenter(X);
 				money.y += (i * 60) + 200;
 				textGroup.add(money);
@@ -413,7 +424,7 @@ class TitleState extends MusicBeatState
 	{
 		if (textGroup != null)
 		{
-			var coolText:Alphabet = new Alphabet(0, 0, text, true, false);
+			var coolText:Alphabet = new Alphabet(0, 0, text, true);
 			coolText.screenCenter(X);
 			coolText.y += (textGroup.length * 60) + 200;
 			textGroup.add(coolText);

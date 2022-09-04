@@ -84,9 +84,9 @@ class CharacterEditorState extends MusicBeatUIState
 		camMenu.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camEditor);
-		FlxG.cameras.add(camHUD);
-		FlxG.cameras.add(camMenu);
-		FlxCamera.defaultCameras = [camEditor];
+		FlxG.cameras.add(camHUD, false);
+		FlxG.cameras.add(camMenu, false);
+		FlxG.cameras.setDefaultDrawTarget(camEditor, true);
 
 		super.create();
 

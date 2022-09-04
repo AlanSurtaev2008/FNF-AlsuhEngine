@@ -155,7 +155,7 @@ class Option
 	private function set_text(newValue:String = ''):String
 	{
 		if (child != null) {
-			child.changeText(newValue);
+			child.text = newValue;
 		}
 
 		return null;

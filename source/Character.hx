@@ -344,8 +344,7 @@ class Character extends FlxSprite
 				else
 					playAnim('danceLeft' + idleSuffix);
 			}
-			else if (animation.getByName('idle' + idleSuffix) != null)
-			{
+			else if (animation.getByName('idle' + idleSuffix) != null) {
 				playAnim('idle' + idleSuffix);
 			}
 		}

@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxSubState;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.math.FlxPoint;
@@ -13,7 +14,7 @@ import flixel.effects.FlxFlicker;
 
 using StringTools;
 
-class GameplayChangersSubState extends MusicBeatSubState
+class GameplayChangersSubState extends BaseSubState
 {
 	private static var curSelected:Int = 0;
 
@@ -171,39 +172,44 @@ class GameplayChangersSubState extends MusicBeatSubState
 
 		for (i in 0...optionsArray.length)
 		{
-			var optionText:Alphabet = new Alphabet(0, 70 * i, optionsArray[i].name, true, false, 0.05, 0.8);
+			var leOption:GameplayOption = optionsArray[i];
+
+			var optionText:Alphabet = new Alphabet(120, 70, leOption.name, true);
 			optionText.isMenuItem = true;
-			optionText.x += 300;
-			optionText.xAdd = 120;
+			optionText.startPosition.x = 120;
+			optionText.scaleX = 0.8;
+			optionText.scaleY = 0.8;
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
-			switch (optionsArray[i].type)
+			switch (leOption.type)
 			{
 				case 'bool':
 				{
-					var checkbox:CheckboxThingie = new CheckboxThingie(optionText.x - 105, optionText.y, optionsArray[i].getValue() == true);
+					optionText.x += 110;
+					optionText.startPosition.x += 110;
+
+					var checkbox:CheckboxThingie = new CheckboxThingie(optionText.x - 105, optionText.y, leOption.getValue() == true);
 					checkbox.sprTracker = optionText;
-					checkbox.offsetY = -60;
+					checkbox.offsetX -= 32;
+					checkbox.offsetY = -70;
 					checkbox.ID = i;
 					checkboxGroup.add(checkbox);
-					optionText.xAdd += 80;
 				}
 				case 'int' | 'float' | 'percent' | 'string':
 				{
-					var valueText:AttachedText = new AttachedText('' + optionsArray[i].getValue(), optionText.width + 80, true, 0.8);
+					var valueText:AttachedText = new AttachedText(Std.string(optionsArray[i].getValue()), optionText.width + 15, -13.5, true, 0.8);
 					valueText.sprTracker = optionText;
 					valueText.copyAlpha = true;
 					valueText.ID = i;
 					grpTexts.add(valueText);
+
 					optionsArray[i].setChild(valueText);
 				}
 			}
 
 			updateTextFrom(optionsArray[i]);
 		}
-
-		if (isPause) cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		changeSelection();
 		reloadCheckboxes();
@@ -752,7 +758,7 @@ class GameplayOption
 	private function set_text(newValue:String = ''):String
 	{
 		if (child != null) {
-			child.changeText(newValue);
+			child.text = newValue;
 		}
 
 		return null;

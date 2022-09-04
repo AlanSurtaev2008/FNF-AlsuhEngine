@@ -23,8 +23,7 @@ class CoolUtil
 {
 	public static function getDifficultyName(diff:String, isSuffix:Bool = false, ?difficulties:Array<Array<String>> = null):String
 	{
-		if (difficulties == null)
-		{
+		if (difficulties == null) {
 			difficulties = PlayState.difficulties;
 		}
 
@@ -33,8 +32,7 @@ class CoolUtil
 
 	public static function getDifficultyID(diff:String, ?isSuffix:Bool = false, ?difficulties:Array<Array<String>> = null):String
 	{
-		if (difficulties == null)
-		{
+		if (difficulties == null) {
 			difficulties = PlayState.difficulties;
 		}
 
@@ -43,8 +41,7 @@ class CoolUtil
 
 	public static function getDifficultySuffix(diff:String, ?isName:Bool = false, ?difficulties:Array<Array<String>> = null):String
 	{
-		if (difficulties == null)
-		{
+		if (difficulties == null) {
 			difficulties = PlayState.difficulties;
 		}
 
@@ -63,66 +60,72 @@ class CoolUtil
 
 	public static function getKeyName(key:FlxKey):String
 	{
-		return switch (key)
+		switch (key)
 		{
-			case BACKSPACE: "BckSpc";
-			case CONTROL: "Ctrl";
-			case ALT: "Alt";
-			case CAPSLOCK: "Caps";
-			case PAGEUP: "PgUp";
-			case PAGEDOWN: "PgDown";
-			case ZERO: "0";
-			case ONE: "1";
-			case TWO: "2";
-			case THREE: "3";
-			case FOUR: "4";
-			case FIVE: "5";
-			case SIX: "6";
-			case SEVEN: "7";
-			case EIGHT: "8";
-			case NINE: "9";
-			case NUMPADZERO: "#0";
-			case NUMPADONE: "#1";
-			case NUMPADTWO: "#2";
-			case NUMPADTHREE: "#3";
-			case NUMPADFOUR: "#4";
-			case NUMPADFIVE: "#5";
-			case NUMPADSIX: "#6";
-			case NUMPADSEVEN: "#7";
-			case NUMPADEIGHT: "#8";
-			case NUMPADNINE: "#9";
-			case NUMPADMULTIPLY: "#*";
-			case NUMPADPLUS: "#+";
-			case NUMPADMINUS: "#-";
-			case NUMPADPERIOD: "#.";
-			case SEMICOLON: ";";
-			case COMMA: ",";
-			case PERIOD: ".";
-			case GRAVEACCENT: "`";
-			case LBRACKET: "[";
-			case RBRACKET: "]";
-			case QUOTE: "'";
-			case PRINTSCREEN: "PrtScrn";
-			case NONE: '---';
+			case BACKSPACE: return "BckSpc";
+			case CONTROL: return "Ctrl";
+			case ALT: return "Alt";
+			case CAPSLOCK: return "Caps";
+			case PAGEUP: return "PgUp";
+			case PAGEDOWN: return "PgDown";
+			case ZERO: return "0";
+			case ONE: return "1";
+			case TWO: return "2";
+			case THREE: return "3";
+			case FOUR: return "4";
+			case FIVE: return "5";
+			case SIX: return "6";
+			case SEVEN: return "7";
+			case EIGHT: return "8";
+			case NINE: return "9";
+			case NUMPADZERO: return "#0";
+			case NUMPADONE: return "#1";
+			case NUMPADTWO: return "#2";
+			case NUMPADTHREE: return "#3";
+			case NUMPADFOUR: return "#4";
+			case NUMPADFIVE: return "#5";
+			case NUMPADSIX: return "#6";
+			case NUMPADSEVEN: return "#7";
+			case NUMPADEIGHT: return "#8";
+			case NUMPADNINE: return "#9";
+			case NUMPADMULTIPLY: return "#*";
+			case NUMPADPLUS: return "#+";
+			case NUMPADMINUS: return "#-";
+			case NUMPADPERIOD: return "#.";
+			case SEMICOLON: return ";";
+			case COMMA: return ",";
+			case PERIOD: return ".";
+			case GRAVEACCENT: return "`";
+			case LBRACKET: return "[";
+			case RBRACKET: return "]";
+			case QUOTE: return "'";
+			case PRINTSCREEN: return "PrtScrn";
+			case NONE: return '---';
 			default:
 			{
 				var label:String = '' + key;
-				if (label.toLowerCase() == 'null') '---';
 
-				'' + label.charAt(0).toUpperCase() + label.substr(1).toLowerCase();
-			}
+				if (label.toLowerCase() == 'null') {
+					return '---';
+				}
+		
+				return '' + label.charAt(0).toUpperCase() + label.substr(1).toLowerCase();
+			} 
 		}
 	}
 
-	public static function smoothColorChange(from:FlxColor, to:FlxColor, speed:Float = 0.045):FlxColor
+	public static function interpolateColor(from:FlxColor, to:FlxColor, speed:Float = 0.045, multiplier:Float = 54.5):FlxColor
 	{
-		var lerpVal:Float = CoolUtil.boundTo(speed, 0, 1);
+		return FlxColor.interpolate(from, to, boundTo(FlxG.elapsed * (speed * multiplier), 0, 1));
+	}
 
-		return FlxColor.fromRGBFloat(
-			FlxMath.lerp(from.redFloat, to.redFloat, lerpVal),
-			FlxMath.lerp(from.greenFloat, to.greenFloat, lerpVal),
-			FlxMath.lerp(from.blueFloat, to.blueFloat, lerpVal)
-		);
+	public static function coolLerp(a:Float, b:Float, ratio:Float, multiplier:Float = 54.5, ?integerShitKillMeLoopWhatEver:Null<Float> = null):Float
+	{
+		if (integerShitKillMeLoopWhatEver != null) {
+			return FlxMath.lerp(a, b, boundTo(integerShitKillMeLoopWhatEver - (FlxG.elapsed * (ratio * multiplier)), 0, 1));
+		}
+
+		return FlxMath.lerp(a, b, boundTo(FlxG.elapsed * (ratio * multiplier), 0, 1));
 	}
 
 	public static function boundTo(value:Float, min:Float, max:Float):Float
@@ -202,6 +205,22 @@ class CoolUtil
 
 	public static function browserLoad(site:String):Void
 	{
+		if (site.contains('dQw4w9WgXcQ'))
+		{
+			trace('lololololololol');
+			trace("you've been rick rolled lol");
+			trace("NEVER");
+			trace("GONNA");
+			trace("GIVE");
+			trace("YOU");
+			trace("UP");
+			trace("NEVER");
+			trace("GONNA");
+			trace("LET");
+			trace("YOU");
+			trace("DOWN");
+		}
+
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
 		#else

@@ -131,15 +131,15 @@ class PreferencesSubState extends MusicBeatSubState
 			'What should the opponent (CPU) notes?',
 			'cpuStrumsType',
 			'string',
-			'Light Up',
-			['Light Up', 'Normal', 'Disabled']);
+			'Glow',
+			['Glow', 'Glow no Sustains', 'Static', 'Disabled']);
 
 		if (isPause)
 		{
 			if (option.getValue() == 'Disabled') {
 				option.isPause = isPause;
 			} else {
-				option.options = ['Light Up', 'Normal'];
+				option.options = ['Glow', 'Glow no Sustains', 'Static'];
 				option.luaAllowed = true;
 			}
 		}
@@ -311,8 +311,8 @@ class PreferencesSubState extends MusicBeatSubState
 			"What should the Time Bar display?",
 			'songPositionType',
 			'string',
-			'Time Left',
-			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
+			'Multiplicative',
+			['Multiplicative', 'Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		option.onChange = onChangeSongPosition;
 		option.luaAllowed = true;
 		addOption(option);
@@ -334,6 +334,23 @@ class PreferencesSubState extends MusicBeatSubState
 			'bool',
 			true);
 		option.luaAllowed = true;
+		addOption(option);
+
+		var option:Option = new Option('Events',
+			true,
+			'If unchecked, disables events on gameplay.',
+			'events',
+			'bool',
+			true);
+		option.isPause = isPause;
+		addOption(option);
+
+		var option:Option = new Option('Combo Stacking',
+			true,
+			"If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read",
+			'comboStacking',
+			'bool',
+			true);
 		addOption(option);
 
 		var option:Option = new Option('Show Ratings',
@@ -573,22 +590,20 @@ class PreferencesSubState extends MusicBeatSubState
 
 			var isCentered:Bool = unselectableCheck(i, true);
 
-			var optionText:Alphabet = new Alphabet(0, 70 * i, leOption.name, isCentered, false);
+			var optionText:Alphabet = new Alphabet(300, 70 * i, leOption.name, isCentered);
 			optionText.isMenuItem = true;
+			optionText.changeX = false;
 
 			if (isCentered)
 			{
 				optionText.screenCenter(X);
-				optionText.forceX = optionText.x;
+				optionText.startPosition.y = -20;
 			}
-			else
-			{
-				optionText.yAdd = -50;
-				optionText.forceX = 300;
-				optionText.x += 300;
+			else {
+				optionText.startPosition.y = -70;
 			}
 
-			optionText.yMult = 100;
+			optionText.distancePerItem.y = 100;
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
@@ -614,9 +629,9 @@ class PreferencesSubState extends MusicBeatSubState
 					}
 				}
 
-				if (leOption.type != 'bool')
-				{
-					optionText.forceX = 180;
+				if (leOption.type != 'bool') {
+					optionText.x = 180;
+					optionText.distancePerItem.x = 180;
 				}
 
 				updateTextFrom(leOption);
@@ -640,8 +655,6 @@ class PreferencesSubState extends MusicBeatSubState
 		descText.scrollFactor.set();
 		descText.borderSize = 2.4;
 		add(descText);
-
-		if (isPause) cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		changeSelection();
 	}
@@ -741,7 +754,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 					FlxG.sound.play(Paths.getSound('confirmMenu'));
 				}
-				else
+				else if (!unselectableCheck(curSelected))
 				{
 					if (curOption.type == 'bool' && !curOption.isPause)
 					{
@@ -1050,10 +1063,22 @@ class PreferencesSubState extends MusicBeatSubState
 			var secondsTotal:Int = Math.floor(songCalc / 1000);
 			if (secondsTotal < 0) secondsTotal = 0;
 
+			var secondsTotalBlyad:Int = Math.floor(curTime / 1000);
+			if (secondsTotalBlyad < 0) secondsTotalBlyad = 0;
+
 			PlayState.instance.songPosName.text = PlayState.SONG.songName + " - " + CoolUtil.getDifficultyName(PlayState.lastDifficulty, PlayState.difficulties);
 
-			if (OptionData.songPositionType != 'Song Name') {
-				PlayState.instance.songPosName.text += ' (' + FlxStringUtil.formatTime(secondsTotal, false) + ')';
+			if (OptionData.songPositionType != 'Song Name')
+			{
+				switch (OptionData.songPositionType)
+				{
+					case 'Multiplicative':
+						PlayState.instance.songPosName.text += ' (' + FlxStringUtil.formatTime(secondsTotalBlyad, false) + ' / ' + FlxStringUtil.formatTime(secondsTotal, false) + ')';
+					case 'Time Elapsed':
+						PlayState.instance.songPosName.text += ' (' + FlxStringUtil.formatTime(secondsTotalBlyad, false) + ')';
+					default:
+						PlayState.instance.songPosName.text += ' (' + FlxStringUtil.formatTime(secondsTotal, false) + ')';
+				}
 			}
 		}
 	}
@@ -1138,7 +1163,7 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		super.beatHit();
 
-		if (boyfriend != null && curBeat % 2 == 0) {
+		if (boyfriend != null && curBeat % OptionData.danceOffset == 0) {
 			boyfriend.dance();
 		}
 	}
@@ -1206,8 +1231,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 		descBox.visible = (curOption.description != '');
 
-		if (boyfriend != null)
-		{
+		if (boyfriend != null) {
 			boyfriend.visible = curOption.showBoyfriend && !curOption.isPause;
 		}
 
@@ -1237,8 +1261,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 	private function unselectableCheck(num:Int, ?checkDefaultValue:Bool = false):Bool
 	{
-		if (optionsArray[num] == defaultValue)
-		{
+		if (optionsArray[num] == defaultValue) {
 			return checkDefaultValue;
 		}
 

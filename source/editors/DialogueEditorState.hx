@@ -14,6 +14,8 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 
+import Alphabet;
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -42,7 +44,7 @@ class DialogueEditorState extends MusicBeatUIState
 {
 	var character:DialogueCharacter;
 	var box:FlxSprite;
-	var daText:Alphabet;
+	var daText:Null<TypedAlphabet>;
 
 	var selectedText:FlxText;
 	var animText:FlxText;
@@ -270,7 +272,6 @@ class DialogueEditorState extends MusicBeatUIState
 	{
 		if (daText != null)
 		{
-			daText.killTheTimer();
 			daText.kill();
 			remove(daText);
 
@@ -281,9 +282,11 @@ class DialogueEditorState extends MusicBeatUIState
 
 		var textToType:String = lineInputText.text;
 		if (textToType == null || textToType.length < 1) textToType = ' ';
-	
-		Alphabet.setDialogueSound(soundInputText.text);
-		daText = new Alphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, textToType, false, true, speed, 0.7);
+
+		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, textToType, speed, false);
+		daText.sound = soundInputText.text;
+		daText.scaleX = 0.7;
+		daText.scaleY = 0.7;
 		add(daText);
 
 		if (speed > 0)

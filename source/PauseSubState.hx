@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -13,7 +14,7 @@ import flixel.util.FlxStringUtil;
 
 using StringTools;
 
-class PauseSubState extends MusicBeatSubState
+class PauseSubState extends BaseSubState
 {
 	static var playingPause:Bool = false;
 	static var goToOptions:Bool = false;
@@ -209,20 +210,17 @@ class PauseSubState extends MusicBeatSubState
 		add(grpMenuShit);
 
 		regenMenu();
-
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	private function regenMenu():Void
 	{
-		while (grpMenuShit.members.length > 0)
-		{
+		while (grpMenuShit.members.length > 0) {
 			grpMenuShit.remove(grpMenuShit.members[0], true);
 		}
 
 		for (i in 0...menuItems.length)
 		{
-			var menuItem:Alphabet = new Alphabet(0, (70 * i) + 30, menuItems[i], true, false);
+			var menuItem:Alphabet = new Alphabet(0, (70 * i) + 30, menuItems[i], true);
 			menuItem.isMenuItem = true;
 			menuItem.targetY = i;
 			grpMenuShit.add(menuItem);

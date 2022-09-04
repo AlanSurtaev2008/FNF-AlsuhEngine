@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import shaders.ColorSwap;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
+import editors.ChartingState;
 import flash.display.BitmapData;
 
 using StringTools;
@@ -22,7 +23,11 @@ class Note extends FlxSprite
 	public var strumTime:Float = 0;
 
 	public var spawned:Bool = false;
-	public var noRating:Bool = false;
+
+	public var rating:String = 'unknown';
+	public var ratingMod:Float = 0; // 9 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
+	public var ratingDisabled:Bool = false;
+
 	public var parent:Note;
 
 	public var blockHit:Bool = false; // only works for player
@@ -47,17 +52,18 @@ class Note extends FlxSprite
 	public var eventVal1:String = '';
 	public var eventVal2:String = '';
 
-	public var noHealth:Bool = false;
+	public var scoreDisabled:Bool = false;
+	public var healthDisabled:Bool = false;
 
 	public var colorSwap:ColorSwap;
 	public var inEditor:Bool = false;
 	private var earlyHitMult:Float = 0.5;
 
 	public static var swagWidth:Float = 160 * 0.7;
-	public static var PURP_NOTE:Int = 0;
-	public static var GREEN_NOTE:Int = 2;
-	public static var BLUE_NOTE:Int = 1;
-	public static var RED_NOTE:Int = 3;
+
+	private var maxNote:Int = 4;
+	private var colArray:Array<String> = ['purple', 'blue', 'green', 'red'];
+	private var pixelInt:Array<Int> = [0, 1, 2, 3];
 
 	// Lua shit
 	public var quickNoteSplash:Bool = false;
@@ -88,14 +94,14 @@ class Note extends FlxSprite
 	public var copyAngle:Bool = true;
 	public var copyAlpha:Bool = true;
 
-	public var hitHealthSick:Float = 0.025;
-	public var hitHealthSickSus:Float = 0.0125;
-	public var hitHealthGood:Float = 0.020;
-	public var hitHealthGoodSus:Float = 0.010;
-	public var hitHealthBad:Float = 0.010;
-	public var hitHealthBadSus:Float = 0.005;
-	public var hitHealthShit:Float = 0;
-	public var hitHealthShitSus:Float = 0;
+	public var hithealth_sick:Float = 0.025;
+	public var hithealth_sick_sus:Float = 0.0125;
+	public var hithealth_good:Float = 0.020;
+	public var hithealth_good_sus:Float = 0.010;
+	public var hithealth_bad:Float = 0.010;
+	public var hithealth_bad_sus:Float = 0.005;
+	public var hithealth_shit:Float = 0;
+	public var hithealth_shit_sus:Float = 0;
 
 	public var missHealth:Float = 0.0475;
 
@@ -146,9 +152,9 @@ class Note extends FlxSprite
 
 		if (noteData > -1)
 		{
-			colorSwap.hue = OptionData.arrowHSV[noteData % 4][0] / 360;
-			colorSwap.saturation = OptionData.arrowHSV[noteData % 4][1] / 100;
-			colorSwap.brightness = OptionData.arrowHSV[noteData % 4][2] / 100;
+			colorSwap.hue = OptionData.arrowHSV[noteData % maxNote][0] / 360;
+			colorSwap.saturation = OptionData.arrowHSV[noteData % maxNote][1] / 100;
+			colorSwap.brightness = OptionData.arrowHSV[noteData % maxNote][2] / 100;
 		}
 
 		if (noteData > -1 && noteType != value)
@@ -227,24 +233,13 @@ class Note extends FlxSprite
 			colorSwap = new ColorSwap();
 			shader = colorSwap.shader;
 
-			x += swagWidth * (noteData % 4);
+			x += swagWidth * (noteData % maxNote);
 
 			if (!isSustainNote) // Doing this 'if' check to fix the warnings on Senpai songs
 			{
 				var animToPlay:String = '';
 
-				switch (noteData % 4)
-				{
-					case 0:
-						animToPlay = 'purple';
-					case 1:
-						animToPlay = 'blue';
-					case 2:
-						animToPlay = 'green';
-					case 3:
-						animToPlay = 'red';
-				}
-
+				animToPlay = colArray[noteData % maxNote];
 				animation.play(animToPlay + 'Scroll');
 			}
 		}
@@ -261,17 +256,7 @@ class Note extends FlxSprite
 			offsetX += width / 2;
 			copyAngle = false;
 
-			switch (noteData)
-			{
-				case 0:
-					animation.play('purpleholdend');
-				case 1:
-					animation.play('blueholdend');
-				case 2:
-					animation.play('greenholdend');
-				case 3:
-					animation.play('redholdend');
-			}
+			animation.play(colArray[noteData % maxNote] + 'holdend');
 
 			updateHitbox();
 
@@ -283,18 +268,7 @@ class Note extends FlxSprite
 
 			if (prevNote.isSustainNote)
 			{
-				switch (prevNote.noteData)
-				{
-					case 0:
-						prevNote.animation.play('purplehold');
-					case 1:
-						prevNote.animation.play('bluehold');
-					case 2:
-						prevNote.animation.play('greenhold');
-					case 3:
-						prevNote.animation.play('redhold');
-				}
-
+				prevNote.animation.play(colArray[prevNote.noteData % maxNote] + 'hold');
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05 * PlayState.SONG.speed;
 
 				if (PlayState.isPixelStage) {
@@ -398,29 +372,21 @@ class Note extends FlxSprite
 
 		if (inEditor)
 		{
-			setGraphicSize(editors.ChartingState.GRID_SIZE, editors.ChartingState.GRID_SIZE);
+			setGraphicSize(ChartingState.GRID_SIZE, ChartingState.GRID_SIZE); // fucking import
 			updateHitbox();
 		}
 	}
 
 	function loadNoteAnims():Void
 	{
-		animation.addByPrefix('greenScroll', 'green0');
-		animation.addByPrefix('redScroll', 'red0');
-		animation.addByPrefix('blueScroll', 'blue0');
-		animation.addByPrefix('purpleScroll', 'purple0');
+		animation.addByPrefix(colArray[noteData] + 'Scroll', colArray[noteData] + '0');
 
 		if (isSustainNote)
 		{
-			animation.addByPrefix('purpleholdend', 'pruple end hold');
-			animation.addByPrefix('greenholdend', 'green hold end');
-			animation.addByPrefix('redholdend', 'red hold end');
-			animation.addByPrefix('blueholdend', 'blue hold end');
+			animation.addByPrefix('purpleholdend', 'pruple end hold'); // plz not delete this
 
-			animation.addByPrefix('purplehold', 'purple hold piece');
-			animation.addByPrefix('greenhold', 'green hold piece');
-			animation.addByPrefix('redhold', 'red hold piece');
-			animation.addByPrefix('bluehold', 'blue hold piece');
+			animation.addByPrefix(colArray[noteData] + 'holdend', colArray[noteData] + ' hold end');
+			animation.addByPrefix(colArray[noteData] + 'hold', colArray[noteData] + ' hold piece');
 		}
 
 		setGraphicSize(Std.int(width * 0.7));
@@ -431,22 +397,12 @@ class Note extends FlxSprite
 	{
 		if (isSustainNote)
 		{
-			animation.add('purpleholdend', [PURP_NOTE + 4]);
-			animation.add('greenholdend', [GREEN_NOTE + 4]);
-			animation.add('redholdend', [RED_NOTE + 4]);
-			animation.add('blueholdend', [BLUE_NOTE + 4]);
-
-			animation.add('purplehold', [PURP_NOTE]);
-			animation.add('greenhold', [GREEN_NOTE]);
-			animation.add('redhold', [RED_NOTE]);
-			animation.add('bluehold', [BLUE_NOTE]);
+			animation.add(colArray[noteData] + 'holdend', [pixelInt[noteData] + maxNote]);
+			animation.add(colArray[noteData] + 'hold', [pixelInt[noteData]]);
 		}
 		else
 		{
-			animation.add('greenScroll', [GREEN_NOTE + 4]);
-			animation.add('redScroll', [RED_NOTE + 4]);
-			animation.add('blueScroll', [BLUE_NOTE + 4]);
-			animation.add('purpleScroll', [PURP_NOTE + 4]);
+			animation.add(colArray[noteData] + 'Scroll', [pixelInt[noteData] + maxNote]);
 		}
 	}
 
@@ -456,9 +412,9 @@ class Note extends FlxSprite
 
 		if (noteData > -1)
 		{
-			colorSwap.hue = OptionData.arrowHSV[noteData % 4][0] / 360;
-			colorSwap.saturation = OptionData.arrowHSV[noteData % 4][1] / 100;
-			colorSwap.brightness = OptionData.arrowHSV[noteData % 4][2] / 100;
+			colorSwap.hue = OptionData.arrowHSV[noteData % maxNote][0] / 360;
+			colorSwap.saturation = OptionData.arrowHSV[noteData % maxNote][1] / 100;
+			colorSwap.brightness = OptionData.arrowHSV[noteData % maxNote][2] / 100;
 
 			noteSplashHue = colorSwap.hue;
 			noteSplashSat = colorSwap.saturation;

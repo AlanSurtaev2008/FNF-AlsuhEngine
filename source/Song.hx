@@ -40,45 +40,48 @@ typedef SwagSong =
 
 class Song
 {
-	public static function onLoadJson(songJson:Dynamic):Void
+	public static function onLoadJson(songJson:SwagSong):Void
 	{
-		if (songJson.songID == null)
-		{
+		if (songJson.songID == null) {
 			songJson.songID = Paths.formatToSongPath(songJson.song);
 		}
 
 		if (songJson.songName == null)
 		{
-			songJson.songName = StringTools.replace(songJson.song, '-', ' ');
+			var killMe:Array<String> = songJson.song.trim().split('-');
+			
+			for (i in 0...killMe.length) {
+				killMe[i] = '' + killMe[i].charAt(0).toUpperCase().trim() + killMe[i].substr(1).toLowerCase().trim();
+			}
+
+			songJson.songName = killMe.join(' ');
 		}
 
-		if (songJson.arrowSkin == null)
-		{
+		if (songJson.arrowSkin == null) {
 			songJson.arrowSkin = '';
 		}
 
-		if (songJson.arrowSkin2 == null)
-		{
+		if (songJson.arrowSkin2 == null) {
 			songJson.arrowSkin2 = songJson.arrowSkin;
 		}
 
-		if (songJson.splashSkin == null)
-		{
+		if (songJson.splashSkin == null) {
 			songJson.splashSkin = 'noteSplashes';
 		}
 
-		if (songJson.splashSkin2 == null)
-		{
+		if (songJson.splashSkin2 == null) {
 			songJson.splashSkin2 = songJson.splashSkin;
 		}
 
-		if (songJson.gfVersion == null) // from Psych Chars
+		if (songJson.gfVersion == null) // from Psych Charts
 		{
 			songJson.gfVersion = songJson.player3;
 			songJson.player3 = null;
 		}
 
-		if (songJson.events == null) // from Psych Chars
+		songJson.songID = songJson.songID.toLowerCase();
+
+		if (songJson.events == null) // from Psych Charts
 		{
 			songJson.events = [];
 
@@ -101,8 +104,7 @@ class Song
 
 						len = notes.length;
 					}
-					else
-					{
+					else {
 						i++;
 					}
 				}
@@ -110,7 +112,7 @@ class Song
 		}
 	}
 
-	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
+	public static function loadFromJson(jsonInput:String, ?folder:Null<String> = null):Null<SwagSong>
 	{
 		var rawJson:String = null;
 
@@ -121,6 +123,7 @@ class Song
 			rawJson = File.getContent(moddyFile).trim();
 		}
 		#end
+
 		if (rawJson == null)
 		{
 			#if sys
@@ -130,8 +133,7 @@ class Song
 			#end
 		}
 
-		while (!rawJson.endsWith('}'))
-		{
+		while (!rawJson.endsWith('}')) {
 			rawJson = rawJson.substr(0, rawJson.length - 1);
 		}
 

@@ -60,8 +60,8 @@ class EditorPlayState extends MusicBeatState
 	var grpRatings:FlxTypedGroup<Rating>;
 	var grpNumbers:FlxTypedGroup<Number>;
 
-	var ratingTweensArray:Array<FlxTween> = [];
-	var numbersTweensArray:Array<FlxTween> = [];
+	public var ratingTweensArray:Array<FlxTween> = [];
+	public var numbersTweensArray:Array<FlxTween> = [];
 
 	var scoreTxt:FlxText;
 	var stepTxt:FlxText;
@@ -491,9 +491,9 @@ class EditorPlayState extends MusicBeatState
 		stepTxt.text = 'Step: ' + curStep;
 	}
 
-	public override function openSubState(SubState:FlxSubState):Void
+	public override function openSubState(BaseSubState:FlxSubState):Void
 	{
-		super.openSubState(SubState);
+		super.openSubState(BaseSubState);
 
 		for (tween in ratingTweensArray) {
 			tween.active = false;
@@ -541,29 +541,48 @@ class EditorPlayState extends MusicBeatState
 			}
 		}
 
-		if (strumGroup.members[daNote.noteData].sustainReduce && daNote.isSustainNote && (daNote.mustPress || !daNote.ignoreNote) &&
-			(!daNote.mustPress || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
+		switch (OptionData.sustainsType)
 		{
-			if (strumScroll)
+			case 'Old':
 			{
-				if (daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= center)
+				if (daNote.y > FlxG.height)
 				{
-					var swagRect:FlxRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
-					swagRect.height = (center - daNote.y) / daNote.scale.y;
-					swagRect.y = daNote.frameHeight - swagRect.height;
-
-					daNote.clipRect = swagRect;
+					daNote.active = false;
+					daNote.visible = false;
+				}
+				else
+				{
+					daNote.visible = true;
+					daNote.active = true;
 				}
 			}
-			else
+			case 'New':
 			{
-				if (daNote.y + daNote.offset.y * daNote.scale.y <= center)
+				if (strumGroup.members[daNote.noteData].sustainReduce && daNote.isSustainNote && (daNote.mustPress || !daNote.ignoreNote) &&
+					(!daNote.mustPress || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
 				{
-					var swagRect:FlxRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-					swagRect.y = (center - daNote.y) / daNote.scale.y;
-					swagRect.height -= swagRect.y;
-
-					daNote.clipRect = swagRect;
+					if (strumScroll)
+					{
+						if (daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= center)
+						{
+							var swagRect:FlxRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
+							swagRect.height = (center - daNote.y) / daNote.scale.y;
+							swagRect.y = daNote.frameHeight - swagRect.height;
+		
+							daNote.clipRect = swagRect;
+						}
+					}
+					else
+					{
+						if (daNote.y + daNote.offset.y * daNote.scale.y <= center)
+						{
+							var swagRect:FlxRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
+							swagRect.y = (center - daNote.y) / daNote.scale.y;
+							swagRect.height -= swagRect.y;
+		
+							daNote.clipRect = swagRect;
+						}
+					}
 				}
 			}
 		}
@@ -580,7 +599,7 @@ class EditorPlayState extends MusicBeatState
 
 		vocals.volume = 1;
 
-		var daRating:String = Conductor.judgeNote(daNote, noteDiff);
+		var daRating:String = Conductor.judgeNote(daNote, noteDiff, true);
 
 		if (daRating == 'sick' && daNote != null && daNote.quickNoteSplash && !daNote.noteSplashDisabled && !daNote.isSustainNote) {
 			spawnNoteSplashOnNote(daNote);
@@ -848,37 +867,40 @@ class EditorPlayState extends MusicBeatState
 			vocals.volume = 1;
 		}
 
-		var time:Float = 0.15;
+		if (OptionData.cpuStrumsType == 'Glow' || (OptionData.cpuStrumsType == 'Glow no Sustains' && !daNote.isSustainNote))
+		{
+			var time:Float = 0.15;
 
-		if (daNote.isSustainNote && !daNote.animation.curAnim.name.endsWith('end')) {
-			time += 0.15;
+			if (daNote.isSustainNote && !daNote.animation.curAnim.name.endsWith('end')) {
+				time += 0.15;
+			}
+	
+			StrumPlayAnim(true, Std.int(Math.abs(daNote.noteData)), time);
 		}
 
 		if (daNote.noteSplashHitByOpponent && !daNote.noteSplashDisabled && !daNote.isSustainNote) {
 			spawnNoteSplashOnNote(daNote);
 		}
 
-		StrumPlayAnim(true, Std.int(Math.abs(daNote.noteData)), time);
-
 		daNote.hitByOpponent = true;
 
-		daNote.kill();
-		notes.remove(daNote, true);
-		daNote.destroy();
+		if (OptionData.sustainsType == 'Old' || !daNote.isSustainNote)
+		{
+			daNote.kill();
+			notes.remove(daNote, true);
+			daNote.destroy();
+		}
 	}
 
 	public function hitNote(note:Note):Void
 	{
 		if (!note.ignoreNote)
 		{
-			if (!note.noRating)
-			{
-				popUpScore(note);
+			popUpScore(note);
 
-				if (!note.isSustainNote)
-				{
-					if (combo > 9999) combo = 9999;
-				}
+			if (!note.isSustainNote)
+			{
+				if (combo > 9999) combo = 9999;
 			}
 		}
 	}
@@ -925,7 +947,7 @@ class EditorPlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
-			if (!note.isSustainNote)
+			if (OptionData.sustainsType == 'Old' || !note.isSustainNote)
 			{
 				note.kill();
 				notes.remove(note, true);

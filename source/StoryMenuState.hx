@@ -217,10 +217,16 @@ class StoryMenuState extends MusicBeatState
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
 
-		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 30, 0, 1)));
+		lerpScore = Math.floor(CoolUtil.coolLerp(lerpScore, intendedScore, 0.5));
 		if (Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;
 
-		scoreText.text = 'WEEK SCORE:' + lerpScore;
+		scoreText.text = "WEEK SCORE:" + lerpScore;
+
+		grpLocks.forEach(function(lock:FlxSprite)
+		{
+			lock.y = grpWeeks.members[lock.ID].y;
+			lock.visible = (lock.y > FlxG.height / 2);
+		});
 
 		var shiftMult:Int = FlxG.keys.pressed.SHIFT ? 3 : 1;
 
@@ -322,8 +328,7 @@ class StoryMenuState extends MusicBeatState
 					{
 						var char:MenuCharacter = grpWeekCharacters.members[i];
 
-						if (char.character != '' && char.hasConfirmAnimation)
-						{
+						if (char.character != '' && char.hasConfirmAnimation) {
 							char.hey();
 						}
 					}
@@ -370,7 +375,11 @@ class StoryMenuState extends MusicBeatState
 				}
 				else
 				{
-					FlxG.sound.play(Paths.getSound('cancelMenu'));
+					if (FlxG.random.bool(25)) {
+						CoolUtil.browserLoad('https://youtu.be/dQw4w9WgXcQ'); // lololololololol
+					} else {
+						FlxG.sound.play(Paths.getSound('cancelMenu'));
+					}
 				}
 			}
 		}
@@ -409,7 +418,7 @@ class StoryMenuState extends MusicBeatState
 
 			item.alpha = 0.6;
 
-			if (item.targetY == 0) {
+			if (item.targetY == 0 && !WeekData.weekIsLocked(curWeek.weekID)) {
 				item.alpha = 1;
 			}
 		}
@@ -529,7 +538,7 @@ class StoryMenuState extends MusicBeatState
 			}
 			else
 			{
-				if (curBeat % 2 == 0 && !leChar.heyed)
+				if (curBeat % OptionData.danceOffset == 0 && !leChar.heyed)
 				{
 					leChar.dance();
 				}

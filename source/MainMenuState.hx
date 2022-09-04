@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxBasic;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -21,7 +22,7 @@ import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
-class MainMenuState extends MusicBeatState
+class MainMenuState extends TransitionableState
 {
 	private static var curSelected:Int = 0;
 
@@ -42,7 +43,7 @@ class MainMenuState extends MusicBeatState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.5';
+	public static var engineVersion:String = '1.5.1';
 	public static var gameVersion:String = '0.2.8';
 
 	var debugKeys:Array<FlxKey>;
@@ -141,8 +142,7 @@ class MainMenuState extends MusicBeatState
 			if (FreeplayMenuState.vocals != null) FreeplayMenuState.vocals.volume += 0.5 * elapsed;
 		}
 
-		var lerpVal:Float = CoolUtil.boundTo(elapsed * 4, 0, 1);
-		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
+		camFollowPos.setPosition(CoolUtil.coolLerp(camFollowPos.x, camFollow.x, 0.06), CoolUtil.coolLerp(camFollowPos.y, camFollow.y, 0.06));
 
 		if (!selectedSomethin)
 		{

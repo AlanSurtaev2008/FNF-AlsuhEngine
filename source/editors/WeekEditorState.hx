@@ -574,6 +574,8 @@ class WeekEditorState extends MusicBeatUIState
 
 				for (i in 0...splittedText.length)
 				{
+					splittedText[i] = splittedText[i].trim();
+
 					if (weekFile.songs[i] != null) {
 						weekFile.songs[i].songName = splittedText[i];
 					}
@@ -879,7 +881,7 @@ class WeekEditorFreeplayState extends MusicBeatUIState
 
 		for (i in 0...weekFile.songs.length)
 		{
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, weekFile.songs[i].songName, true, false);
+			var songText:Alphabet = new Alphabet(0, 0, weekFile.songs[i].songName, true);
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpSongs.add(songText);

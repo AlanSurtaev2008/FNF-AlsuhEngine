@@ -2,15 +2,11 @@ package;
 
 import flixel.*;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 import openfl.geom.Rectangle;
-import openfl.display.BitmapData;
 import flixel.addons.ui.FlxUIPopup;
-import flixel.addons.ui.FlxUIButton;
 
 using StringTools;
 

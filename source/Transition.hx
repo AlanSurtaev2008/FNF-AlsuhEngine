@@ -51,7 +51,8 @@ class Transition extends MusicBeatSubState
 		{
 			transGradient.y = transBlack.y - transBlack.height;
 
-			FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {
+			FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration,
+			{
 				ease: FlxEase.linear,
 				onComplete: function(twn:FlxTween)
 				{
@@ -64,7 +65,8 @@ class Transition extends MusicBeatSubState
 			transGradient.y = -transGradient.height;
 			transBlack.y = transGradient.y - transBlack.height + 50;
 
-			leTween = FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {
+			leTween = FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration,
+			{
 				ease: FlxEase.linear,
 				onComplete: function(twn:FlxTween)
 				{

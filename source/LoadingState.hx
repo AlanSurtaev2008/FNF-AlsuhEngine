@@ -15,7 +15,7 @@ import lime.utils.Assets as LimeAssets;
 
 using StringTools;
 
-class LoadingState extends MusicBeatState
+class LoadingState extends TransitionableState
 {
 	var targetShit:Float = 0;
 
@@ -28,22 +28,17 @@ class LoadingState extends MusicBeatState
 	var stopMusic:Bool = false;
 	var directory:String;
 
-	var skip:Bool = false;
-
-	function new(target:FlxState, stopMusic:Bool, directory:String, ?skip:Bool = false):Void
+	function new(target:FlxState, stopMusic:Bool, directory:String):Void
 	{
 		super();
 
 		this.target = target;
 		this.stopMusic = stopMusic;
 		this.directory = directory;
-		this.skip = skip;
 	}
 	
 	public override function create():Void
 	{
-		super.create();
-
 		var bg:FlxSprite = new FlxSprite();
 		bg.makeGraphic(FlxG.width, FlxG.height, 0xFFCAFF4D);
 		add(bg);
@@ -63,11 +58,6 @@ class LoadingState extends MusicBeatState
 		loadBar.screenCenter(X);
 		add(loadBar);
 
-		if (skip) {
-			Transition.skipNextTransIn = false;
-			Transition.skipNextTransOut = true;
-		}
-		
 		initSongsManifest().onComplete(function(lib)
 		{
 			callbacks = new MultiCallback(onLoad);
@@ -144,7 +134,8 @@ class LoadingState extends MusicBeatState
 		if (stopMusic && FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
 		}
-		
+
+		Transition.nextCamera = null;
 		FlxG.switchState(target);
 	}
 	
@@ -160,12 +151,12 @@ class LoadingState extends MusicBeatState
 	}
 	#end
 	
-	public static function loadAndSwitchState(target:FlxState, stopMusic:Bool = false, skip:Bool = false):Void
+	public static function loadAndSwitchState(target:FlxState, stopMusic:Bool = false):Void
 	{
-		FlxG.switchState(getNextState(target, stopMusic, skip));
+		FlxG.switchState(getNextState(target, stopMusic));
 	}
 	
-	static function getNextState(target:FlxState, stopMusic:Bool = false, skip:Bool = false):FlxState
+	static function getNextState(target:FlxState, stopMusic:Bool = false):FlxState
 	{
 		var directory:String = 'shared';
 		var weekDir:String = StageData.forceNextDirectory;
@@ -184,7 +175,7 @@ class LoadingState extends MusicBeatState
 		}
 
 		if (!loaded) {
-			return new LoadingState(target, stopMusic, directory, skip);
+			return new LoadingState(target, stopMusic, directory);
 		}
 		#end
 

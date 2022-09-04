@@ -158,21 +158,22 @@ class ControlsSubState extends MusicBeatSubState
 		{
 			var isCentered:Bool = unselectableCheck(i, true);
 
-			var optionText:Alphabet = new Alphabet(0, (10 * i), optionShit[i][0], true, false);
+			var optionText:Alphabet = new Alphabet(0, 70, optionShit[i][0], true);
 			optionText.isMenuItem = true;
-	
+		
 			if (isCentered)
 			{
 				optionText.screenCenter(X);
-				optionText.forceX = optionText.x;
-				optionText.yAdd = -55;
+				optionText.y -= 55;
+				optionText.startPosition.y -= 55;
 			}
-			else
-			{
-				optionText.forceX = 200;
+			else {
+				optionText.x = 200;
+				optionText.startPosition.x = 200;
 			}
 
-			optionText.yMult = 60;
+			optionText.changeX = false;
+			optionText.distancePerItem.y = 60;
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
@@ -184,8 +185,6 @@ class ControlsSubState extends MusicBeatSubState
 				if (curSelected < 0) curSelected = i;
 			}
 		}
-
-		if (isPause) cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		changeSelection();
 	}
@@ -302,8 +301,7 @@ class ControlsSubState extends MusicBeatSubState
 					}
 				}
 
-				if ((controls.UI_LEFT_P || controls.UI_RIGHT_P) && optionShit[curSelected][0] != defaultKey)
-				{
+				if ((controls.UI_LEFT_P || controls.UI_RIGHT_P) && optionShit[curSelected][0] != defaultKey) {
 					changeAlt();
 				}
 
