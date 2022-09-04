@@ -35,13 +35,6 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 - Smokey - Sprite Atlas Support
 - Nebula the Zorua - LUA JIT Fork and some Lua reworks
 
-### Kade Engine by
-- KadeDev - Programmer
-
-### Kade Engine Contributors
-- puyoxyz - Additional Programmer
-- Spel0 - Additional Programmer
-
 ### Funkin' Crew
 - ninjamuffin99 - Programmer of the Friday Night Funkin'
 - PhantomArcade - Animator/Artist of the Friday Night Funkin'
