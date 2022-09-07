@@ -126,6 +126,8 @@ class ComboSubState extends MusicBeatSubState
 
 		createTexts();
 		repositionCombo();
+
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	public override function destroy():Void

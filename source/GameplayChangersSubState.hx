@@ -213,6 +213,8 @@ class GameplayChangersSubState extends BaseSubState
 
 		changeSelection();
 		reloadCheckboxes();
+
+		if (isPause) cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	var flickering:Bool = false;

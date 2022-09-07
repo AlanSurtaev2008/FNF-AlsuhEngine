@@ -10,8 +10,7 @@ class TransitionableState extends FlxState
 {
 	private var controls(get, never):Controls;
 
-	inline function get_controls():Controls
-	{
+	inline function get_controls():Controls {
 		return PlayerSettings.player1.controls;
 	}
 
@@ -61,8 +60,7 @@ class TransitionableState extends FlxState
 			currentColor++;
 			skippedFrames = 0;
 		}
-		else
-		{
+		else {
 			skippedFrames++;
 		}
 
@@ -77,8 +75,7 @@ class TransitionableState extends FlxState
 			currentColor2++;
 			skippedFrames2 = 0;
 		}
-		else
-		{
+		else {
 			skippedFrames2++;
 		}
 		#end

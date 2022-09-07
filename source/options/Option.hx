@@ -114,6 +114,7 @@ class Option
 	{
 		Reflect.setProperty(OptionData, variable, value);
 
+		#if LUA_ALLOWED
 		if (onPause && luaAllowed) // for lua shit
 		{
 			PlayState.instance.setOnLuas(variable, getValue());
@@ -122,6 +123,7 @@ class Option
 				PlayState.instance.setOnLuas(luaVarAltShit, getValue());
 			}
 		}
+		#end
 	}
 
 	private function set_isPause(value:Bool):Bool

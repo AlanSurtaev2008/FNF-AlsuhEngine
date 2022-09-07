@@ -58,6 +58,10 @@ class LoadingState extends TransitionableState
 		loadBar.screenCenter(X);
 		add(loadBar);
 
+		if (Transition.nextCamera != null) {
+			Transition.nextCamera = null;
+		}
+
 		initSongsManifest().onComplete(function(lib)
 		{
 			callbacks = new MultiCallback(onLoad);
@@ -74,18 +78,6 @@ class LoadingState extends TransitionableState
 
 			new FlxTimer().start(1.5, function(_) introComplete());
 		});
-	}
-	
-	function checkLoadSong(path:String):Void
-	{
-		if (!Assets.cache.hasSound(path))
-		{
-			var library = Assets.getLibrary("songs");
-			final symbolPath = path.split(":").pop();
-
-			var callback = callbacks.add("song:" + path);
-			Assets.loadSound(path).onComplete(function(_) { callback(); });
-		}
 	}
 	
 	function checkLibrary(library:String):Void
@@ -135,11 +127,9 @@ class LoadingState extends TransitionableState
 			FlxG.sound.music.stop();
 		}
 
-		Transition.nextCamera = null;
 		FlxG.switchState(target);
 	}
-	
-	#if NO_PRELOAD_ALL
+
 	static function getSongPath():Any
 	{
 		return Paths.getInst(PlayState.SONG.songID, CoolUtil.getDifficultySuffix(PlayState.lastDifficulty));
@@ -149,7 +139,6 @@ class LoadingState extends TransitionableState
 	{
 		return Paths.getVoices(PlayState.SONG.songID, CoolUtil.getDifficultySuffix(PlayState.lastDifficulty));
 	}
-	#end
 	
 	public static function loadAndSwitchState(target:FlxState, stopMusic:Bool = false):Void
 	{

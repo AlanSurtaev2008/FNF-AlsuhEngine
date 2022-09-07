@@ -187,6 +187,8 @@ class ControlsSubState extends MusicBeatSubState
 		}
 
 		changeSelection();
+
+		if (isPause) cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	var flickering:Bool = false;

@@ -1,7 +1,6 @@
 package;
 
 import Song.SwagSong;
-import Rating.RatingData;
 
 typedef BPMChangeEvent =
 {
@@ -34,19 +33,16 @@ class Conductor
 			good.ratingMod = 0.7;
 			good.score = 200;
 			good.noteSplash = false;
-			data.push(good);
 	
 			var bad:RatingData = new RatingData('bad');
 			bad.ratingMod = 0.4;
 			bad.score = 100;
 			bad.noteSplash = false;
-			data.push(bad);
 	
 			var shit:RatingData = new RatingData('shit');
 			shit.ratingMod = 0;
 			shit.score = 50;
 			shit.noteSplash = false;
-			data.push(shit);
 
 			data = [new RatingData('sick'), good, bad, shit];
 		}
@@ -183,7 +179,7 @@ class Conductor
 	{
 		bpm = newBpm;
 
-		crochet = ((60 / bpm) * 1000);
+		crochet = calculateCrochet(bpm);
 		stepCrochet = crochet / 4;
 	}
 }

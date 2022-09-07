@@ -143,10 +143,6 @@ class ReplaysState extends TransitionableState
 	
 				FreeplayMenuState.destroyFreeplayVocals();
 
-				#if NO_PRELOAD_ALL
-				Transition.skipNextTransOut = true;
-				#end
-
 				LoadingState.loadAndSwitchState(new PlayState(), true);
 			}
 			else

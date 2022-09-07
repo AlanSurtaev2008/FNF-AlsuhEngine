@@ -1,6 +1,5 @@
 package;
 
-import flixel.util.FlxColor;
 import flixel.addons.ui.FlxUISubState;
 
 using StringTools;
@@ -38,7 +37,7 @@ class MusicBeatUISubState extends FlxUISubState
 	private function updateBeat():Void
 	{
 		curBeat = Math.floor(curStep / 4);
-		curDecBeat = curDecStep/4;
+		curDecBeat = curDecStep / 4;
 	}
 
 	private function updateCurStep():Void

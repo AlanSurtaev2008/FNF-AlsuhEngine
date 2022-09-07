@@ -43,7 +43,7 @@ class MainMenuState extends TransitionableState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.5.1';
+	public static var engineVersion:String = '1.5.2';
 	public static var gameVersion:String = '0.2.8';
 
 	var debugKeys:Array<FlxKey>;
@@ -202,8 +202,7 @@ class MainMenuState extends TransitionableState
 
 			if (controls.ACCEPT)
 			{
-				if (menuItems[curSelected] == 'donate')
-				{
+				if (menuItems[curSelected] == 'donate') {
 					CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
 				}
 				else
@@ -218,10 +217,10 @@ class MainMenuState extends TransitionableState
 						{
 							new FlxTimer().start(1, function(tmr:FlxTimer)
 							{
-								FlxTween.tween(spr, {alpha: 0}, 0.4, {
+								FlxTween.tween(spr, {alpha: 0}, 0.4,
+								{
 									ease: FlxEase.quadOut,
-									onComplete: function(twn:FlxTween)
-									{
+									onComplete: function(twn:FlxTween) {
 										spr.kill();
 									}
 								});
@@ -233,16 +232,14 @@ class MainMenuState extends TransitionableState
 							{
 								FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
 								{
-									new FlxTimer().start(0.4, function(tmr:FlxTimer)
-									{
+									new FlxTimer().start(0.4, function(tmr:FlxTimer) {
 										goToState(menuItems[curSelected]);
 									});
 								});
 							}
 							else
 							{
-								new FlxTimer().start(1.4, function(tmr:FlxTimer)
-								{
+								new FlxTimer().start(1.4, function(tmr:FlxTimer) {
 									goToState(menuItems[curSelected]);
 								});
 							}
@@ -277,13 +274,7 @@ class MainMenuState extends TransitionableState
 			case 'freeplay':
 				FlxG.switchState(new FreeplayMenuState());
 			case 'options':
-			{
-				#if NO_PRELOAD_ALL
-				Transition.skipNextTransOut = true;
-				#end
-
 				LoadingState.loadAndSwitchState(new options.OptionsMenuState());
-			}
 		}
 	}
 

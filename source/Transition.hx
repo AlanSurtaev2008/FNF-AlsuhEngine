@@ -10,7 +10,7 @@ import flixel.util.FlxGradient;
 
 using StringTools;
 
-class Transition extends MusicBeatSubState
+class Transition extends BaseSubState
 {
 	public static var skipNextTransIn:Bool = false;
 	public static var skipNextTransOut:Bool = false;
@@ -77,10 +77,9 @@ class Transition extends MusicBeatSubState
 			});
 		}
 
-		if (nextCamera != null)
-		{
-			transBlack.cameras = [nextCamera];
+		if (nextCamera != null) {
 			transGradient.cameras = [nextCamera];
+			transBlack.cameras = [nextCamera];
 		}
 
 		nextCamera = null;

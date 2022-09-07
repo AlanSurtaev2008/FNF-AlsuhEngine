@@ -67,6 +67,7 @@ class CreditsMenuState extends TransitionableState
 		}
 
 		var arrayOfFolders:Array<String> = Paths.getModDirectories();
+		arrayOfFolders.push('');
 
 		for (folder in arrayOfFolders) {
 			pushModCreditsToList(folder);

@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -210,6 +209,8 @@ class PauseSubState extends BaseSubState
 		add(grpMenuShit);
 
 		regenMenu();
+
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	private function regenMenu():Void

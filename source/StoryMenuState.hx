@@ -59,8 +59,7 @@ class StoryMenuState extends MusicBeatState
 
 		persistentUpdate = persistentDraw = true;
 
-		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0)
-		{
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0) {
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
@@ -362,10 +361,6 @@ class StoryMenuState extends MusicBeatState
 					PlayState.seenCutscene = false;
 
 					FlxG.sound.play(Paths.getSound('confirmMenu'));
-					
-					#if NO_PRELOAD_ALL
-					Transition.skipNextTransOut = true;
-					#end
 
 					new FlxTimer().start(1, function(tmr:FlxTimer)
 					{

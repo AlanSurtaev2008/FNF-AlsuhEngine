@@ -89,6 +89,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
+
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
 		mainGroup = new FlxSpriteGroup();

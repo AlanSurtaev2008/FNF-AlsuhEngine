@@ -110,7 +110,9 @@ class PlayState extends MusicBeatState
 
 	public static var SONG:SwagSong;
 
-	@:deprecated("`curStage` is deprecated, use `SONG.stage` instead")
+	/**
+	 * `curStage` is deprecated, use `SONG.stage` instead lol
+	 */
 	public static var curStage:String = '';
 
 	public static var rep:Replay;
@@ -947,8 +949,7 @@ class PlayState extends MusicBeatState
 
 		instance = this; // for lua and stuff
 
-		if (FlxG.sound.music != null)
-		{
+		if (FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
 		}
 
@@ -981,10 +982,10 @@ class PlayState extends MusicBeatState
 
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
-		BaseSubState.cameraAllowed = true;
-
-		BaseSubState.cameraShit = camOther;
 		Transition.nextCamera = camOther;
+
+		persistentUpdate = true;
+		persistentDraw = true;
 
 		super.create();
 
@@ -1007,9 +1008,6 @@ class PlayState extends MusicBeatState
 		rating.score = 50;
 		rating.noteSplash = false;
 		ratingsData.push(rating);
-
-		persistentUpdate = true;
-		persistentDraw = true;
 
 		if (SONG == null) {
 			SONG = Song.loadFromJson('tutorial', 'tutorial');
@@ -5428,7 +5426,7 @@ class PlayState extends MusicBeatState
 				} else if (OptionData.hitsoundType == 'Psych') {
 					FlxG.sound.play(Paths.getSound('hitsound'), OptionData.hitsoundVolume);
 				}
-			}	
+			}
 
 			if (!note.noAnimation)
 			{
@@ -6172,9 +6170,6 @@ class PlayState extends MusicBeatState
 		}
 
 		luaArray = [];
-
-		BaseSubState.cameraAllowed = false;
-		BaseSubState.cameraShit = null;
 
 		#if hscript
 		if (FunkinLua.hscript != null) FunkinLua.hscript = null;

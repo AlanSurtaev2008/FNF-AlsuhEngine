@@ -170,8 +170,6 @@ class OptionsMenuState extends TransitionableState
 
 				if (FlxG.mouse.wheel != 0)
 				{
-					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
-
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
 			}
@@ -351,6 +349,8 @@ class OptionsSubState extends MusicBeatSubState
 		add(selectorRight);
 
 		changeSelection();
+
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	var flickering:Bool = false;

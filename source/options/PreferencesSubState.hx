@@ -657,6 +657,8 @@ class PreferencesSubState extends MusicBeatSubState
 		add(descText);
 
 		changeSelection();
+
+		if (isPause) cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	var flickering:Bool = false;

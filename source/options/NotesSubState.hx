@@ -156,6 +156,8 @@ class NotesSubState extends MusicBeatSubState
 		add(hsbText);
 
 		changeSelection();
+
+		if (isPause) cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	var nextAccept:Int = 5;

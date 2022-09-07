@@ -43,8 +43,7 @@ class FreeplayMenuState extends TransitionableState
 		DiscordClient.changePresence("In the Freeplay Menu", null); // Updating Discord Rich Presence
 		#end
 
-		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0)
-		{
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0) {
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
@@ -70,8 +69,7 @@ class FreeplayMenuState extends TransitionableState
 			{
 				var colors:Array<Int> = song.color;
 
-				if (colors == null || colors.length < 3)
-				{
+				if (colors == null || colors.length < 3) {
 					colors = [146, 113, 253];
 				}
 
@@ -135,10 +133,6 @@ class FreeplayMenuState extends TransitionableState
 		scoreBG.antialiasing = false;
 		scoreBG.alpha = 0.6;
 		insert(members.indexOf(scoreText), scoreBG);
-
-		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
-		diffText.font = scoreText.font;
-		add(diffText);
 
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
@@ -352,7 +346,7 @@ class FreeplayMenuState extends TransitionableState
 		{
 			persistentUpdate = false;
 
-			var diffic:String = CoolUtil.getDifficultySuffix(curDifficultyString, curSong.difficulties);
+			var diffic:String = CoolUtil.getDifficultySuffix(curDifficultyString, false, curSong.difficulties);
 
 			PlayState.SONG = Song.loadFromJson(curSong.songID + diffic, curSong.songID);
 			PlayState.gameMode = 'freeplay';
@@ -369,10 +363,6 @@ class FreeplayMenuState extends TransitionableState
 			#end
 
 			destroyFreeplayVocals();
-
-			#if NO_PRELOAD_ALL
-			Transition.skipNextTransOut = true;
-			#end
 
 			LoadingState.loadAndSwitchState(new PlayState(), true);
 		}

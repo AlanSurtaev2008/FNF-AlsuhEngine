@@ -194,8 +194,7 @@ class ChartingState extends MusicBeatUIState
 	{
 		super.create();
 
-		if (PlayState.SONG != null)
-		{
+		if (PlayState.SONG != null) {
 			_song = PlayState.SONG;
 		}
 		else
@@ -567,6 +566,7 @@ class ChartingState extends MusicBeatUIState
 		{
 			_song.arrowSkin = noteSkinInputText.text;
 			_song.arrowSkin2 = noteSkinInputTextP2.text;
+
 			updateGrid();
 		});
 
@@ -2327,7 +2327,7 @@ class ChartingState extends MusicBeatUIState
 
 							playedSound[data] = true;
 						}
-					
+
 						data = note.noteData;
 
 						if (note.mustPress != _song.notes[curSec].mustHitSection)

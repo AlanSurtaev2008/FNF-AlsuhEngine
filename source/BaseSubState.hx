@@ -1,6 +1,5 @@
 package;
 
-import flixel.FlxCamera;
 import flixel.FlxSubState;
 import flixel.util.FlxColor;
 
@@ -8,13 +7,9 @@ using StringTools;
 
 class BaseSubState extends FlxSubState
 {
-	public static var cameraAllowed:Bool = false;
-	public static var cameraShit:Null<FlxCamera> = null;
-
 	private var controls(get, never):Controls;
 
-	inline function get_controls():Controls
-	{
+	inline function get_controls():Controls {
 		return PlayerSettings.player1.controls;
 	}
 
@@ -26,10 +21,6 @@ class BaseSubState extends FlxSubState
 	public override function create():Void
 	{
 		super.create();
-
-		if (cameraShit != null && cameraAllowed) {
-			cameras = [cameraShit];
-		}
 	}
 
 	var array:Array<FlxColor> = [
@@ -64,8 +55,7 @@ class BaseSubState extends FlxSubState
 			currentColor++;
 			skippedFrames = 0;
 		}
-		else
-		{
+		else {
 			skippedFrames++;
 		}
 
@@ -80,8 +70,7 @@ class BaseSubState extends FlxSubState
 			currentColor2++;
 			skippedFrames2 = 0;
 		}
-		else
-		{
+		else {
 			skippedFrames2++;
 		}
 		#end
