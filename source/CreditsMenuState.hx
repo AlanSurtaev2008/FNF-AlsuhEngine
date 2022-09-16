@@ -101,7 +101,7 @@ class CreditsMenuState extends TransitionableState
 			['Smokey',				'smokey',			'Sprite Atlas Support',														'https://twitter.com/Smokey_5_',		'483D92'],
 			[''],
 			['Special Thanks'],
-			['AngelDTF',			'angeldtf',			"For Week 7's (Newgrounds exclusive preview) Source Code Leak",				'',										'909090'],
+			['AngelDTF',			'angeldtf',			"For Week 7's (Newgrounds Port) Source Code",								'',										'909090'],
 			['GWeb',				'gweb',				"For .WEBM Extension",														'https://twitter.com/GWebDevFNF',		'639BFF'],
 			[''],
 			["Funkin' Crew"],
