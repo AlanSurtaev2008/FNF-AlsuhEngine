@@ -108,6 +108,11 @@ class LoadingState extends TransitionableState
 				if (PlayState.SONG != null && PlayState.SONG.needsVoices) {
 					checkLoadSong(getVocalPath());
 				}
+			}).onError(function(error:Dynamic)
+			{
+				trace('path not found: ' + path);
+
+				callback();
 			});
 			#else
 			Assets.loadSound(path).onComplete(function(sound:Sound)
@@ -122,6 +127,11 @@ class LoadingState extends TransitionableState
 				if (PlayState.SONG != null && PlayState.SONG.needsVoices) {
 					checkLoadSong(getVocalPath());
 				}
+			}).onError(function(error:Dynamic)
+			{
+				trace('path not found: ' + path);
+
+				callback();
 			});
 			#end
 		}
