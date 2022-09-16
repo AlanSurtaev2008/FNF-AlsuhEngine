@@ -11,10 +11,11 @@ import sys.FileSystem;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxSubState;
 import flixel.text.FlxText;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup;
+import flixel.tweens.FlxTween;
 import flixel.effects.FlxFlicker;
 
 using StringTools;
@@ -23,10 +24,13 @@ class CreditsMenuState extends TransitionableState
 {
 	private static var curSelected:Int = -1;
 
-	var creditsArray:Array<Array<String>> = [];
+	var creditsStuff:Array<Array<String>> = [];
 	var curCredit:Array<String>;
 
 	var bg:FlxSprite;
+
+	var intendedColor:Int = 0xFFFFFFFF;
+	var colorTween:FlxTween;
 
 	var grpCredits:FlxTypedGroup<Alphabet>;
 	var grpIcons:FlxTypedGroup<AttachedSprite>;
@@ -108,11 +112,12 @@ class CreditsMenuState extends TransitionableState
 		];
 
 		for (i in pisspoop) {
-			creditsArray.push(i);
+			creditsStuff.push(i);
 		}
 
 		bg = new FlxSprite();
 		bg.loadGraphic(Paths.getImage('bg/menuDesat'));
+		bg.updateHitbox();
 		bg.screenCenter();
 		bg.scrollFactor.set();
 		bg.antialiasing = OptionData.globalAntialiasing;
@@ -124,9 +129,9 @@ class CreditsMenuState extends TransitionableState
 		grpIcons = new FlxTypedGroup<AttachedSprite>();
 		add(grpIcons);
 
-		for (i in 0...creditsArray.length)
+		for (i in 0...creditsStuff.length)
 		{
-			var leCredit:Array<String> = creditsArray[i];
+			var leCredit:Array<String> = creditsStuff[i];
 			var isCentered:Bool = unselectableCheck(i);
 
 			var creditText:Alphabet = new Alphabet(0, 70 * i, leCredit[0], isCentered);
@@ -184,17 +189,21 @@ class CreditsMenuState extends TransitionableState
 	{
 		super.update(elapsed);
 
-		bg.color = CoolUtil.interpolateColor(bg.color, getCurrentBGColor(), 0.045);
-
 		if (controls.BACK)
 		{
+			persistentUpdate = false;
+
+			if (colorTween != null) {
+				colorTween.cancel();
+			}
+
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
-			FlxG.switchState(new options.OptionsMenuState());
+			FlxG.switchState(new MainMenuState());
 		}
 
 		if (!flickering)
 		{
-			if (creditsArray.length > 1)
+			if (creditsStuff.length > 1)
 			{
 				var shiftMult:Int = FlxG.keys.pressed.SHIFT ? 3 : 1;
 
@@ -272,6 +281,42 @@ class CreditsMenuState extends TransitionableState
 		}
 	}
 
+	var startShit:Bool = true;
+
+	public override function openSubState(SubState:FlxSubState):Void
+	{
+		super.openSubState(SubState);
+
+		if (!startShit) {
+			if (colorTween != null) {
+				colorTween.active = false;
+			}
+		}
+	}
+
+	public override function closeSubState():Void
+	{
+		super.closeSubState();
+
+		if (startShit)
+		{
+			colorTween = FlxTween.color(bg, 1, 0xFFFFFFFF, getCurrentBGColor(),
+			{
+				onComplete: function(twn:FlxTween) {
+					colorTween = null;
+				}
+			});
+
+			persistentUpdate = true;
+			startShit = false;
+		}
+		else {
+			if (colorTween != null) {
+				colorTween.active = true;
+			}
+		}
+	}
+
 	function changeSelection(change:Int = 0)
 	{
 		do
@@ -279,13 +324,34 @@ class CreditsMenuState extends TransitionableState
 			curSelected += change;
 
 			if (curSelected < 0)
-				curSelected = creditsArray.length - 1;
-			if (curSelected >= creditsArray.length)
+				curSelected = creditsStuff.length - 1;
+			if (curSelected >= creditsStuff.length)
 				curSelected = 0;
 		}
 		while (unselectableCheck(curSelected));
 
-		curCredit = creditsArray[curSelected];
+		if (!startShit)
+		{
+			var newColor:Int = getCurrentBGColor();
+
+			if (newColor != intendedColor)
+			{
+				if (colorTween != null) {
+					colorTween.cancel();
+				}
+	
+				intendedColor = newColor;
+		
+				colorTween = FlxTween.color(bg, 1, bg.color, intendedColor,
+				{
+					onComplete: function(twn:FlxTween) {
+						colorTween = null;
+					}
+				});
+			}
+		}
+
+		curCredit = creditsStuff[curSelected];
 
 		var bullShit:Int = 0;
 
@@ -350,10 +416,10 @@ class CreditsMenuState extends TransitionableState
 			{
 				var arr:Array<String> = i.replace('\\n', '\n').split("::");
 				if (arr.length >= 5) arr.push(folder);
-				creditsArray.push(arr);
+				creditsStuff.push(arr);
 			}
 	
-			creditsArray.push(['']);
+			creditsStuff.push(['']);
 		}
 
 		modsAdded.push(folder);
@@ -362,7 +428,7 @@ class CreditsMenuState extends TransitionableState
 
 	function getCurrentBGColor():Int
 	{
-		var bgColor:String = creditsArray[curSelected][4];
+		var bgColor:String = creditsStuff[curSelected][4];
 
 		if (!bgColor.startsWith('0x')) {
 			bgColor = '0xFF' + bgColor;
@@ -373,6 +439,6 @@ class CreditsMenuState extends TransitionableState
 
 	private function unselectableCheck(num:Int):Bool
 	{
-		return creditsArray[num].length <= 1;
+		return creditsStuff[num].length <= 1;
 	}
 }

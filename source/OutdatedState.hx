@@ -31,8 +31,10 @@ class OutdatedState extends TransitionableState
 		txt = new FlxText(0, 0, FlxG.width, "Your used version " + MainMenuState.engineVersion + "\nof Alsuh Engine is outdated."
 			+ "\nUse the latest version " + newVersion
 			+ "." + (curChanges != '- dk' ? "\n\nWhat new?\n\n" + curChanges : '') + "\n\nPress ENTER to download latest version\nor ESCAPE to ignorite this message.", 32);
-		txt.setFormat(Paths.getFont('vcr.ttf'), 32, FlxColor.WHITE, CENTER);
+		txt.setFormat(Paths.getFont('vcr.ttf'), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		txt.scrollFactor.set();
 		txt.screenCenter();
+		txt.borderSize = 2.4;
 		add(txt);
 	}
 
@@ -59,8 +61,7 @@ class OutdatedState extends TransitionableState
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
 		}
 
-		if (controls.ACCEPT)
-		{
+		if (controls.ACCEPT) {
 			CoolUtil.browserLoad('https://github.com/AlanSurtaev2008/FNF-AlsuhEngine/releases/latest');
 		}
 	}

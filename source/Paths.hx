@@ -171,9 +171,19 @@ class Paths
 		return getPath(file, type, library);
 	}
 
+	public static function file(file:String, type:AssetType = TEXT, ?library:String):String
+	{
+		return getFile(file, type, library);
+	}
+
 	public static function getTxt(key:String, ?library:String):String
 	{
 		return getPath('data/$key.txt', TEXT, library);
+	}
+
+	public static function txt(key:String, ?library:String):String
+	{
+		return getTxt(key, library);
 	}
 
 	public static function getXml(key:String, ?library:String):String
@@ -181,14 +191,29 @@ class Paths
 		return getPath('data/$key.xml', TEXT, library);
 	}
 
+	public static function xml(key:String, ?library:String):String
+	{
+		return getXml(key, library);
+	}
+
 	public static function getJson(key:String, ?library:String):String
 	{
 		return getPath('data/$key.json', TEXT, library);
 	}
 
-	public static function getLua(key:String, ?library:String)
+	public static function json(key:String, ?library:String):String
+	{
+		return getJson(key, library);
+	}
+
+	public static function getLua(key:String, ?library:String):String
 	{
 		return getPath('$key.lua', TEXT, library);
+	}
+
+	public static function lua(key:String, ?library:String):String
+	{
+		return getLua(key, library);
 	}
 
 	public static function getSound(key:String, ?library:String):Sound
@@ -196,9 +221,19 @@ class Paths
 		return returnSound('sounds', key, library);
 	}
 
+	public static function sound(key:String, ?library:String):Sound
+	{
+		return getSound(key, library);
+	}
+
 	public static function getSoundRandom(key:String, min:Int, max:Int, ?library:String):Sound
 	{
 		return getSound(key + FlxG.random.int(min, max), library);
+	}
+
+	public static function soundRandom(key:String, min:Int, max:Int, ?library:String):Sound
+	{
+		return getSoundRandom(key, min, max, library);
 	}
 
 	public static function getMusic(key:String, ?library:String):Sound
@@ -206,22 +241,82 @@ class Paths
 		return returnSound('music', key, library);
 	}
 
-	public static function getInst(song:String, ?difficulty:String = ''):Any
+	public static function getInst(song:String, ?difficulty:String = '', ?string:Bool = false):Any
 	{
-		if (fileExists('songs/' + song.toLowerCase() + '/Inst' + difficulty + '.' + SOUND_EXT, SOUND) || fileExists('songs/' + song.toLowerCase() + '/Inst' + difficulty + '.' + SOUND_EXT, MUSIC)) {
+		var path:String = 'songs/' + song.toLowerCase() + '/Inst' + '.' + SOUND_EXT;
+		var pathAlt:String = 'songs/' + song.toLowerCase() + '/Inst' + difficulty + '.' + SOUND_EXT;
+
+		if (string)
+		{
+			if (fileExists(pathAlt, SOUND) || fileExists(pathAlt, MUSIC))
+			{
+				#if MODS_ALLOWED
+				if (FileSystem.exists(modFolders(pathAlt))) {
+					return modFolders(pathAlt);
+				}
+				#end
+
+				return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + pathAlt;
+			}
+
+			#if MODS_ALLOWED
+			if (FileSystem.exists(modFolders(path))) {
+				return modFolders(path);
+			}
+			#end
+
+			return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + path;
+		}
+
+		if (fileExists(pathAlt, SOUND) || fileExists(pathAlt, MUSIC)) {
 			return returnSound('songs', song.toLowerCase() + '/Inst' + difficulty);
 		}
 
 		return returnSound('songs', song.toLowerCase() + '/Inst');
 	}
 
-	public static function getVoices(song:String, ?difficulty:String = ''):Any
+	public static function inst(song:String, ?difficulty:String = '', ?string:Bool = false):Any
 	{
-		if (fileExists('songs/' + song.toLowerCase() + '/Voices' + difficulty + '.' + SOUND_EXT, SOUND) || fileExists('songs/' + song.toLowerCase() + '/Voices' + difficulty + '.' + SOUND_EXT, MUSIC)) {
+		return getInst(song, difficulty, string);
+	}
+
+	public static function getVoices(song:String, ?difficulty:String = '', ?string:Bool = false):Any
+	{
+		var path:String = 'songs/' + song.toLowerCase() + '/Voices' + '.' + SOUND_EXT;
+		var pathAlt:String = 'songs/' + song.toLowerCase() + '/Voices' + difficulty + '.' + SOUND_EXT;
+
+		if (string)
+		{
+			if (fileExists(pathAlt, SOUND) || fileExists(pathAlt, MUSIC))
+			{
+				#if MODS_ALLOWED
+				if (FileSystem.exists(modFolders(pathAlt))) {
+					return modFolders(pathAlt);
+				}
+				#end
+
+				return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + pathAlt;
+			}
+
+			#if MODS_ALLOWED
+			if (FileSystem.exists(modFolders(path))) {
+				return modFolders(path);
+			}
+			#end
+
+			return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + path;
+		}
+
+		if (fileExists(pathAlt, SOUND) || fileExists(pathAlt, MUSIC)) {
 			return returnSound('songs', song.toLowerCase() + '/Voices' + difficulty);
 		}
 
 		return returnSound('songs', song.toLowerCase() + '/Voices');
+	}
+
+	public static function voices(song:String, ?difficulty:String = '', ?string:Bool = false):Any
+	{
+		return getVoices(song, difficulty, string);
 	}
 
 	public static function getImage(key:String, ?library:String):FlxGraphic
@@ -229,7 +324,12 @@ class Paths
 		return returnGraphic(key, library);
 	}
 
-	public static function getVideo(key:String):String
+	public static function image(key:String, ?library:String):FlxGraphic
+	{
+		return getImage(key, library);
+	}
+
+	public static function getVideo(key:String, ?library:String):String
 	{
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
@@ -239,15 +339,26 @@ class Paths
 		}
 		#end
 
-		return 'assets/videos/$key.$VIDEO_EXT';
+		var shit:String = getPath('videos/$key.$VIDEO_EXT', BINARY, library).replace(currentLevel + ':', '').replace(library + ':', '');
+		return shit;
 	}
 
-	public static function getWebmSound(key:String):Sound
+	public static function video(key:String, ?library:String):String
 	{
-		return returnSound('videos', key);
+		return getVideo(key, library);
 	}
 
-	public static function getWebm(key:String):String
+	public static function getWebmSound(key:String, ?library:String):Sound
+	{
+		return returnSound('videos', key, library);
+	}
+
+	public static function webmSound(key:String, ?library:String):Sound
+	{
+		return getWebmSound('videos', library);
+	}
+
+	public static function getWebm(key:String, ?library:String):String
 	{
 		#if MODS_ALLOWED
 		var file:String = modsWebm(key);
@@ -257,7 +368,13 @@ class Paths
 		}
 		#end
 
-		return 'assets/videos/$key.webm';
+		var shit:String = getPath('videos/$key.webm', BINARY, library).replace(currentLevel + ':', '').replace(library + ':', '');
+		return shit;
+	}
+
+	public static function webm(key:String, ?library:String):String
+	{
+		return getWebm(key, library);
 	}
 
 	public static function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
@@ -297,7 +414,7 @@ class Paths
 		return Assets.getText(getPath(key, TEXT));
 	}
 
-	public static function getFont(key:String):String
+	public static function getFont(key:String, ?library:String):String
 	{
 		#if MODS_ALLOWED
 		var file:String = modsFont(key);
@@ -307,7 +424,7 @@ class Paths
 		}
 		#end
 
-		return 'assets/fonts/$key';
+		return getPath('fonts/$key', FONT, library);
 	}
 
 	public static function getSparrowAtlas(key:String, ?library:String):FlxAtlasFrames

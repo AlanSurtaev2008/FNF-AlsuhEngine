@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.util.FlxColor;
 
 using StringTools;
 

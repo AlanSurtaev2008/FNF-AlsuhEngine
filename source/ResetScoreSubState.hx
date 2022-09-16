@@ -6,7 +6,7 @@ import flixel.util.FlxColor;
 
 using StringTools;
 
-class ResetScoreSubState extends MusicBeatSubState
+class ResetScoreSubState extends BaseSubState
 {
 	static var onYes:Bool = false;
 
@@ -41,21 +41,20 @@ class ResetScoreSubState extends MusicBeatSubState
 
 		var text:Alphabet = new Alphabet(0, 180, "Reset the score of", true);
 		text.screenCenter(X);
-		alphabetArray.push(text);
 		text.alpha = 0;
+		alphabetArray.push(text);
 		add(text);
 
 		var text:Alphabet = new Alphabet(0, text.y + 90, name, true);
 		text.scaleX = tooLong;
 		text.screenCenter(X);
 
-		if (mode == 'freeplay')
-		{
+		if (mode == 'freeplay') {
 			text.x += 60 * tooLong;
 		}
 
-		alphabetArray.push(text);
 		text.alpha = 0;
+		alphabetArray.push(text);
 		add(text);
 
 		if (mode == 'freeplay' && character != null)

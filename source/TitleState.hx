@@ -147,7 +147,7 @@ class TitleState extends MusicBeatState
 
 		#if desktop
 		DiscordClient.initialize();
-		
+
 		Application.current.onExit.add(function(exitCode:Int)
 		{
 			DiscordClient.shutdown();
@@ -198,22 +198,7 @@ class TitleState extends MusicBeatState
 		add(logoBl);
 
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
-
-		#if (desktop && MODS_ALLOWED)
-		var path = "mods/" + Paths.currentModDirectory + "/images/title/titleEnter.png";
-
-		if (!FileSystem.exists(path)) {
-			path = "mods/images/title/titleEnter.png";
-		}
-
-		if (!FileSystem.exists(path)) {
-			path = "assets/images/title/titleEnter.png";
-		}
-
-		titleText.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path), File.getContent(StringTools.replace(path, ".png", ".xml")));
-		#else
 		titleText.frames = Paths.getSparrowAtlas('title/titleEnter');
-		#end
 
 		var animFrames:Array<FlxFrame> = [];
 
@@ -329,67 +314,69 @@ class TitleState extends MusicBeatState
 			if (titleTimer > 2) titleTimer -= 2;
 		}
 
-		if (initialized && !transitioning && skippedIntro)
+		if (initialized)
 		{
-			#if sys
-			if (controls.BACK)
+			if (!transitioning && skippedIntro)
 			{
-				if (FlxG.random.bool(25)) {
-					CoolUtil.browserLoad('https://youtu.be/dQw4w9WgXcQ'); // lololololololol
-				} else {
-					Sys.exit(0);
+				#if sys
+				if (controls.BACK)
+				{
+					if (FlxG.random.bool(25)) {
+						CoolUtil.browserLoad('https://youtu.be/dQw4w9WgXcQ'); // lololololololol
+					} else {
+						Sys.exit(0);
+					}
 				}
-			}
-			#end
+				#end
 
-			if (newTitle && !pressedEnter)
-			{
-				var timer:Float = titleTimer;
+				if (newTitle && !pressedEnter)
+				{
+					var timer:Float = titleTimer;
 
-				if (timer >= 1) {
-					timer = (-timer) + 2;
+					if (timer >= 1) {
+						timer = (-timer) + 2;
+					}
+					
+					timer = FlxEase.quadInOut(timer);
+					
+					titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], timer);
+					titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
 				}
 				
-				timer = FlxEase.quadInOut(timer);
-				
-				titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], timer);
-				titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
-			}
-			
-			if (pressedEnter)
-			{
-				if (titleText != null)
+				if (pressedEnter)
 				{
-					titleText.color = FlxColor.WHITE;
-					titleText.alpha = 1;
-	
-					titleText.animation.play('press');
+					if (titleText != null)
+					{
+						titleText.color = FlxColor.WHITE;
+						titleText.alpha = 1;
+		
+						titleText.animation.play('press');
+					}
+
+					FlxG.camera.flash(OptionData.flashingLights ? FlxColor.WHITE : 0x4CFFFFFF, 1);
+					FlxG.sound.play(Paths.getSound('confirmMenu'), 0.7);
+
+					transitioning = true;
+
+					new FlxTimer().start(1, function(tmr:FlxTimer)
+					{
+						if (OptionData.checkForUpdates && OutdatedState.newVersion != MainMenuState.engineVersion && !OutdatedState.leftState)
+						{
+							trace('There is a new version ' + OutdatedState.newVersion + '!');
+							FlxG.switchState(new OutdatedState());
+						}
+						else
+						{
+							trace('You now have the latest version');
+							FlxG.switchState(new MainMenuState());
+						}
+					});
 				}
-
-				FlxG.camera.flash(OptionData.flashingLights ? FlxColor.WHITE : 0x4CFFFFFF, 1);
-				FlxG.sound.play(Paths.getSound('confirmMenu'), 0.7);
-
-				transitioning = true;
-
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					if (OptionData.checkForUpdates && OutdatedState.newVersion != MainMenuState.engineVersion && !OutdatedState.leftState)
-					{
-						trace('There is a new version ' + OutdatedState.newVersion + '!');
-						FlxG.switchState(new OutdatedState());
-					}
-					else
-					{
-						trace('You now have the latest version');
-						FlxG.switchState(new MainMenuState());
-					}
-				});
 			}
-		}
 
-		if (initialized && pressedEnter && !skippedIntro)
-		{
-			skipIntro();
+			if (pressedEnter && !skippedIntro) {
+				skipIntro();
+			}
 		}
 
 		if (swagShader != null)
@@ -441,8 +428,7 @@ class TitleState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if (logoBl != null)
-		{
+		if (logoBl != null) {
 			logoBl.animation.play('bump');
 		}
 
@@ -488,13 +474,19 @@ class TitleState extends MusicBeatState
 				else
 				{
 					addMoreText('newgrounds');
-					ngSpr.visible = true;
+
+					if (ngSpr != null) {
+						ngSpr.visible = true;
+					}
 				}
 			}
 			case 8:
 			{
 				deleteCoolText();
-				ngSpr.visible = false;
+
+				if (ngSpr != null) {
+					ngSpr.visible = false;
+				}
 			}
 			case 9:
 				createCoolText([curWacky[0]]);
@@ -517,13 +509,20 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
-			remove(ngSpr);
+			if (ngSpr != null) {
+				remove(ngSpr);
+			}
 
-			blackScreen.visible = false;
-			blackScreen.alpha = 0;
-			remove(blackScreen);
+			if (blackScreen != null)
+			{
+				blackScreen.visible = false;
+				blackScreen.alpha = 0;
+				remove(blackScreen);
+			}
 
-			remove(textGroup);
+			if (textGroup != null) {
+				remove(textGroup);
+			}
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 

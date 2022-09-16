@@ -513,7 +513,5 @@ class NotesSubState extends MusicBeatSubState
 			letter.offset.x += add;
 			if (roundedValue < 0) letter.offset.x += 10;
 		}
-
-		if (roundedValue < 0) item.offset.x += 10;
 	}
 }

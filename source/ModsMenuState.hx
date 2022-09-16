@@ -17,6 +17,7 @@ import flixel.ui.FlxButton;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import openfl.geom.Rectangle;
+import flixel.tweens.FlxTween;
 import openfl.display.BitmapData;
 
 using StringTools;
@@ -24,8 +25,12 @@ using StringTools;
 class ModsMenuState extends TransitionableState
 {
 	var mods:Array<ModMetadata> = [];
+
 	static var changedAThing = false;
+
 	var bg:FlxSprite;
+	var intendedColor:Int;
+	var colorTween:FlxTween;
 
 	var noModsTxt:FlxText;
 	var selector:AttachedSprite;
@@ -302,6 +307,8 @@ class ModsMenuState extends TransitionableState
 		else
 			bg.color = mods[curSelected].color;
 
+		intendedColor = bg.color;
+
 		changeSelection();
 		updatePosition();
 		FlxG.sound.play(Paths.getSound('scrollMenu'));
@@ -391,10 +398,6 @@ class ModsMenuState extends TransitionableState
 	var canExit:Bool = true;
 	public override function update(elapsed:Float)
 	{
-		if (bg.color != defaultColor) {
-			bg.color = CoolUtil.interpolateColor(bg.color, (mods[curSelected].color != null ? mods[curSelected].color : defaultColor), 0.045);
-		}
-
 		if(noModsTxt.visible)
 		{
 			noModsSine += 180 * elapsed;
@@ -403,6 +406,10 @@ class ModsMenuState extends TransitionableState
 
 		if(canExit && controls.BACK)
 		{
+			if(colorTween != null) {
+				colorTween.cancel();
+			}
+
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
 			FlxG.mouse.visible = false;
 			saveTxt();
@@ -492,6 +499,19 @@ class ModsMenuState extends TransitionableState
 			curSelected = mods.length - 1;
 		else if(curSelected >= mods.length)
 			curSelected = 0;
+
+		var newColor:Int = mods[curSelected].color;
+		if(newColor != intendedColor) {
+			if(colorTween != null) {
+				colorTween.cancel();
+			}
+			intendedColor = newColor;
+			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
+				onComplete: function(twn:FlxTween) {
+					colorTween = null;
+				}
+			});
+		}
 
 		var i:Int = 0;
 		for (mod in mods)

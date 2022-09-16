@@ -276,7 +276,7 @@ class StoryMenuState extends MusicBeatState
 				}
 			}
 
-			if (curWeek.difficulties[1].length > 1)
+			if (curWeek.difficulties[1].length > 1 && !WeekData.weekIsLocked(curWeek.weekID))
 			{
 				if (controls.UI_LEFT_P)
 				{
@@ -348,6 +348,7 @@ class StoryMenuState extends MusicBeatState
 					}
 
 					PlayState.storyPlaylist = songArray;
+					PlayState.weekLength = songArray.length;
 					PlayState.storyDifficulty = curDifficultyString;
 					PlayState.lastDifficulty = curDifficultyString;
 					PlayState.storyWeek = curWeek.weekID;
@@ -365,12 +366,15 @@ class StoryMenuState extends MusicBeatState
 					new FlxTimer().start(1, function(tmr:FlxTimer)
 					{
 						LoadingState.loadAndSwitchState(new PlayState(), true);
-						FreeplayMenuState.destroyFreeplayVocals();
+
+						if (!OptionData.loadingScreen) {
+							FreeplayMenuState.destroyFreeplayVocals();
+						}
 					});
 				}
 				else
 				{
-					if (FlxG.random.bool(25)) {
+					if (FlxG.random.bool(1)) {
 						CoolUtil.browserLoad('https://youtu.be/dQw4w9WgXcQ'); // lololololololol
 					} else {
 						FlxG.sound.play(Paths.getSound('cancelMenu'));
@@ -383,8 +387,6 @@ class StoryMenuState extends MusicBeatState
 	public override function closeSubState():Void
 	{
 		super.closeSubState();
-
-		persistentUpdate = true;
 
 		#if !switch
 		intendedScore = Highscore.getWeekScore(CoolUtil.formatSong(curWeek.weekID, curDifficultyString));
@@ -424,6 +426,18 @@ class StoryMenuState extends MusicBeatState
 
 		updateText();
 
+		if (curWeek.difficulties[1].contains(curWeek.defaultDifficulty)) {
+			curDifficulty = Math.round(Math.max(0, curWeek.difficulties[1].indexOf(curWeek.defaultDifficulty)));
+		} else {
+			curDifficulty = 0;
+		}
+
+		var newPos:Int = curWeek.difficulties[1].indexOf(curDifficultyString);
+
+		if (newPos > -1) {
+			curDifficulty = newPos;
+		}
+
 		changeDifficulty();
 	}
 
@@ -452,9 +466,9 @@ class StoryMenuState extends MusicBeatState
 
 			if (tweenDifficulty != null) tweenDifficulty.cancel();
 
-			tweenDifficulty = FlxTween.tween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07, {
-				onComplete: function(twn:FlxTween)
-				{
+			tweenDifficulty = FlxTween.tween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07,
+			{
+				onComplete: function(twn:FlxTween) {
 					tweenDifficulty = null;
 				}
 			});
@@ -490,13 +504,11 @@ class StoryMenuState extends MusicBeatState
 
 		var stringThing:Array<String> = [];
 
-		for (i in 0...curWeek.songs.length)
-		{
+		for (i in 0...curWeek.songs.length) {
 			stringThing.push(curWeek.songs[i].songName);
 		}
 
-		for (i in 0...stringThing.length)
-		{
+		for (i in 0...stringThing.length) {
 			txtTracklist.text += stringThing[i] + '\n';
 		}
 

@@ -2,6 +2,8 @@ package;
 
 import flixel.FlxG;
 
+using StringTools;
+
 class PlayStateChangeables
 {
 	public static var scrollType:String = 'multiplicative';

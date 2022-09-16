@@ -1,18 +1,18 @@
 package;
 
+import flixel.FlxSubState;
 #if desktop
 import Discord.DiscordClient;
 #end
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
-import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
+import flixel.tweens.FlxTween;
 
 using StringTools;
 
@@ -30,6 +30,9 @@ class FreeplayMenuState extends TransitionableState
 	private var grpIcons:FlxTypedGroup<HealthIcon>;
 
 	var bg:FlxSprite;
+
+	var intendedColor:Int = 0xFFFFFFFF;
+	var colorTween:FlxTween;
 
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
@@ -89,6 +92,7 @@ class FreeplayMenuState extends TransitionableState
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.scrollFactor.set();
+		bg.antialiasing = OptionData.globalAntialiasing;
 		add(bg);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
@@ -112,7 +116,7 @@ class FreeplayMenuState extends TransitionableState
 				songText.scaleX = maxWidth / songText.width;
 			}
 
-			Paths.currentModDirectory = songsArray[i].folder;
+			Paths.currentModDirectory = leSong.folder;
 
 			var icon:HealthIcon = new HealthIcon(leSong.songCharacter);
 			icon.sprTracker = songText;
@@ -163,7 +167,9 @@ class FreeplayMenuState extends TransitionableState
 			curDifficultyString = songsArray[curSelected].defaultDifficulty;
 		}
 
-		curDifficulty = songsArray[curSelected].difficulties[1].indexOf(curDifficultyString);
+		curSong = songsArray[curSelected];
+
+		curDifficulty = Math.round(Math.max(0, curSong.difficulties[1].indexOf(curSong.defaultDifficulty)));
 
 		changeSelection();
 		changeDifficulty();
@@ -204,8 +210,6 @@ class FreeplayMenuState extends TransitionableState
 		if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.7) {
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
-
-		bg.color = CoolUtil.interpolateColor(bg.color, curSong.color, 0.045);
 
 		lerpScore = Math.floor(CoolUtil.coolLerp(lerpScore, intendedScore, 0.4));
 		lerpAccuracy = CoolUtil.coolLerp(lerpAccuracy, intendedAccuracy, 0.2);
@@ -358,11 +362,12 @@ class FreeplayMenuState extends TransitionableState
 			PlayState.storyWeekName = curSong.weekName;
 			PlayState.seenCutscene = false;
 
-			#if PRELOAD_ALL
-			FlxG.sound.music.volume = 0;
-			#end
+			if (!OptionData.loadingScreen)
+			{
+				FlxG.sound.music.volume = 0;
 
-			destroyFreeplayVocals();
+				destroyFreeplayVocals();
+			}
 
 			LoadingState.loadAndSwitchState(new PlayState(), true);
 		}
@@ -375,11 +380,49 @@ class FreeplayMenuState extends TransitionableState
 		}
 	}
 
+	public override function onTransIn():Void
+	{
+		super.onTransIn();
+
+		if (colorTween != null) {
+			colorTween.cancel();
+		}
+	}
+
+	var startShit:Bool = true;
+
+	public override function openSubState(SubState:FlxSubState):Void
+	{
+		super.openSubState(SubState);
+
+		if (!startShit) {
+			if (colorTween != null) {
+				colorTween.active = false;
+			}
+		}
+	}
+
 	public override function closeSubState():Void
 	{
 		super.closeSubState();
 
-		persistentUpdate = true;
+		if (startShit)
+		{
+			colorTween = FlxTween.color(bg, 1, 0xFFFFFFFF, curSong.color,
+			{
+				onComplete: function(twn:FlxTween) {
+					colorTween = null;
+				}
+			});
+	
+			persistentUpdate = true;
+			startShit = false;
+		}
+		else {
+			if (colorTween != null) {
+				colorTween.active = true;
+			}
+		}
 
 		#if !switch
 		intendedScore = Highscore.getScore(CoolUtil.formatSong(curSong.songID, curDifficultyString));
@@ -422,7 +465,28 @@ class FreeplayMenuState extends TransitionableState
 				icon.alpha = 1;
 			}
 		}
+
+		if (!startShit)
+		{
+			var newColor:Int = curSong.color;
+
+			if (newColor != intendedColor)
+			{
+				if (colorTween != null) {
+					colorTween.cancel();
+				}
+	
+				intendedColor = newColor;
 		
+				colorTween = FlxTween.color(bg, 1, bg.color, intendedColor,
+				{
+					onComplete: function(twn:FlxTween) {
+						colorTween = null;
+					}
+				});
+			}
+		}
+
 		Paths.currentModDirectory = curSong.folder;
 
 		#if !switch
@@ -434,7 +498,21 @@ class FreeplayMenuState extends TransitionableState
 			FlxG.sound.play(Paths.getSound('scrollMenu'), 0.4);
 		}
 
+		if (curSong.difficulties[1].contains(curSong.defaultDifficulty)) {
+			curDifficulty = Math.round(Math.max(0, curSong.difficulties[1].indexOf(curSong.defaultDifficulty)));
+		}
+		else {
+			curDifficulty = 0;
+		}
+
+		var newPos:Int = curSong.difficulties[1].indexOf(curDifficultyString);
+
+		if (newPos > -1) {
+			curDifficulty = newPos;
+		}
+
 		changeDifficulty();
+		positionHighscore();
 	}
 
 	function changeDifficulty(change:Int = 0):Void
@@ -454,6 +532,7 @@ class FreeplayMenuState extends TransitionableState
 		#end
 
 		diffText.text = '< ' + CoolUtil.getDifficultyName(curDifficultyString, curSong.difficulties).toUpperCase() + ' >';
+		positionHighscore();
 	}
 
 	function positionHighscore():Void

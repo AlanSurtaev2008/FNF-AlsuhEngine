@@ -132,14 +132,14 @@ class PreferencesSubState extends MusicBeatSubState
 			'cpuStrumsType',
 			'string',
 			'Glow',
-			['Glow', 'Glow no Sustains', 'Static', 'Disabled']);
+			['Glow', 'Glow no Sustains', 'Glow, while Sus', 'Static', 'Disabled']);
 
 		if (isPause)
 		{
 			if (option.getValue() == 'Disabled') {
 				option.isPause = isPause;
 			} else {
-				option.options = ['Glow', 'Glow no Sustains', 'Static'];
+				option.options = ['Glow', 'Glow no Sustains', 'Glow, while Sus', 'Static'];
 				option.luaAllowed = true;
 			}
 		}
@@ -164,6 +164,7 @@ class PreferencesSubState extends MusicBeatSubState
 			['None', 'Kade', 'Psych']);
 		addOption(option);
 		option.onChange = onChangeHitsoundVolume;
+		option.isIgnoriteFunctionOnReset = true;
 
 		var option:Option = new Option('Hitsound Volume',
 			true,
@@ -178,6 +179,7 @@ class PreferencesSubState extends MusicBeatSubState
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
+		option.isIgnoriteFunctionOnReset = true;
 
 		var option:Option = new Option('Rating Offset',
 			true,
@@ -459,6 +461,16 @@ class PreferencesSubState extends MusicBeatSubState
 			true);
 		addOption(option);
 
+		#if PRELOAD_ALL
+		var option:Option = new Option('Loading Screen',
+			true,
+			'Check this if you like to enjoy loading.',
+			'loadingScreen',
+			'bool',
+			false);
+		addOption(option);
+		#end
+
 		var option:Option = new Option('Flashing Lights',
 			true,
 			"Uncheck this if you're sensitive to flashing lights!",
@@ -466,6 +478,8 @@ class PreferencesSubState extends MusicBeatSubState
 			'bool',
 			true);
 		addOption(option);
+		option.luaAllowed = true;
+		option.luaVarAltShit = 'flashing';
 
 		addOption(defaultValue);
 	}
@@ -603,6 +617,7 @@ class PreferencesSubState extends MusicBeatSubState
 				optionText.startPosition.y = -70;
 			}
 
+			optionText.shit = 1;
 			optionText.distancePerItem.y = 100;
 			optionText.targetY = i;
 			grpOptions.add(optionText);
@@ -1022,6 +1037,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 	function onChangeHitsoundVolume():Void
 	{
+		#if !web
 		if (OptionData.hitsoundType != 'None')
 		{
 			if (OptionData.hitsoundType == 'Kade') {
@@ -1030,6 +1046,7 @@ class PreferencesSubState extends MusicBeatSubState
 				FlxG.sound.play(Paths.getSound('hitsound', 'shared'), OptionData.hitsoundVolume);
 			}
 		}
+		#end
 	}
 
 	function onChangeSafeFrames():Void
@@ -1226,12 +1243,12 @@ class PreferencesSubState extends MusicBeatSubState
 		descText.text = curOption.description;
 		descText.screenCenter(Y);
 		descText.y += 270;
+		descText.visible = curOption.description != '';
 
 		descBox.setPosition(descText.x - 10, descText.y - 10);
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
-
-		descBox.visible = (curOption.description != '');
+		descBox.visible = curOption.description != '';
 
 		if (boyfriend != null) {
 			boyfriend.visible = curOption.showBoyfriend && !curOption.isPause;

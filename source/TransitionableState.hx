@@ -22,6 +22,7 @@ class TransitionableState extends FlxState
 		{
 			onTransOut();
 
+			Transition.finishCallback = onTransOutFinished;
 			openSubState(new Transition(0.7, true));
 		}
 
@@ -86,7 +87,17 @@ class TransitionableState extends FlxState
 		// override per subclass
 	}
 
+	public function onTransInFinished():Void
+	{
+		// override per subclass
+	}
+
 	public function onTransOut():Void
+	{
+		// override per subclass
+	}
+
+	public function onTransOutFinished():Void
 	{
 		// override per subclass
 	}
@@ -107,6 +118,8 @@ class TransitionableState extends FlxState
 				{
 					Transition.finishCallback = function()
 					{
+						onTransInFinished();
+
 						exiting = true;
 						FlxG.switchState(nextState);
 					};
@@ -115,6 +128,8 @@ class TransitionableState extends FlxState
 				{
 					Transition.finishCallback = function()
 					{
+						onTransInFinished();
+
 						exiting = true;
 						FlxG.switchState(nextState);
 					};
@@ -123,8 +138,7 @@ class TransitionableState extends FlxState
 
 			return exiting;
 		}
-		else
-		{
+		else {
 			Transition.skipNextTransIn = false;
 		}
 

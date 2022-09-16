@@ -10,12 +10,8 @@ import flixel.FlxSprite;
 import openfl.utils.Assets;
 import flixel.util.FlxSort;
 import Section.SwagSection;
-import haxe.format.JsonParser;
-import openfl.utils.AssetType;
 import flixel.tweens.FlxTween;
 import animateatlas.AtlasFrameMaker;
-import flixel.addons.effects.FlxTrail;
-import flixel.animation.FlxBaseAnimation;
 
 using StringTools;
 
@@ -218,12 +214,10 @@ class Character extends FlxSprite
 						var animLoop:Bool = !!anim.loop; // Bruh
 						var animIndices:Array<Int> = anim.indices;
 
-						if (animIndices != null && animIndices.length > 0)
-						{
+						if (animIndices != null && animIndices.length > 0) {
 							animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
 						}
-						else
-						{
+						else {
 							animation.addByPrefix(animAnim, animName, animFps, animLoop);
 						}
 

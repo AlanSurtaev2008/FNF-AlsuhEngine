@@ -26,7 +26,6 @@ import lime.system.Clipboard;
 import openfl.net.FileFilter;
 import flixel.addons.ui.FlxUI;
 import openfl.net.FileReference;
-import flixel.input.FlxKeyManager;
 import openfl.events.IOErrorEvent;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUICheckBox;

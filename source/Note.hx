@@ -176,7 +176,8 @@ class Note extends FlxSprite
 
 					if (isSustainNote) {
 						missHealth = 0.1;
-					} else {
+					}
+					else {
 						missHealth = 0.3;
 					}
 

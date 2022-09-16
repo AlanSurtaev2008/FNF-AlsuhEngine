@@ -111,7 +111,7 @@ class GameOverSubState extends MusicBeatSubState
 		bg.alpha = CoolUtil.coolLerp(bg.alpha, 0, 0.04);
 
 		if (updateCamera) {
-			camFollowPos.setPosition(CoolUtil.coolLerp(camFollowPos.x, camFollow.x, 2.4), CoolUtil.coolLerp(camFollowPos.y, camFollow.y, 2.4));
+			camFollowPos.setPosition(CoolUtil.coolLerp(camFollowPos.x, camFollow.x, 0.025), CoolUtil.coolLerp(camFollowPos.y, camFollow.y, 0.025));
 		}
 
 		if (controls.ACCEPT || controls.BACK)
@@ -131,7 +131,7 @@ class GameOverSubState extends MusicBeatSubState
 
 			if (boyfriend.animation.curAnim.finished && !playingDeathSound)
 			{
-				if (OptionData.naughtyness && PlayState.SONG.stage == 'tank')
+				if (OptionData.naughtyness && PlayState.SONG.stage == 'tank' && (PlayState.SONG.player2.contains('tankman') || PlayState.SONG.player2.contains('tankmen')))
 				{
 					playingDeathSound = true;
 					coolStartDeath(0.2);
@@ -140,9 +140,8 @@ class GameOverSubState extends MusicBeatSubState
 
 					FlxG.sound.play(Paths.getSound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25, exclude)), 1, false, null, true, function()
 					{
-						if (!isEnding)
-						{
-							FlxG.sound.music.fadeIn(0.2, 1, 4);
+						if (!isEnding) {
+							FlxG.sound.music.fadeIn(4, 0.2, 1);
 						}
 					});
 				}
@@ -232,7 +231,7 @@ class GameOverSubState extends MusicBeatSubState
 									OptionData.downScroll = false;
 								}
 	
-								FlxG.switchState(new options.ReplaysState());
+								FlxG.switchState(new options.ReplaysMenuState());
 							}
 							default:
 								FlxG.switchState(new MainMenuState());
@@ -247,7 +246,8 @@ class GameOverSubState extends MusicBeatSubState
 
 			if (toMenu) {
 				PlayState.instance.callOnLuas('onExitFromGameOver', [true]);
-			} else {
+			}
+			else {
 				PlayState.instance.callOnLuas('onGameOverConfirm', [true]);
 			}
 		}

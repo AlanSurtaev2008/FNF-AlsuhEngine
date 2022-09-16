@@ -2,13 +2,8 @@ package;
 
 import flixel.FlxG;
 import flixel.math.FlxMath;
-import openfl.utils.Assets;
 import flixel.util.FlxColor;
-import flixel.system.FlxSound;
-import lime.utils.AssetLibrary;
-import lime.utils.AssetManifest;
 import flixel.input.keyboard.FlxKey;
-import lime.utils.Assets as LimeAssets;
 
 #if sys
 import sys.io.File;
@@ -50,12 +45,12 @@ class CoolUtil
 
 	public static function quantize(f:Float, snap:Float):Float
 	{
-		return (Math.fround(f * snap) / snap);
+		return Math.fround(f * snap) / snap;
 	}
 
 	public static function formatSong(song:String, diff:String):String
 	{
-		return Paths.formatToSongPath(song + '-' + diff);
+		return (song + '-' + diff).toLowerCase();
 	}
 
 	public static function getKeyName(key:FlxKey):String
@@ -114,6 +109,7 @@ class CoolUtil
 		}
 	}
 
+	@:deprecated("`CoolUtil.interpolateColor()` is deprecated, use 'FlxTween.color()' instead")
 	public static function interpolateColor(from:FlxColor, to:FlxColor, speed:Float = 0.045, multiplier:Float = 54.5):FlxColor
 	{
 		return FlxColor.interpolate(from, to, boundTo(FlxG.elapsed * (speed * multiplier), 0, 1));

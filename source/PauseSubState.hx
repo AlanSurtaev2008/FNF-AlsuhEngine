@@ -471,7 +471,7 @@ class PauseSubState extends BaseSubState
 								OptionData.downScroll = false;
 							}
 
-							FlxG.switchState(new options.ReplaysState());
+							FlxG.switchState(new options.ReplaysMenuState());
 						}
 						default:
 							FlxG.switchState(new MainMenuState());

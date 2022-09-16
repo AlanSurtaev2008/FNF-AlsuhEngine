@@ -24,7 +24,8 @@ class MasterEditorMenu extends TransitionableState
 		'Dialogue Editor',
 		'Dialogue Portrait Editor',
 		'Character Editor',
-		'Chart Editor'
+		// 'Stage Editor', Alan is here, we need your pull request with stage editor for StageSpriteData.hx.
+		'Chart Editor',
 	];
 	private var directories:Array<String> = [null];
 
@@ -170,26 +171,45 @@ class MasterEditorMenu extends TransitionableState
 		if (controls.ACCEPT)
 		{
 			goToState(editorsArray[curSelected]);
-			FreeplayMenuState.destroyFreeplayVocals();
+			
+			if (!OptionData.loadingScreen) {
+				FreeplayMenuState.destroyFreeplayVocals();
+			}
 		}
 	}
 
 	function goToState(label:String):Void
 	{
-		FlxG.sound.music.volume = 0;
+		if (OptionData.loadingScreen) {
+			FlxG.sound.music.volume = 0;
+		}
 
 		switch (label)
 		{
 			case 'Week Editor':
+			{
+				if (!OptionData.loadingScreen) {
+					FreeplayMenuState.destroyFreeplayVocals();
+				}
+
 				FlxG.switchState(new WeekEditorState());
+			}
 			case 'Menu Character Editor':
+			{
+				if (!OptionData.loadingScreen) {
+					FreeplayMenuState.destroyFreeplayVocals();
+				}
+
 				FlxG.switchState(new MenuCharacterEditorState());
+			}
 			case 'Character Editor':
 				LoadingState.loadAndSwitchState(new CharacterEditorState(Character.DEFAULT_CHARACTER, false), true);
 			case 'Dialogue Editor':
 				LoadingState.loadAndSwitchState(new DialogueEditorState(), true);
 			case 'Dialogue Portrait Editor':
 				LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), true);
+			case 'Stage Editor': // Alan is here, we need your pull request with stage editor for StageSpriteData.hx.
+				LoadingState.loadAndSwitchState(new StageEditorState(), true);
 			case 'Chart Editor':
 			{
 				PlayState.SONG = Song.loadFromJson('test', 'test');

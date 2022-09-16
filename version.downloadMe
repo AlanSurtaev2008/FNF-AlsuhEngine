@@ -1,4 +1,8 @@
-1.5.2;
-- Fixed Credits Menu for Modcharting
-- Fixed Transition on HTML5
-- Changed Ratings for Modcharting
+1.5.2h;
+- Main Menu now is Psych
+- Added Achievements
+- Added Loading Screen Option
+- Changed Loading
+- Stage editor added for the long term
+- Fixed Crashes on Title
+- Fixed Preferences Menu

@@ -6,7 +6,6 @@ import Discord.DiscordClient;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxCamera;
 import flixel.text.FlxText;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
@@ -16,10 +15,8 @@ import flixel.group.FlxSpriteGroup;
 
 using StringTools;
 
-class ComboSubState extends MusicBeatSubState
+class ComboSubState extends BaseSubState
 {
-	public var camHUD:FlxCamera;
-
 	var rating:FlxSprite;
 	var comboNums:FlxSpriteGroup;
 	var dumbTexts:FlxTypedGroup<FlxText>;
@@ -80,12 +77,6 @@ class ComboSubState extends MusicBeatSubState
 		practiceText.alpha = PlayStateChangeables.practiceMode ? 1 : 0;
 		add(practiceText);
 
-		camHUD = new FlxCamera();
-		camHUD.bgColor.alpha = 0;
-		FlxG.cameras.add(camHUD);
-		
-		camera = camHUD;
-
 		rating = new FlxSprite();
 		rating.loadGraphic(Paths.getImage('ratings/sick'));
 		rating.screenCenter();
@@ -95,7 +86,6 @@ class ComboSubState extends MusicBeatSubState
 		add(rating);
 
 		comboNums = new FlxSpriteGroup();
-		comboNums.cameras = [camHUD];
 		add(comboNums);
 
 		var seperatedScore:Array<Int> = [];
@@ -114,29 +104,18 @@ class ComboSubState extends MusicBeatSubState
 			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			numScore.updateHitbox();
 			numScore.antialiasing = OptionData.globalAntialiasing;
-			numScore.cameras = [camHUD];
 			comboNums.add(numScore);
 
 			daLoop++;
 		}
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
-		dumbTexts.cameras = [camHUD];
 		add(dumbTexts);
 
 		createTexts();
 		repositionCombo();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-	}
-
-	public override function destroy():Void
-	{
-		super.destroy();
-
-		camera = null;
-		FlxG.cameras.remove(camHUD);
-		camHUD.destroy();
 	}
 
 	var holdingObjectType:Null<Bool> = null;
@@ -199,7 +178,8 @@ class ComboSubState extends MusicBeatSubState
 		if (FlxG.mouse.justPressed)
 		{
 			holdingObjectType = null;
-			FlxG.mouse.getScreenPosition(camHUD, startMousePos);
+
+			FlxG.mouse.getScreenPosition(FlxG.cameras.list[FlxG.cameras.list.length - 1], startMousePos);
 
 			if (startMousePos.x - comboNums.x >= 0 && startMousePos.x - comboNums.x <= comboNums.width && startMousePos.y - comboNums.y >= 0 && startMousePos.y - comboNums.y <= comboNums.height)
 			{
@@ -226,7 +206,7 @@ class ComboSubState extends MusicBeatSubState
 		{
 			if (FlxG.mouse.justMoved)
 			{
-				var mousePos:FlxPoint = FlxG.mouse.getScreenPosition(camHUD);
+				var mousePos:FlxPoint = FlxG.mouse.getScreenPosition(FlxG.cameras.list[FlxG.cameras.list.length - 1]);
 				var addNum:Int = holdingObjectType ? 2 : 0;
 
 				OptionData.comboOffset[addNum + 0] = Math.round((mousePos.x - startMousePos.x) + startComboOffset.x);
@@ -270,7 +250,6 @@ class ComboSubState extends MusicBeatSubState
 			text.scrollFactor.set();
 			text.borderSize = 2;
 			dumbTexts.add(text);
-			text.cameras = [camHUD];
 
 			if (i > 1)
 			{

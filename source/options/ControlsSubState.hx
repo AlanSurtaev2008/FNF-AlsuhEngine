@@ -17,7 +17,7 @@ import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
-class ControlsSubState extends MusicBeatSubState
+class ControlsSubState extends BaseSubState
 {
 	private static var curSelected:Int = -1;
 	private static var curAlt:Bool = false;
@@ -39,10 +39,6 @@ class ControlsSubState extends MusicBeatSubState
 		['Up', 'ui_up'],
 		['Right', 'ui_right'],
 		[''],
-		#if MODS_ALLOWED
-		['Mods', 'mods'],
-		[''],
-		#end
 		['Reset', 'reset'],
 		['Accept', 'accept'],
 		['Back', 'back'],
@@ -172,6 +168,7 @@ class ControlsSubState extends MusicBeatSubState
 				optionText.startPosition.x = 200;
 			}
 
+			optionText.shit = 1;
 			optionText.changeX = false;
 			optionText.distancePerItem.y = 60;
 			optionText.targetY = i;

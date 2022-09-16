@@ -6,7 +6,7 @@ class RatingData
 	public var image:String = '';
 	public var counter:String = '';
 
-	public var hitWindow(get, default):Null<Int> = 0; //ms
+	public var hitWindow(get, null):Null<Int> = 0; //ms
 	public var ratingMod:Float = 1;
 
 	public var score:Int = 350;

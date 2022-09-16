@@ -131,7 +131,7 @@ class Highscore
 
 	public static function scoreText(deaths:Int, accuracy:Float, rating:String, comboRank:String, health:Float, misses:Int, score:Int):String
 	{
-		return 'DEATHS: ' + deaths + ' | ACCURACY: ' + CoolUtil.floorDecimal(accuracy, 2) + '% | RATING: ' + rating +
-			(rating != 'N/A' ? ' (' + comboRank + ')' : '') + ' | HEALTH: ' + Math.floor(health * 50) + '% | COMBO BREAKS: ' + misses + ' | SCORE: ' + score;
+		return 'Deaths: ' + deaths + ' | Accuracy: ' + CoolUtil.floorDecimal(accuracy, 2) + '% | Rating: ' + rating +
+			(rating != 'N/A' ? ' (' + comboRank + ')' : '') + ' | Health: ' + Math.floor(health * 50) + '% | Combo Breaks: ' + misses + ' | Score: ' + score;
 	}
 }

@@ -14,7 +14,7 @@ import flixel.group.FlxGroup;
 
 using StringTools;
 
-class ReplaysState extends TransitionableState
+class ReplaysMenuState extends TransitionableState
 {
 	var curSelected:Int = 0;
 
@@ -27,12 +27,13 @@ class ReplaysState extends TransitionableState
 	{
 		super.create();
 
+		persistentUpdate = true;
+
 		#if desktop
 		DiscordClient.changePresence("In the Replays Menu", null); // Updating Discord Rich Presence
 		#end
 
-		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0)
-		{
+		if (FlxG.sound.music.playing == false || FlxG.sound.music.volume == 0) {
 			FlxG.sound.playMusic(Paths.getMusic('freakyMenu'));
 		}
 
@@ -119,15 +120,13 @@ class ReplaysState extends TransitionableState
 				FlxG.sound.play(Paths.getSound('scrollMenu'));
 			}
 		}
-		else
-		{
-			holdTime = 0;
-		}
 
 		if (controls.ACCEPT)
 		{
 			if (replaysArray[curSelected] != "No replays...")
 			{
+				persistentUpdate = false;
+
 				PlayState.rep = Replay.loadReplay(actualNames[curSelected]);
 
 				var diffic:String = CoolUtil.getDifficultySuffix(PlayState.rep.replay.songDiff, false, PlayState.rep.replay.difficulties);
@@ -140,13 +139,14 @@ class ReplaysState extends TransitionableState
 				PlayState.storyDifficulty = PlayState.rep.replay.songDiff;
 				PlayState.storyWeek = PlayState.rep.replay.weekID;
 				PlayState.storyWeekName = PlayState.rep.replay.weekName;
-	
-				FreeplayMenuState.destroyFreeplayVocals();
+
+				if (!OptionData.loadingScreen) {
+					FreeplayMenuState.destroyFreeplayVocals();
+				}
 
 				LoadingState.loadAndSwitchState(new PlayState(), true);
 			}
-			else
-			{
+			else {
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
 			}
 		}

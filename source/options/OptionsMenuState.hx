@@ -17,7 +17,7 @@ class OptionsMenuState extends TransitionableState
 {
 	public static var curSelected:Int = 0;
 
-	private var options:Array<String> = ['Preferences', 'Controls', 'Note Colors', 'Adjust Delay and Combo', 'Credits', #if sys 'Replays' #end];
+	private var options:Array<String> = ['Preferences', 'Controls', 'Note Colors', 'Adjust Delay and Combo', #if sys 'Replays', #end 'Exit'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 
 	var selectorLeft:Alphabet;
@@ -56,13 +56,17 @@ class OptionsMenuState extends TransitionableState
 			case 'Replays':
 			{
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
-				FlxG.switchState(new ReplaysState());
+				FlxG.switchState(new ReplaysMenuState());
 			}
 			#end
 			case 'Exit':
 			{
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
 				FlxG.switchState(new MainMenuState());
+			}
+			default:
+			{
+				flickering = false;
 			}
 		}
 	}
@@ -227,11 +231,11 @@ class OptionsMenuState extends TransitionableState
 	}
 }
 
-class OptionsSubState extends MusicBeatSubState
+class OptionsSubState extends BaseSubState
 {
 	private static var curSelected:Int = -1;
 
-	private var options:Array<String> = ['Preferences', 'Controls', 'Note Colors', 'Combo Position'];
+	private var options:Array<String> = ['Preferences', 'Controls', 'Note Colors', 'Combo Position', 'Exit'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 
 	var selectorLeft:Alphabet;
@@ -268,6 +272,21 @@ class OptionsSubState extends MusicBeatSubState
 
 				FlxG.state.closeSubState();
 				FlxG.state.openSubState(new ComboSubState());
+			}
+			case 'Exit':
+			{
+				OptionsMenuState.curSelected = curSelected;
+
+				OptionData.savePrefs();
+	
+				FlxG.sound.play(Paths.getSound('cancelMenu'));
+	
+				PlayState.isNextSubState = true;
+	
+				FlxG.state.closeSubState();
+				FlxG.state.openSubState(new PauseSubState(true));
+	
+				curSelected = -1;
 			}
 		}
 	}

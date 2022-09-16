@@ -1,6 +1,5 @@
 package;
 
-import flixel.util.FlxColor;
 import flixel.addons.ui.FlxUIState;
 
 using StringTools;

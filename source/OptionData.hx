@@ -57,6 +57,7 @@ class OptionData
 	public static var checkForUpdates:Bool = true;
 	public static var autoPause:Bool = false;
 	public static var watermarks:Bool = true;
+	public static var loadingScreen:Bool = #if NO_PRELOAD_ALL true #else false #end;
 	public static var flashingLights:Bool = true;
 
 	public static var comboOffset:Array<Int> = [0, 0, 0, 0];
@@ -109,11 +110,15 @@ class OptionData
 		FlxG.save.data.memoryCounter = memoryCounter;
 		FlxG.save.data.rainMemory = rainMemory;
 		FlxG.save.data.watermarks = watermarks;
+		FlxG.save.data.loadingScreen = loadingScreen;
 		FlxG.save.data.autoPause = autoPause;
 		FlxG.save.data.flashingLights = flashingLights;
 
 		FlxG.save.data.arrowHSV = arrowHSV;
 		FlxG.save.data.comboOffset = comboOffset;
+
+		FlxG.save.data.achievementsMap = Achievements.achievementsMap;
+		FlxG.save.data.henchmenDeath = Achievements.henchmenDeath;
 
 		FlxG.save.flush();
 	}
@@ -283,6 +288,7 @@ class OptionData
 		if (FlxG.save.data.rainMemory != null) {
 			rainMemory = FlxG.save.data.rainMemory;
 		}
+		
 		if (FlxG.save.data.watermarks != null) {
 			watermarks = FlxG.save.data.watermarks;
 		}
@@ -292,6 +298,10 @@ class OptionData
 			FlxG.autoPause = autoPause;
 		} else {
 			FlxG.autoPause = autoPause;
+		}
+
+		if (FlxG.save.data.loadingScreen != null) {
+			loadingScreen = FlxG.save.data.loadingScreen;
 		}
 
 		if (FlxG.save.data.flashingLights != null) {
@@ -316,26 +326,6 @@ class OptionData
 		}
 	}
 
-	public static function field(variable:String):Dynamic
-	{
-		return Reflect.field(OptionData, variable);
-	}
-
-	public static function setField(variable:String, value:Dynamic):Void
-	{
-		Reflect.setField(OptionData, variable, value);
-	}
-
-	public static function getProperty(variable:String):Dynamic
-	{
-		return Reflect.getProperty(OptionData, variable);
-	}
-
-	public static function setProperty(variable:String, value:Dynamic):Void
-	{
-		Reflect.setProperty(OptionData, variable, value);
-	}
-
 	public static var keyBinds:Map<String, Array<FlxKey>> =
 	[
 		'note_left'		=> [A, LEFT],
@@ -347,8 +337,6 @@ class OptionData
 		'ui_down'		=> [S, DOWN],
 		'ui_up'			=> [W, UP],
 		'ui_right'		=> [D, RIGHT],
-
-		'mods'			=> [M, NONE],
 
 		'reset'			=> [R, NONE],
 		'accept'		=> [SPACE, ENTER],

@@ -1,5 +1,7 @@
 package;
 
+using StringTools;
+
 typedef SwagSection =
 {
 	var sectionNotes:Array<Dynamic>;
