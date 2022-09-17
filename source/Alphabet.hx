@@ -190,9 +190,9 @@ class Alphabet extends FlxSpriteGroup
 		var xPos:Float = 0;
 		var rowData:Array<Float> = [];
 		rows = 0;
-
 		for (character in newText.split(''))
 		{
+			
 			if(character != '\n')
 			{
 				var spaceChar:Bool = (character == " " || (bold && character == "_"));
@@ -239,6 +239,8 @@ class Alphabet extends FlxSpriteGroup
 			letter.spawnScale.set(scaleX, scaleY);
 			letter.rowWidth = rowData[letter.row];
 		}
+
+		if(letters.length > 0) rows++;
 	}
 }
 

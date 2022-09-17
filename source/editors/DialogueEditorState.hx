@@ -286,7 +286,6 @@ class DialogueEditorState extends MusicBeatUIState
 		}
 
 		daText.y = DialogueBoxPsych.DEFAULT_TEXT_Y;
-		if(daText.rows > 2) daText.y -= DialogueBoxPsych.LONG_TEXT_ADD;
 
 		#if desktop
 		// Updating Discord Rich Presence
