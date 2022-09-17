@@ -158,7 +158,12 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 
 		reloadCharacter();
 		updateTextBox();
-		reloadText();
+
+		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, '', 0.05, false);
+		daText.scaleX = 0.7;
+		daText.scaleY = 0.7;
+		daText.text = DEFAULT_TEXT;
+		hudGroup.add(daText);
 
 		addEditorBox();
 
@@ -477,21 +482,6 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 
 	private static var DEFAULT_TEXT:String = 'Lorem ipsum dolor sit amet';
 
-	function reloadText():Void
-	{
-		if (daText != null)
-		{
-			daText.kill();
-			hudGroup.remove(daText);
-			daText.destroy();
-		}
-
-		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, DEFAULT_TEXT, 0.05, false);
-		daText.scaleX = 0.7;
-		daText.scaleY = 0.7;
-		hudGroup.add(daText);
-	}
-
 	function reloadCharacter():Void
 	{
 		var charsArray:Array<DialogueCharacter> = [character, ghostLoop, ghostIdle];
@@ -645,7 +635,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 				character.playAnim(character.jsonFile.animations[curAnim].anim);
 
 				updateTextBox();
-				reloadText();
+				daText.resetDialogue();
 			}
 
 			// lots of Ifs lol get trolled
@@ -781,7 +771,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 					animText.visible = true;
 
 					updateTextBox();
-					reloadText();
+					daText.resetDialogue();
 					
 					if (curAnim < 0)
 						curAnim = character.jsonFile.animations.length - 1;
@@ -884,7 +874,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 					reloadAnimationsDropDown();
 					updateCharTypeBox();
 					updateTextBox();
-					reloadText();
+					daText.resetDialogue();
 
 					imageInputText.text = character.jsonFile.image;
 					scaleStepper.value = character.jsonFile.scale;

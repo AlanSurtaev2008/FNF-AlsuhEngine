@@ -33,7 +33,7 @@ class Alphabet extends FlxSpriteGroup
 	public var alignment(default, set):Alignment = LEFT;
 	public var scaleX(default, set):Float = 1;
 	public var scaleY(default, set):Float = 1;
-	private var _curRow:Int = 0;
+	public var rows:Int = 0;
 
 	public var distancePerItem:FlxPoint = new FlxPoint(20, 120);
 	public var startPosition:FlxPoint = new FlxPoint(0, 0); //for the calculations
@@ -113,7 +113,7 @@ class Alphabet extends FlxSpriteGroup
 			}
 		}
 		letters = [];
-		_curRow = 0;
+		rows = 0;
 	}
 
 	private function set_scaleX(value:Float)
@@ -190,7 +190,7 @@ class Alphabet extends FlxSpriteGroup
 
 		var xPos:Float = 0;
 		var rowData:Array<Float> = [];
-		_curRow = 0;
+		rows = 0;
 
 		for (character in newText.split(''))
 		{
@@ -208,20 +208,20 @@ class Alphabet extends FlxSpriteGroup
 						if(!bold && xPos >= FlxG.width * 0.65)
 						{
 							xPos = 0;
-							_curRow++;
+							rows++;
 						}
 					}
 					consecutiveSpaces = 0;
 
-					var letter:AlphaCharacter = new AlphaCharacter(xPos, _curRow * Y_PER_ROW * scaleY, character, bold, this);
+					var letter:AlphaCharacter = new AlphaCharacter(xPos, rows * Y_PER_ROW * scaleY, character, bold, this);
 					letter.x += letter.letterOffset[0] * scaleX;
 					letter.y -= letter.letterOffset[1] * scaleY;
-					letter.row = _curRow;
+					letter.row = rows;
 
 					var off:Float = 0;
 					if(!bold) off = 2;
 					xPos += letter.width + (letter.letterOffset[0] + off) * scaleX;
-					rowData[_curRow] = xPos;
+					rowData[rows] = xPos;
 
 					add(letter);
 					letters.push(letter);
@@ -230,13 +230,13 @@ class Alphabet extends FlxSpriteGroup
 			else
 			{
 				xPos = 0;
-				_curRow++;
+				rows++;
 			}
 		}
 
 		for (letter in letters)
 		{
-			if (!bold && _curRow >= 2) {
+			if (!bold && rows >= 2) {
 				letter.y -= LONG_TEXT_ADD * scaleY;
 			}
 

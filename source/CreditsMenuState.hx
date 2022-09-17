@@ -94,6 +94,7 @@ class CreditsMenuState extends TransitionableState
 			['Psych Engine Contributors'],
 			['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',					'https://twitter.com/flicky_i',			'9E29CF'],
 			['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',				'https://twitter.com/gedehari',			'E1843A'],
+			['EliteMasterEric',		'mastereric',		'Runtime Shaders support',													'https://twitter.com/EliteMasterEric',	'FFBD40'],
 			['PolybiusProxy',		'proxy',			'.MP4 Video Loader Library (hxCodec)',										'https://twitter.com/polybiusproxy',	'DCD294'],
 			['KadeDev',				'kade',				'Fixed some cool stuff on Chart Editor\nand other PRs',						'https://twitter.com/kade0912',			'64A250'],
 			['Keoiki',				'keoiki',			'Note Splash Animations',													'https://twitter.com/Keoiki_',			'D2D2D2'],

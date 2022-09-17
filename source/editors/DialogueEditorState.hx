@@ -264,39 +264,31 @@ class DialogueEditorState extends MusicBeatUIState
 
 	function reloadText(speed:Float = 0.05):Void
 	{
-		if (daText != null)
-		{
-			daText.kill();
-			remove(daText);
-
-			daText.destroy();
-		}
-
-		if (Math.isNaN(speed) || speed < 0.001) speed = 0.0;
-
 		var textToType:String = lineInputText.text;
-		if (textToType == null || textToType.length < 1) textToType = ' ';
+		if(textToType == null || textToType.length < 1) textToType = ' ';
 
-		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, textToType, speed, false);
-		daText.sound = soundInputText.text;
-		daText.scaleX = 0.7;
-		daText.scaleY = 0.7;
-		add(daText);
+		daText.text = textToType;
+		daText.resetDialogue();
 
-		if (speed > 0)
+		if(skipDialogue) 
+			daText.finishText();
+		else if(daText.delay > 0)
 		{
-			if (character.jsonFile.animations.length > curAnim && character.jsonFile.animations[curAnim] != null) {
+			if(character.jsonFile.animations.length > curAnim && character.jsonFile.animations[curAnim] != null) {
 				character.playAnim(character.jsonFile.animations[curAnim].anim);
 			}
-
 			characterAnimSpeed();
 		}
 
+		daText.y = DialogueBoxPsych.DEFAULT_TEXT_Y;
+		if(daText.rows > 2) daText.y -= DialogueBoxPsych.LONG_TEXT_ADD;
+
 		#if desktop
+		// Updating Discord Rich Presence
 		var rpcText:String = lineInputText.text;
-		if (rpcText == null || rpcText.length < 1) rpcText = '(Empty)';
-		if (rpcText.length < 3) rpcText += '   '; //Fixes a bug on RPC that triggers an error when the text is too short
-		DiscordClient.changePresence("Dialogue Editor", rpcText); // Updating Discord Rich Presence
+		if(rpcText == null || rpcText.length < 1) rpcText = '(Empty)';
+		if(rpcText.length < 3) rpcText += '   '; //Fixes a bug on RPC that triggers an error when the text is too short
+		DiscordClient.changePresence("Dialogue Editor", rpcText);
 		#end
 	}
 
@@ -308,7 +300,6 @@ class DialogueEditorState extends MusicBeatUIState
 			{
 				character.reloadCharacterJson(characterInputText.text);
 				reloadCharacter();
-				updateTextBox();
 
 				if (character.jsonFile.animations.length > 0)
 				{
@@ -328,26 +319,37 @@ class DialogueEditorState extends MusicBeatUIState
 				}
 
 				dialogueFile.dialogue[curSelected].portrait = characterInputText.text;
+
+				reloadText(false);
+				updateTextBox();
 			}
 			else if (sender == lineInputText)
 			{
-				reloadText(0);
 				dialogueFile.dialogue[curSelected].text = lineInputText.text;
+				
+				daText.text = lineInputText.text;
+				if(daText.text == null) daText.text = '';
+				reloadText(true);
 			}
 			else if (sender == soundInputText)
 			{
+				daText.finishText();
 				dialogueFile.dialogue[curSelected].sound = soundInputText.text;
-				reloadText(0);
+
+				daText.sound = soundInputText.text;
+				if(daText.sound == null) daText.sound = '';
 			}
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender == speedStepper))
 		{
-			reloadText(speedStepper.value);
 			dialogueFile.dialogue[curSelected].speed = speedStepper.value;
 
 			if (Math.isNaN(dialogueFile.dialogue[curSelected].speed) || dialogueFile.dialogue[curSelected].speed == null || dialogueFile.dialogue[curSelected].speed < 0.001) {
 				dialogueFile.dialogue[curSelected].speed = 0.0;
 			}
+
+			daText.delay = dialogueFile.dialogue[curSelected].speed;
+			reloadText(false);
 		}
 	}
 
