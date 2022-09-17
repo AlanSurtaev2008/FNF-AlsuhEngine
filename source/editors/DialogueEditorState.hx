@@ -262,7 +262,7 @@ class DialogueEditorState extends MusicBeatUIState
 	private static var DEFAULT_SPEED:Float = 0.05;
 	private static var DEFAULT_BUBBLETYPE:String = "normal";
 
-	function reloadText(speed:Float = 0.05):Void
+	function reloadText(skipDialogue:Bool):Void
 	{
 		var textToType:String = lineInputText.text;
 		if(textToType == null || textToType.length < 1) textToType = ' ';
@@ -419,7 +419,7 @@ class DialogueEditorState extends MusicBeatUIState
 
 			if (FlxG.keys.justPressed.SPACE)
 			{
-				reloadText(speedStepper.value);
+				reloadText(false);
 			}
 
 			if (FlxG.keys.justPressed.ESCAPE)
@@ -501,8 +501,8 @@ class DialogueEditorState extends MusicBeatUIState
 		character.reloadCharacterJson(characterInputText.text);
 
 		reloadCharacter();
+		reloadText(false);
 		updateTextBox();
-		reloadText(curDialogue.speed);
 
 		var leLength:Int = character.jsonFile.animations.length;
 
