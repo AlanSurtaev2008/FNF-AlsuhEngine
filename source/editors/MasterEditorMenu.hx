@@ -180,7 +180,7 @@ class MasterEditorMenu extends TransitionableState
 
 	function goToState(label:String):Void
 	{
-		if (OptionData.loadingScreen) {
+		if (!OptionData.loadingScreen) {
 			FlxG.sound.music.volume = 0;
 		}
 
