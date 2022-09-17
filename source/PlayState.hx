@@ -4998,7 +4998,7 @@ class PlayState extends MusicBeatState
 
 	public function goToState(gameMode:String):Void
 	{
-		var ret:Dynamic = callOnLuas('', [], false);
+		var ret:Dynamic = callOnLuas('onEnd', [], false);
 
 		if (ret != FunkinLua.Function_Stop)
 		{
