@@ -297,7 +297,6 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 	public static var DEFAULT_TEXT_X = 175;
 	public static var DEFAULT_TEXT_Y = 432;
-	public static var LONG_TEXT_ADD = 24;
 	var scrollSpeed = 4000;
 	var daText:TypedAlphabet = null;
 	var ignoreThisFrame:Bool = true; //First frame is reserved for loading dialogue images
@@ -508,7 +507,6 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		if(daText.sound == null || daText.sound.trim() == '') daText.sound = 'dialogue';
 
 		daText.y = DEFAULT_TEXT_Y;
-		if(daText.rows > 2) daText.y -= LONG_TEXT_ADD;
 
 		var char:DialogueCharacter = arrayCharacters[character];
 		if(char != null) {

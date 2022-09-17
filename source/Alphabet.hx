@@ -181,7 +181,6 @@ class Alphabet extends FlxSpriteGroup
 		}
 	}
 
-	private static var LONG_TEXT_ADD:Float = 34; //text is over 2 rows long, make it go up a bit
 	private static var Y_PER_ROW:Float = 85;
 
 	private function createLetters(newText:String)
@@ -236,10 +235,6 @@ class Alphabet extends FlxSpriteGroup
 
 		for (letter in letters)
 		{
-			if (!bold && rows >= 2) {
-				letter.y -= LONG_TEXT_ADD * scaleY;
-			}
-
 			letter.spawnPos.set(letter.x, letter.y);
 			letter.spawnScale.set(scaleX, scaleY);
 			letter.rowWidth = rowData[letter.row];
