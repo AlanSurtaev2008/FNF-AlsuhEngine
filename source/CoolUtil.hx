@@ -45,7 +45,7 @@ class CoolUtil
 
 	public static function quantize(f:Float, snap:Float):Float
 	{
-		return Math.fround(f * snap) / snap;
+		return (Math.fround(f * snap) / snap);
 	}
 
 	public static function formatSong(song:String, diff:String):String
