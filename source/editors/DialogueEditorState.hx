@@ -552,18 +552,6 @@ class DialogueEditorState extends MusicBeatUIState
 		}
 	}
 
-	function ClipboardAdd(prefix:String = ''):String
-	{
-		if (prefix.toLowerCase().endsWith('v')) // probably copy paste attempt
-		{
-			prefix = prefix.substring(0, prefix.length-1);
-		}
-
-		var text:String = prefix + Clipboard.text.replace('\n', '');
-
-		return text;
-	}
-
 	var _file:FileReference = null;
 
 	function loadDialogue():Void

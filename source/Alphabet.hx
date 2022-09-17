@@ -2,11 +2,8 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import openfl.media.Sound;
 import flixel.math.FlxMath;
-import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
 import flixel.group.FlxSpriteGroup;
 
 using StringTools;
