@@ -259,16 +259,14 @@ class Paths
 				return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + pathAlt;
 			}
 
-			#if MODS_ALLOWED
-			if (FileSystem.exists(modFolders(path))) {
-				return modFolders(path);
+			if (Assets.exists('songs:assets/' + pathAlt)) {
+				return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + pathAlt;
 			}
-			#end
 
 			return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + path;
 		}
 
-		if (fileExists(pathAlt, SOUND) || fileExists(pathAlt, MUSIC)) {
+		if (Assets.exists('songs:assets/' + pathAlt)) {
 			return returnSound('songs', song.toLowerCase() + '/Inst' + difficulty);
 		}
 
@@ -298,16 +296,14 @@ class Paths
 				return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + pathAlt;
 			}
 
-			#if MODS_ALLOWED
-			if (FileSystem.exists(modFolders(path))) {
-				return modFolders(path);
+			if (Assets.exists('songs:assets/' + pathAlt)) {
+				return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + pathAlt;
 			}
-			#end
 
 			return #if !MODS_ALLOWED 'songs:' + #end 'assets/' + path;
 		}
 
-		if (fileExists(pathAlt, SOUND) || fileExists(pathAlt, MUSIC)) {
+		if (Assets.exists('songs:assets/' + pathAlt)) {
 			return returnSound('songs', song.toLowerCase() + '/Voices' + difficulty);
 		}
 

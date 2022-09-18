@@ -102,8 +102,8 @@ class DialogueCharacter extends FlxSprite
 		if (!FileSystem.exists(path)) {
 			path = Paths.getPreloadPath('images/dialogue/' + DEFAULT_CHARACTER + '.json');
 		}
-		rawJson = File.getContent(path);
 
+		rawJson = File.getContent(path);
 		#else
 		var path:String = Paths.getPreloadPath(characterPath);
 		rawJson = Assets.getText(path);
@@ -503,6 +503,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		lastBoxType = boxType;
 
 		daText.text = curDialogue.text;
+		daText.delay = curDialogue.speed;
 		daText.sound = curDialogue.sound;
 		if(daText.sound == null || daText.sound.trim() == '') daText.sound = 'dialogue';
 

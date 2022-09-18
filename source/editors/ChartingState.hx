@@ -1561,7 +1561,7 @@ class ChartingState extends MusicBeatUIState
 			FlxG.sound.music.stop();
 		}
 
-		var file:Dynamic = Paths.getVoices(currentSongName, PlayState.lastDifficulty);
+		var file:Dynamic = Paths.getVoices(currentSongName, CoolUtil.getDifficultySuffix(PlayState.lastDifficulty));
 		vocals = new FlxSound();
 
 		if (Std.isOfType(file, Sound) || OpenFlAssets.exists(file))
@@ -1580,7 +1580,7 @@ class ChartingState extends MusicBeatUIState
 
 	function generateSong():Void
 	{
-		FlxG.sound.playMusic(Paths.getInst(currentSongName, PlayState.lastDifficulty), 0.6);
+		FlxG.sound.playMusic(Paths.getInst(currentSongName, CoolUtil.getDifficultySuffix(PlayState.lastDifficulty)), 0.6);
 
 		if (instVolume != null) FlxG.sound.music.volume = instVolume.value;
 		if (check_mute_inst != null && check_mute_inst.checked) FlxG.sound.music.volume = 0;
