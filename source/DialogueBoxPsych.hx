@@ -217,7 +217,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		spawnCharacters();
 
 		box = new FlxSprite(70, 370);
-		box.frames = Paths.getSparrowAtlas('speech_bubble');
+		box.frames = Paths.getSparrowAtlas('dialogue/speech_bubble');
 		box.scrollFactor.set();
 		box.antialiasing = OptionData.globalAntialiasing;
 		box.animation.addByPrefix('normal', 'speech bubble normal', 24);
