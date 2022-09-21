@@ -2629,7 +2629,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		FlxG.sound.playMusic(Paths.getInst(SONG.songID, lastDifficulty), 1, false);
+		FlxG.sound.playMusic(Paths.getInst(SONG.songID, CoolUtil.getDifficultySuffix(lastDifficulty)), 1, false);
 		FlxG.sound.music.onComplete = finishSong.bind();
 		vocals.play();
 
@@ -2737,13 +2737,13 @@ class PlayState extends MusicBeatState
 		}
 
 		if (songData.needsVoices) {
-			vocals = new FlxSound().loadEmbedded(Paths.getVoices(songData.songID, lastDifficulty));
+			vocals = new FlxSound().loadEmbedded(Paths.getVoices(songData.songID, CoolUtil.getDifficultySuffix(lastDifficulty)));
 		} else {
 			vocals = new FlxSound();
 		}
 
 		FlxG.sound.list.add(vocals);
-		FlxG.sound.list.add(new FlxSound().loadEmbedded(Paths.getInst(songData.songID, lastDifficulty)));
+		FlxG.sound.list.add(new FlxSound().loadEmbedded(Paths.getInst(songData.songID, CoolUtil.getDifficultySuffix(lastDifficulty))));
 
 		var noteData:Array<SwagSection> = songData.notes;
 
