@@ -359,8 +359,13 @@ class NoteOffsetState extends MusicBeatState
 				if (controls.RESET)
 				{
 					holdTime = 0;
-					barPercent = 0;
-				
+
+					if (menu == 'dance') {
+						barPercent = 2;
+					} else {
+						barPercent = 0;
+					}
+
 					updateNoteDelay();
 				}
 			}
