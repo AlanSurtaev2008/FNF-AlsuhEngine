@@ -9,11 +9,10 @@ import flixel.system.FlxSound;
 
 using StringTools;
 
-class VideoState extends TransitionableState
+class VideoSubState extends BaseSubState
 {
 	public var leSource:String = "";
 
-	public var transClass:FlxState = new PlayState();
 	public var txt:FlxText;
 
 	public var vidSound:FlxSound = null;
@@ -26,23 +25,23 @@ class VideoState extends TransitionableState
 	var itsTooLate:Bool = false;
 	var skipTxt:FlxText;
 
-	var goToPlayState:Bool = false;
+	var onComplete:Void->Void;
 
-	public function new(source:String, ?toTrans:Null<FlxState> = null, ?goToPlayState:Bool = false):Void
+	public function new(source:String, ?onComplete:Void->Void):Void
 	{
 		super();
 		
 		this.leSource = source;
-
-		this.transClass = toTrans != null ? toTrans : new PlayState();
-		this.goToPlayState = goToPlayState;
+		this.onComplete = onComplete;
 	}
 	
 	public override function create()
 	{
 		super.create();
 
-		FlxG.sound.music.pause();
+		if (FlxG.sound.music != null) {
+			FlxG.sound.music.pause();
+		}
 
 		var isHTML:Bool = #if web true #else false #end;
 
@@ -90,6 +89,8 @@ class VideoState extends TransitionableState
 		if (!PlayState.seenCutscene) {
 			PlayState.seenCutscene = true;
 		}
+
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	public override function update(elapsed:Float)
@@ -156,15 +157,12 @@ class VideoState extends TransitionableState
 	public function end():Void
 	{
 		txt.text = pauseText;
+		vidSound.destroy();
 
-		FlxG.sound.music.volume = 0;
+		close();
 
-		if (goToPlayState)
-		{
-			Transition.skipNextTransIn = true;
-			Transition.skipNextTransOut = true;
+		if (onComplete != null) {
+			onComplete();
 		}
-		
-		FlxG.switchState(transClass);
 	}
 }

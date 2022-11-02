@@ -71,29 +71,26 @@ class MenuCharacter extends FlxSprite
 			}
 			default:
 			{
-				var characterPath:String = 'menucharacters/' + character + '.json';
+				var characterPath:String = 'images/storymenu/menucharacters/' + character + '.json';
 				var rawJson = null;
 
 				#if MODS_ALLOWED
 				var path:String = Paths.modFolders(characterPath);
 
-				if (!FileSystem.exists(path))
-				{
+				if (!FileSystem.exists(path)) {
 					path = Paths.getPreloadPath(characterPath);
 				}
 
-				if (!FileSystem.exists(path))
-				{
-					path = Paths.getPreloadPath('menucharacters/' + DEFAULT_CHARACTER + '.json');
+				if (!FileSystem.exists(path)) {
+					path = Paths.getPreloadPath('images/storymenu/menucharacters/' + DEFAULT_CHARACTER + '.json');
 				}
-				rawJson = File.getContent(path);
 
+				rawJson = File.getContent(path);
 				#else
 				var path:String = Paths.getPreloadPath(characterPath);
 
-				if (!Assets.exists(path))
-				{
-					path = Paths.getPreloadPath('menucharacters/' + DEFAULT_CHARACTER + '.json');
+				if (!Assets.exists(path)) {
+					path = Paths.getPreloadPath('images/storymenu/menucharacters/' + DEFAULT_CHARACTER + '.json');
 				}
 
 				rawJson = Assets.getText(path);
@@ -106,29 +103,25 @@ class MenuCharacter extends FlxSprite
 
 				if (isDanced)
 				{
-					if (charFile.indicesAlt != null && charFile.indicesAlt.length > 0 && charFile.idle_animAlt != null)
-					{
+					if (charFile.indicesAlt != null && charFile.indicesAlt.length > 0 && charFile.idle_animAlt != null) {
 						animation.addByIndices('danceRight', charFile.idle_animAlt, charFile.indicesAlt, '', charFile.fpsAlt, false);
 					}
 
-					if (charFile.indices != null && charFile.indices.length > 0)
-					{
+					if (charFile.indices != null && charFile.indices.length > 0) {
 						animation.addByIndices('danceLeft', charFile.idle_anim, charFile.indices, '', charFile.fps, false);
 					}
 				}
-				else
-				{
+				else {
 					animation.addByPrefix('idle', charFile.idle_anim, 24, false);
 				}
 
 				var confirmAnim:String = charFile.confirm_anim;
 
-				if (confirmAnim != null && confirmAnim != charFile.idle_anim)
+				if (confirmAnim != null && confirmAnim.length > 0 && confirmAnim != charFile.idle_anim)
 				{
 					animation.addByPrefix('confirm', confirmAnim, charFile.fpsConfirm, false);
 
-					if (animation.getByName('confirm') != null) // check for invalid animation
-					{
+					if (animation.getByName('confirm') != null) { // check for invalid animation
 						hasConfirmAnimation = true;
 					}
 				}

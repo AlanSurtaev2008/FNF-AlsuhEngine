@@ -329,6 +329,23 @@ class PreferencesSubState extends MusicBeatSubState
 		option.luaAllowed = true;
 		addOption(option);
 
+		var option:Option = new Option('Cutscenes in:',
+			true,
+			"What mode should cutscenes be in?",
+			'cutscenesInType',
+			'string',
+			'Story',
+			['Story', 'Story and Freeplay', 'Freeplay', 'Freeplay and Replay', 'Replay', 'Replay and Story', 'Everywhere', 'Nowhere']);
+		addOption(option);
+
+		var option:Option = new Option('Skip Cutscene Replay',
+			true,
+			"Check the box if you want to see only one cutscene.",
+			'skipCutscenes',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Naughtyness',
 			true,
 			"Uncheck this if your mom doesn't allow swearing.",
@@ -336,15 +353,6 @@ class PreferencesSubState extends MusicBeatSubState
 			'bool',
 			true);
 		option.luaAllowed = true;
-		addOption(option);
-
-		var option:Option = new Option('Events',
-			true,
-			'If unchecked, disables events on gameplay.',
-			'events',
-			'bool',
-			true);
-		option.isPause = isPause;
 		addOption(option);
 
 		var option:Option = new Option('Combo Stacking',
@@ -654,8 +662,7 @@ class PreferencesSubState extends MusicBeatSubState
 				if (curSelected < 0) curSelected = i;
 			}
 
-			if (optionsArray[i].showBoyfriend && boyfriend == null && !optionsArray[i].isPause)
-			{
+			if (optionsArray[i].showBoyfriend && boyfriend == null && !optionsArray[i].isPause) {
 				reloadBoyfriend();
 			}
 		}

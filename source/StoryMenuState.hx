@@ -278,6 +278,11 @@ class StoryMenuState extends MusicBeatState
 
 			if (curWeek.difficulties[1].length > 1 && !WeekData.weekIsLocked(curWeek.weekID))
 			{
+				if (controls.UI_LEFT)
+					leftArrow.animation.play('press');
+				else
+					leftArrow.animation.play('idle');
+
 				if (controls.UI_LEFT_P)
 				{
 					changeDifficulty(-1);
@@ -292,6 +297,11 @@ class StoryMenuState extends MusicBeatState
 					holdTimeHos = 0;
 				}
 	
+				if (controls.UI_RIGHT)
+					rightArrow.animation.play('press')
+				else
+					rightArrow.animation.play('idle');
+
 				if (controls.UI_LEFT || controls.UI_RIGHT)
 				{
 					var checkLastHold:Int = Math.floor((holdTimeHos - 0.5) * 10);
@@ -319,7 +329,9 @@ class StoryMenuState extends MusicBeatState
 			}
 			else if (controls.ACCEPT)
 			{
-				if (!WeekData.weekIsLocked(curWeek.weekID))
+				var diffic:String = CoolUtil.getDifficultySuffix(curDifficultyString, curWeek.difficulties);
+
+				if (!WeekData.weekIsLocked(curWeek.weekID) && Paths.fileExists('data/' + curWeek.songs[0].songID + '/' + curWeek.songs[0].songID + diffic + '.json', TEXT))
 				{
 					selectedWeek = true;
 
@@ -333,8 +345,6 @@ class StoryMenuState extends MusicBeatState
 					}
 
 					grpWeeks.members[curSelected].isFlashing = true;
-
-					var diffic:String = CoolUtil.getDifficultySuffix(curDifficultyString, curWeek.difficulties);
 
 					PlayState.SONG = Song.loadFromJson(curWeek.songs[0].songID + diffic, curWeek.songs[0].songID);
 					PlayState.gameMode = 'story';
@@ -374,6 +384,10 @@ class StoryMenuState extends MusicBeatState
 				}
 				else
 				{
+					if (Paths.fileExists('data/' + curWeek.songs[0].songID + '/' + curWeek.songs[0].songID + diffic + '.json', TEXT) == false) {
+						Debug.logInfo('File "' + curWeek.songs[0].songID + '/' + curWeek.songs[0].songID + diffic + '.json' + '" does not exist!');
+					}
+
 					if (FlxG.random.bool(1)) {
 						CoolUtil.browserLoad('https://youtu.be/dQw4w9WgXcQ'); // lololololololol
 					} else {

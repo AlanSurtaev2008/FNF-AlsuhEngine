@@ -23,10 +23,10 @@ class Rating extends FlxSprite
 		x = coolText.x - 125;
 		y -= 60;
 
-		acceleration.y = 550;
+		acceleration.y = 550 * PlayStateChangeables.playbackRate * PlayStateChangeables.playbackRate;
 
-		velocity.x -= FlxG.random.int(0, 10);
-		velocity.y -= FlxG.random.int(140, 175);
+		velocity.x -= FlxG.random.int(0, 10) * PlayStateChangeables.playbackRate;
+		velocity.y -= FlxG.random.int(140, 175) * PlayStateChangeables.playbackRate;
 
 		setGraphicSize(Std.int(width * (suffix.contains('pixel') ? PlayState.daPixelZoom * 0.7 : 0.7)));
 

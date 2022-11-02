@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.animation.FlxAnimationController;
 
 using StringTools;
 
@@ -8,6 +9,29 @@ class PlayStateChangeables
 {
 	public static var scrollType:String = 'multiplicative';
 	public static var scrollSpeed:Float = 1.0;
+	public static var playbackRate(default, set):Float = 1.0;
+
+	static function set_playbackRate(value:Float):Float
+	{
+		playbackRate = value;
+
+		if (PlayState.instance != null)
+		{
+			if (PlayState.instance.generatedMusic)
+			{
+				if (PlayState.instance.vocals != null) PlayState.instance.vocals.pitch = value;
+				FlxG.sound.music.pitch = value;
+			}
+
+			FlxAnimationController.globalSpeed = value;
+
+			Conductor.safeZoneOffset = (OptionData.safeFrames / 60) * 1000 * value;
+			PlayState.instance.setOnLuas('playbackRate', playbackRate);
+		}
+
+		return value;
+	}
+
 	public static var healthGain:Float = 1.0;
 	public static var healthLoss:Float = 1.0;
 	public static var instaKill:Bool = false;
@@ -18,6 +42,7 @@ class PlayStateChangeables
 	{
 		FlxG.save.data.scrollType = scrollType;
 		FlxG.save.data.scrollSpeed = scrollSpeed;
+		FlxG.save.data.playbackRate = playbackRate;
 		FlxG.save.data.healthGain = healthGain;
 		FlxG.save.data.healthLoss = healthLoss;
 		FlxG.save.data.instaKill = instaKill;
@@ -33,6 +58,9 @@ class PlayStateChangeables
 		}
 		if (FlxG.save.data.scrollSpeed != null) {
 			scrollSpeed = FlxG.save.data.scrollSpeed;
+		}
+		if (FlxG.save.data.playbackRate != null) {
+			playbackRate = FlxG.save.data.playbackRate;
 		}
 		if (FlxG.save.data.healthGain != null) {
 			healthGain = FlxG.save.data.healthGain;

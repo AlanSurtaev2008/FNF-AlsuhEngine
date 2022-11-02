@@ -360,9 +360,9 @@ class TitleState extends MusicBeatState
 
 					new FlxTimer().start(1, function(tmr:FlxTimer)
 					{
-						if (OptionData.checkForUpdates && OutdatedState.newVersion != MainMenuState.engineVersion && !OutdatedState.leftState)
+						if (OptionData.checkForUpdates && OutdatedState.newVersion.trim() != MainMenuState.engineVersion.trim() && !OutdatedState.leftState)
 						{
-							trace('There is a new version ' + OutdatedState.newVersion + '!');
+							trace('There is a new version ' + OutdatedState.newVersion.trim() + '!');
 							FlxG.switchState(new OutdatedState());
 						}
 						else
@@ -509,6 +509,8 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
+			Debug.logInfo("Skipping intro...");
+
 			if (ngSpr != null) {
 				remove(ngSpr);
 			}

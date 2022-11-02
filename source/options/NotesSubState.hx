@@ -134,7 +134,7 @@ class NotesSubState extends MusicBeatSubState
 			}
 
 			var note:FlxSprite = new FlxSprite(posX, yPos);
-			note.frames = Paths.getSparrowAtlas('notes/NOTE_assets', 'shared');
+			note.frames = Paths.getSparrowAtlas('notes/NOTE_assets');
 
 			var animations:Array<String> = ['purple0', 'blue0', 'green0', 'red0'];
 			note.animation.addByPrefix('idle', animations[i]);
@@ -150,7 +150,7 @@ class NotesSubState extends MusicBeatSubState
 			shaderArray.push(newShader);
 		}
 
-		hsbText = new Alphabet(posX + 560, 0, "Hue    Saturation  Brightness", false);
+		hsbText = new Alphabet(posX + 560, 0, "Hue      Saturation  Brightness", false);
 		hsbText.scaleX = 0.6;
 		hsbText.scaleY = 0.6;
 		add(hsbText);

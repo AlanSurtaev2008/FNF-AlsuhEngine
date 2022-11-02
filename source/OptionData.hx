@@ -13,14 +13,13 @@ class OptionData
 	public static var fullScreen:Bool = false;
 	public static var lowQuality:Bool = false;
 	public static var globalAntialiasing:Bool = true;
-	public static var events:Bool = true;
+	public static var shaders:Bool = true;
 	public static var framerate:Int = 60;
 
 	public static var ghostTapping:Bool = true;
 	public static var controllerMode:Bool = false;
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
-	public static var shaders:Bool = true;
 	public static var cpuStrumsType:String = 'Glow';
 	public static var hitsoundType:String = 'Kade';
 	public static var hitsoundVolume:Float = 0;
@@ -36,6 +35,9 @@ class OptionData
 
 	public static var camZooms:Bool = true;
 	public static var camShakes:Bool = true;
+
+	public static var cutscenesInType:String = 'Story';
+	public static var skipCutscenes:Bool = true;
 
 	public static var iconZooms:Bool = true;
 	public static var sustainsType:String = 'New';
@@ -72,7 +74,6 @@ class OptionData
 		FlxG.save.data.lowQuality = lowQuality;
 		FlxG.save.data.globalAntialiasing = globalAntialiasing;
 		FlxG.save.data.shaders = shaders;
-		FlxG.save.data.events = events;
 		FlxG.save.data.framerate = framerate;
 
 		FlxG.save.data.ghostTapping = ghostTapping;
@@ -90,6 +91,10 @@ class OptionData
 		FlxG.save.data.noteOffset = noteOffset;
 		FlxG.save.data.camZooms = camZooms;
 		FlxG.save.data.camShakes = camShakes;
+
+		FlxG.save.data.cutscenesInType = cutscenesInType;
+		FlxG.save.data.skipCutscenes = skipCutscenes;
+
 		FlxG.save.data.iconZooms = iconZooms;
 		FlxG.save.data.sustainsType = sustainsType;
 		FlxG.save.data.noteSplashes = noteSplashes;
@@ -142,9 +147,6 @@ class OptionData
 		}
 		if (FlxG.save.data.shaders != null) {
 			shaders = FlxG.save.data.shaders;
-		}
-		if (FlxG.save.data.events != null) {
-			events = FlxG.save.data.events;
 		}
 		if (FlxG.save.data.framerate != null) {
 			framerate = FlxG.save.data.framerate;
@@ -218,6 +220,13 @@ class OptionData
 		}
 		if (FlxG.save.data.camShakes != null) {
 			camShakes = FlxG.save.data.camShakes;
+		}
+
+		if (FlxG.save.data.cutscenesInType != null) {
+			cutscenesInType = FlxG.save.data.cutscenesInType;
+		}
+		if (FlxG.save.data.skipCutscenes != null) {
+			skipCutscenes = FlxG.save.data.skipCutscenes;
 		}
 
 		if (FlxG.save.data.iconZooms != null) {

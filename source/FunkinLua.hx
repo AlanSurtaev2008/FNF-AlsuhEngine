@@ -54,12 +54,13 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
 import openfl.display.BlendMode;
+import openfl.display.BitmapData;
 import openfl.filters.BitmapFilter;
 import animateatlas.AtlasFrameMaker;
 import flixel.input.keyboard.FlxKey;
 import flixel.addons.effects.FlxTrail;
 import flixel.system.FlxAssets.FlxShader;
-#if !flash
+#if (!flash && sys)
 import flixel.addons.display.FlxRuntimeShader;
 #end
 
@@ -182,8 +183,15 @@ class FunkinLua
 		set('altAnim', false);
 		set('gfSection', false);
 
+		set('curStage', PlayState.SONG.stage);
+
+		set('healthGainMult', PlayStateChangeables.healthGain);
+		set('healthLossMult', PlayStateChangeables.healthLoss);
+		set('playbackRate', PlayStateChangeables.playbackRate);
+		set('instakillOnMiss', PlayStateChangeables.instaKill);
+
 		set('botPlay', PlayStateChangeables.botPlay);
-		set('practice', PlayStateChangeables.practiceMode);
+		set('practiceMode', PlayStateChangeables.practiceMode);
 
 		for (i in 0...4)
 		{
@@ -500,6 +508,24 @@ class FunkinLua
 			shader.setFloatArray(prop, values);
 			#else
 			luaTrace("setShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+		});
+
+		Lua_helper.add_callback(lua, "setShaderSampler2D", function(obj:String, prop:String, bitmapdataPath:String)
+		{
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+
+			if (shader == null) return;
+
+			var value = Paths.getImage(bitmapdataPath);
+
+			if (value != null && value.bitmap != null) {
+				shader.setSampler2D(prop, value.bitmap);
+			}
+
+			#else
+			luaTrace("setShaderSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
 		});
 
@@ -1388,16 +1414,15 @@ class FunkinLua
 		Lua_helper.add_callback(lua, "precacheMusic", function(name:String) {
 			CoolUtil.precacheMusic(name);
 		});
-		Lua_helper.add_callback(lua, "triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic) {
-			if (OptionData.events) {
-				var value1:String = arg1;
-				var value2:String = arg2;
-				PlayState.instance.triggerEventNote(name, value1, value2);
 
-				return true;
-			}
+		Lua_helper.add_callback(lua, "triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic):Bool
+		{
+			var value1:String = arg1;
+			var value2:String = arg2;
 
-			return false;
+			PlayState.instance.triggerEventNote(name, value1, value2);
+
+			return true;
 		});
 
 		Lua_helper.add_callback(lua, "startCountdown", function() {
@@ -2163,23 +2188,63 @@ class FunkinLua
 			}
 		});
 
-		Lua_helper.add_callback(lua, "addLuaSprite", function(tag:String, behindWhom:Dynamic = 'gf') {
-			if (PlayState.instance.modchartSprites.exists(tag)) {
+		Lua_helper.add_callback(lua, "addLuaSprite", function(tag:String, behindWhom:Dynamic = 'gf')
+		{
+			if (PlayState.instance.modchartSprites.exists(tag))
+			{
 				var shit:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
-				if (!shit.wasAdded) {
-					switch (behindWhom) {
+
+				if (!shit.wasAdded)
+				{
+					switch (behindWhom)
+					{
 						case 'before' | 'in front of' | 'afore' | 'ere' | 'front' | 'head' | true | 'true':
 							getInstance().add(shit);
-						case 'dad' | 'opponent' | 1:
-							PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.dadGroup), shit);
-						case 'bf' | 'boyfriend' | 0:
-							PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup), shit);
+						case 'dad' | 'opponent' | 1 | '1':
+							PlayState.instance.addBehindDad(shit);
+						case 'bf' | 'boyfriend' | 0 | '0':
+							PlayState.instance.addBehindBF(shit);
 						default:
 						{
-							if (PlayState.instance.isDead) {
-								GameOverSubState.instance.insert(PlayState.instance.members.indexOf(GameOverSubState.instance.boyfriend), shit);
-							} else {
-								PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.gfGroup), shit);
+							var blyad:Bool = behindWhom == 'behind' ||
+								behindWhom == 'posteriorly' ||
+								behindWhom == 'aback' ||
+								behindWhom == 'after' ||
+								behindWhom == 'abaft' ||
+								behindWhom == false ||
+								behindWhom == 'false' ||
+								behindWhom == 'back from' ||
+								behindWhom == 'no before' ||
+								behindWhom == 'no in front of' ||
+								behindWhom == 'no afore' ||
+								behindWhom == 'no ere' ||
+								behindWhom == 'no front' ||
+								behindWhom == 'no head' ||
+								behindWhom == 'gf' ||
+								behindWhom == 'girlfriend' ||
+								behindWhom == '2' ||
+								behindWhom == 2;
+
+							if (blyad == true)
+							{
+								if (PlayState.instance.isDead) {
+									GameOverSubState.instance.insert(PlayState.instance.members.indexOf(GameOverSubState.instance.boyfriend), shit);
+								} else {
+									PlayState.instance.addBehindGF(shit);
+								}
+							}
+							else
+							{
+								var killMe:Array<String> = behindWhom.split('.');
+								var leObj:FlxBasic = getObjectDirectly(killMe[0]);
+
+								if (killMe.length > 1) {
+									leObj = getVarInArray(getPropertyLoopThingWhatever(killMe), killMe[killMe.length-1]);
+								}
+					
+								if (leObj != null) {
+									PlayState.instance.insert(getInstance().members.indexOf(leObj), shit);
+								}
 							}
 						}
 					}
@@ -2467,7 +2532,9 @@ class FunkinLua
 			}
 			return false;
 		});
-		Lua_helper.add_callback(lua, "startVideo", function(videoFile:String, type:String = 'mp4') {
+
+		Lua_helper.add_callback(lua, "startVideo", function(videoFile:String, type:String = 'mp4'):Bool
+		{
 			switch (type)
 			{
 				case 'webm':
@@ -2475,42 +2542,17 @@ class FunkinLua
 					#if WEBM_ALLOWED
 					if (FileSystem.exists(Paths.getWebm(videoFile)))
 					{
-						PlayState.instance.persistentDraw = false;
-
-						Transition.skipNextTransIn = true;
-						Transition.skipNextTransOut = true;
-
-						if (PlayState.instance.endingSong)
-						{
-							switch (PlayState.gameMode)
-							{
-								case 'story':
-									FlxG.switchState(new webmlmfao.VideoState(videoFile, new StoryMenuState()));
-								case 'freeplay':
-									FlxG.switchState(new webmlmfao.VideoState(videoFile, new FreeplayMenuState()));
-								default:
-									FlxG.switchState(new webmlmfao.VideoState(videoFile, new MainMenuState()));
-							}
-						}
-						else
-						{
-							FlxG.switchState(new VideoState(videoFile, new PlayState(), true));
-						}
+						PlayState.instance.startVideo(videoFile, 'webm');
 
 						return true;
 					}
-					else
-					{
+					else {
 						luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
 					}
 
 					return false;
 					#else
-					if (PlayState.instance.endingSong) {
-						PlayState.instance.endSong();
-					} else {
-						PlayState.instance.startCountdown();
-					}
+					PlayState.instance.startAndEnd();
 					#end
 				}
 				default:
@@ -2518,21 +2560,16 @@ class FunkinLua
 					#if VIDEOS_ALLOWED
 					if (FileSystem.exists(Paths.getVideo(videoFile)))
 					{
-						PlayState.instance.startVideo(videoFile);
+						PlayState.instance.startVideo(videoFile, 'mp4');
 						return true;
 					}
-					else
-					{
+					else {
 						luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
 					}
 
 					return false;
 					#else
-					if (PlayState.instance.endingSong) {
-						PlayState.instance.endSong();
-					} else {
-						PlayState.instance.startCountdown();
-					}
+					PlayState.instance.startAndEnd();
 					#end
 				}
 			}
@@ -3244,7 +3281,7 @@ class FunkinLua
 		return PlayState.instance.modchartTexts.exists(name) ? PlayState.instance.modchartTexts.get(name) : Reflect.getProperty(PlayState.instance, name);
 	}
 
-	#if (!flash && LUA_ALLOWED && sys)
+	#if (!flash && sys)
 	public function getShader(obj:String):FlxRuntimeShader
 	{
 		var killMe:Array<String> = obj.split('.');
@@ -3265,6 +3302,7 @@ class FunkinLua
 	{
 		if(!OptionData.shaders) return false;
 
+		#if (!flash && sys)
 		if(PlayState.instance.runtimeShaders.exists(name))
 		{
 			luaTrace('Shader $name was already initialized!');
@@ -3305,6 +3343,10 @@ class FunkinLua
 			}
 		}
 		luaTrace('Missing shader $name .frag AND .vert files!', false, false, FlxColor.RED);
+		#else
+		luaTrace('This platform doesn\'t support Runtime Shaders!', false, false, FlxColor.RED);
+		#end
+
 		return false;
 	}
 	#end
@@ -3541,38 +3583,31 @@ class FunkinLua
 		#end
 	}
 
-	function getErrorMessage():String
+	function getErrorMessage(status:Int):String
 	{
 		#if LUA_ALLOWED
 		var v:String = Lua.tostring(lua, -1);
-		if (!isErrorAllowed(v)) v = null;
+		Lua.pop(lua, 1);
+
+		if (v != null) v = v.trim();
+
+		if (v == null || v == "")
+		{
+			switch (status)
+			{
+				case Lua.LUA_ERRRUN: return "Runtime Error";
+				case Lua.LUA_ERRMEM: return "Memory Allocation Error";
+				case Lua.LUA_ERRERR: return "Critical Error";
+			}
+
+			return "Unknown Error";
+		}
 
 		return v;
+		#else
+		return null;
 		#end
-
-		return '';
 	}
-
-	#if LUA_ALLOWED
-	function getResult(l:State, result:Int):Any // some fuckery fucks with linc_luajit
-	{
-		var ret:Any = null;
-
-		switch (Lua.type(l, result))
-		{
-			case Lua.LUA_TNIL:
-				ret = null;
-			case Lua.LUA_TBOOLEAN:
-				ret = Lua.toboolean(l, -1);
-			case Lua.LUA_TNUMBER:
-				ret = Lua.tonumber(l, -1);
-			case Lua.LUA_TSTRING:
-				ret = Lua.tostring(l, -1);
-		}
-		
-		return ret;
-	}
-	#end
 
 	var lastCalledFunction:String = '';
 
@@ -3591,36 +3626,36 @@ class FunkinLua
 
 			var type:Int = Lua.type(lua, -1);
 
-			if (type != Lua.LUA_TFUNCTION) {
+			if (type != Lua.LUA_TFUNCTION)
+			{
+				if (type > Lua.LUA_TNIL) {
+					luaTrace("ERROR (" + func + "): attempt to call a " + typeToString(type) + " value", false, false, FlxColor.RED);
+				}
+
+				Lua.pop(lua, 1);
 				return Function_Continue;
 			}
-			
-			for (arg in args) {
-				Convert.toLua(lua, arg);
-			}
 
-			var result:Null<Int> = Lua.pcall(lua, args.length, 1, 0);
-			var error:Dynamic = getErrorMessage();
+			for (arg in args) Convert.toLua(lua, arg);
 
-			if (!resultIsAllowed(lua, result))
+			var status:Int = Lua.pcall(lua, args.length, 1, 0);
+
+			if (status != Lua.LUA_OK)
 			{
-				Lua.pop(lua, 1);
-				if (error != null) luaTrace("ERROR (" + func + "): " + error, false, false, FlxColor.RED);
-			}
-			else
-			{
-				var conv:Dynamic = cast getResult(lua, result);
-				Lua.pop(lua, 1);
+				var error:String = getErrorMessage(status);
+				luaTrace("ERROR (" + func + "): " + error, false, false, FlxColor.RED);
 
-				if (conv == null) conv = Function_Continue;
-
-				return conv;
+				return Function_Continue;
 			}
 
-			return Function_Continue;
+			var result:Dynamic = cast Convert.fromLua(lua, -1);
+			if (result == null) result = Function_Continue;
+
+			Lua.pop(lua, 1);
+
+			return result;
 		}
-		catch (e:Dynamic)
-		{
+		catch (e:Dynamic) {
 			trace(e);
 		}
 		#end
@@ -3682,25 +3717,23 @@ class FunkinLua
 		return coverMeInPiss;
 	}
 
-	#if LUA_ALLOWED
-	function resultIsAllowed(leLua:State, leResult:Null<Int>):Bool // Makes it ignore warnings
+	function typeToString(type:Int):String
 	{
-		var type:Int = Lua.type(leLua, leResult);
-
-		return type >= Lua.LUA_TNIL && type < Lua.LUA_TTABLE && type != Lua.LUA_TLIGHTUSERDATA;
-	}
-
-	function isErrorAllowed(error:String):Bool
-	{
-		switch (error)
+		#if LUA_ALLOWED
+		switch (type)
 		{
-			case 'attempt to call a nil value' | 'C++ exception':
-				return false;
+			case Lua.LUA_TBOOLEAN: return "boolean";
+			case Lua.LUA_TNUMBER: return "number";
+			case Lua.LUA_TSTRING: return "string";
+			case Lua.LUA_TTABLE: return "table";
+			case Lua.LUA_TFUNCTION: return "function";
 		}
 
-		return true;
+		if (type <= Lua.LUA_TNIL) return "nil";
+		#end
+
+		return "unknown";
 	}
-	#end
 
 	public function set(variable:String, data:Dynamic):Void
 	{
@@ -3875,7 +3908,7 @@ class HScript
 		interp.variables.set('Character', Character);
 		interp.variables.set('Alphabet', Alphabet);
 		interp.variables.set('CustomSubState', CustomSubState);
-		#if !flash
+		#if (!flash && sys)
 		interp.variables.set('FlxRuntimeShader', FlxRuntimeShader);
 		interp.variables.set('ShaderFilter', openfl.filters.ShaderFilter);
 		#end

@@ -201,22 +201,6 @@ class CoolUtil
 
 	public static function browserLoad(site:String):Void
 	{
-		if (site.contains('dQw4w9WgXcQ'))
-		{
-			trace('lololololololol');
-			trace("you've been rick rolled lol");
-			trace("NEVER");
-			trace("GONNA");
-			trace("GIVE");
-			trace("YOU");
-			trace("UP");
-			trace("NEVER");
-			trace("GONNA");
-			trace("LET");
-			trace("YOU");
-			trace("DOWN");
-		}
-
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
 		#else

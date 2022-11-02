@@ -37,28 +37,45 @@ class GameplayChangersSubState extends BaseSubState
 
 	function getOptions():Void
 	{
-		var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrollType', 'string', 'multiplicative', ["multiplicative", "constant"]);
-		goption.onChange = onChangeScrollSpeed;
-		optionsArray.push(goption);
+		if (!isPause)
+		{
+			var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrollType', 'string', 'multiplicative', ["multiplicative", "constant"]);
+			goption.onChange = onChangeScrollSpeed;
+			optionsArray.push(goption);
+	
+			var option:GameplayOption = new GameplayOption('Scroll Speed', 'scrollSpeed', 'float', 1);
+			option.scrollSpeed = 2.0;
+			option.minValue = 0.35;
+			option.changeValue = 0.05;
+			option.decimals = 2;
+	
+			if (goption.getValue() != "constant")
+			{
+				option.displayFormat = '%vX';
+				option.maxValue = 3;
+			}
+			else
+			{
+				option.displayFormat = "%v";
+				option.maxValue = 6;
+			}
+	
+			option.onChange = onChangeScrollSpeed;
+			optionsArray.push(option);
+		}
 
-		var option:GameplayOption = new GameplayOption('Scroll Speed', 'scrollSpeed', 'float', 1);
-		option.scrollSpeed = 1.5;
+		#if !html5
+		var option:GameplayOption = new GameplayOption('Playback Rate', 'playbackRate', 'float', 1);
+		option.scrollSpeed = 1;
 		option.minValue = 0.5;
-		option.changeValue = 0.1;
-
-		if (goption.getValue() != "constant")
-		{
-			option.displayFormat = '%vX';
-			option.maxValue = 3;
-		}
-		else
-		{
-			option.displayFormat = "%v";
-			option.maxValue = 6;
-		}
-
-		option.onChange = onChangeScrollSpeed;
+		option.maxValue = 3.0;
+		option.changeValue = 0.05;
+		option.displayFormat = '%vX';
+		option.decimals = 2;
+		option.luaAllowed = true;
+		option.luaString = 'playbackRate';
 		optionsArray.push(option);
+		#end
 
 		var option:GameplayOption = new GameplayOption('Health Gain Multiplier', 'healthGain', 'float', 1);
 		option.scrollSpeed = 2.5;
@@ -66,6 +83,8 @@ class GameplayChangersSubState extends BaseSubState
 		option.maxValue = 5;
 		option.changeValue = 0.1;
 		option.displayFormat = '%vX';
+		option.luaAllowed = true;
+		option.luaString = 'healthGainMult';
 		optionsArray.push(option);
 
 		var option:GameplayOption = new GameplayOption('Health Loss Multiplier', 'healthLoss', 'float', 1);
@@ -74,17 +93,28 @@ class GameplayChangersSubState extends BaseSubState
 		option.maxValue = 5;
 		option.changeValue = 0.1;
 		option.displayFormat = '%vX';
+		option.luaAllowed = true;
+		option.luaString = 'healthLossMult';
 		optionsArray.push(option);
 
-		var option:GameplayOption = new GameplayOption('Instakill on Miss', 'instaKill', 'bool', false);
-		optionsArray.push(option);
+		if (!isPause)
+		{
+			var option:GameplayOption = new GameplayOption('Instakill on Miss', 'instaKill', 'bool', false);
+			option.luaAllowed = true;
+			option.luaString = 'instakillOnMiss';
+			optionsArray.push(option);
+		}
 
 		var option:GameplayOption = new GameplayOption('Botplay', 'botPlay', 'bool', false);
 		option.onChange = onChangeBotplay;
+		option.luaAllowed = true;
+		option.luaString = 'botPlay';
 		optionsArray.push(option);
 
 		var option:GameplayOption = new GameplayOption('Practice Mode', 'practiceMode', 'bool', false);
 		option.onChange = onChangePractice;
+		option.luaAllowed = true;
+		option.luaString = 'practiceMode';
 		optionsArray.push(option);
 
 		defaultValue.type = 'amogus';
@@ -173,6 +203,10 @@ class GameplayChangersSubState extends BaseSubState
 		for (i in 0...optionsArray.length)
 		{
 			var leOption:GameplayOption = optionsArray[i];
+
+			if (isPause) {
+				leOption.onPause = true;
+			}
 
 			var optionText:Alphabet = new Alphabet(120, 70, leOption.name, true);
 			optionText.isMenuItem = true;
@@ -670,6 +704,10 @@ class GameplayOption
 	public var displayFormat:String = '%v'; //How String/Float/Percent/Int values are shown, %v = Current value, %d = Default value
 	public var name:String = 'Unknown';
 
+	public var onPause:Bool = false;
+	public var luaAllowed:Bool = false;
+	public var luaString:String = '';
+
 	public function new(name:String, variable:String = null, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String> = null):Void
 	{
 		this.name = name;
@@ -741,6 +779,12 @@ class GameplayOption
 	public function setValue(value:Dynamic):Void
 	{
 		Reflect.setProperty(PlayStateChangeables, variable, value);
+
+		#if LUA_ALLOWED
+		if (onPause && luaAllowed && luaString.length > 0) {
+			PlayState.instance.setOnLuas(luaString, value);
+		}
+		#end
 	}
 
 	public function setChild(child:Alphabet):Void

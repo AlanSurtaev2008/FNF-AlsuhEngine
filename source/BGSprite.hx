@@ -29,8 +29,7 @@ class BGSprite extends FlxSprite
 		}
 		else
 		{
-			if (image != null)
-			{
+			if (image != null) {
 				loadGraphic(Paths.getImage(image));
 			}
 

@@ -48,7 +48,7 @@ class MainMenuState extends TransitionableState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.5.2h';
+	public static var engineVersion:String = '1.6';
 	public static var gameVersion:String = '0.2.8';
 
 	var debugKeys:Array<FlxKey>;
@@ -145,7 +145,7 @@ class MainMenuState extends TransitionableState
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var text:String = 'v ' + gameVersion + (OptionData.watermarks ? ' - FNF | v ' + engineVersion + ' - Alsuh Engine' : '');
+		var text:String = 'v ' + gameVersion + (OptionData.watermarks ? ' - FNF | v ' + engineVersion.trim() + ' - Alsuh Engine' : '');
 
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 24, 0, text, 12);
 		versionShit.setFormat(Paths.getFont('vcr.ttf'), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -178,7 +178,7 @@ class MainMenuState extends TransitionableState
 	function giveAchievement():Void
 	{
 		add(new AchievementObject('friday_night_play', camAchievement));
-		FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+		FlxG.sound.play(Paths.getSound('confirmMenu'), 0.7);
 	}
 	#end
 

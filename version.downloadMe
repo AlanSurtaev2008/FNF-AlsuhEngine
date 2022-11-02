@@ -1,8 +1,12 @@
-1.5.2h;
-- Main Menu now is Psych
-- Added Achievements
-- Added Loading Screen Option
-- Changed Loading
-- Stage editor added for the long term
-- Fixed Crashes on Title
-- Fixed Preferences Menu
+1.6;
+- Added Playback Rate/Sound Pitch as a Gameplay Modifier/Chart Editor setting
+- Added Logs
+- Added the ability to play and repeat cut-scenes where you want
+- Fixed Name of Characters, and instead of "null" it will be "Unknown"
+- Fixed Buttons Press on Story Menu
+- Fixed .WEBM Cutscenes
+- Fixed Song Inst and Voices on other difficulties Support
+- Fixed Dialogue Box
+- Fixed 32 bits export
+- Fixed Loading Screen
+- Changed Data Paths of Dialogue Portraits and Menu Characters

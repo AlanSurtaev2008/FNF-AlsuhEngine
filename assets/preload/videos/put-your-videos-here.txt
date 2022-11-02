@@ -1,0 +1,4 @@
+WARNING: videos in HTML5 does not work.
+
+They have to be in .mp4 or .webm and 1280x720 resolution!!!
+For soundables .webm videos .ogg file required.

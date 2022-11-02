@@ -352,24 +352,32 @@ class FreeplayMenuState extends TransitionableState
 
 			var diffic:String = CoolUtil.getDifficultySuffix(curDifficultyString, false, curSong.difficulties);
 
-			PlayState.SONG = Song.loadFromJson(curSong.songID + diffic, curSong.songID);
-			PlayState.gameMode = 'freeplay';
-			PlayState.isStoryMode = false;
-			PlayState.difficulties = curSong.difficulties;
-			PlayState.storyDifficulty = curDifficultyString;
-			PlayState.lastDifficulty = curDifficultyString;
-			PlayState.storyWeek = curSong.weekID;
-			PlayState.storyWeekName = curSong.weekName;
-			PlayState.seenCutscene = false;
-
-			if (!OptionData.loadingScreen)
+			if (Paths.fileExists('data/' + curSong.songID + '/' + curSong.songID + diffic + '.json', TEXT))
 			{
-				FlxG.sound.music.volume = 0;
+				PlayState.SONG = Song.loadFromJson(curSong.songID + diffic, curSong.songID);
+				PlayState.gameMode = 'freeplay';
+				PlayState.isStoryMode = false;
+				PlayState.difficulties = curSong.difficulties;
+				PlayState.storyDifficulty = curDifficultyString;
+				PlayState.lastDifficulty = curDifficultyString;
+				PlayState.storyWeek = curSong.weekID;
+				PlayState.storyWeekName = curSong.weekName;
+				PlayState.seenCutscene = false;
 
-				destroyFreeplayVocals();
+				Debug.logInfo('Loading song ${PlayState.SONG.songName} from week ${PlayState.storyWeekName} into Free Play...');
+
+				if (!OptionData.loadingScreen)
+				{
+					FlxG.sound.music.volume = 0;
+
+					destroyFreeplayVocals();
+				}
+
+				LoadingState.loadAndSwitchState(new PlayState(), true);
 			}
-
-			LoadingState.loadAndSwitchState(new PlayState(), true);
+			else {
+				Debug.logInfo('File "' + curSong.songID + '/' + curSong.songID + diffic + '.json' + '" does not exist!');
+			}
 		}
 		else if (controls.RESET)
 		{

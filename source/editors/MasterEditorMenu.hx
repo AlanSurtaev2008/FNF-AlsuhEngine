@@ -171,19 +171,11 @@ class MasterEditorMenu extends TransitionableState
 		if (controls.ACCEPT)
 		{
 			goToState(editorsArray[curSelected]);
-			
-			if (!OptionData.loadingScreen) {
-				FreeplayMenuState.destroyFreeplayVocals();
-			}
 		}
 	}
 
 	function goToState(label:String):Void
 	{
-		if (!OptionData.loadingScreen) {
-			FlxG.sound.music.volume = 0;
-		}
-
 		switch (label)
 		{
 			case 'Week Editor':
@@ -203,18 +195,39 @@ class MasterEditorMenu extends TransitionableState
 				FlxG.switchState(new MenuCharacterEditorState());
 			}
 			case 'Character Editor':
+			{
 				LoadingState.loadAndSwitchState(new CharacterEditorState(Character.DEFAULT_CHARACTER, false), true);
+				return;
+			}
 			case 'Dialogue Editor':
+			{
 				LoadingState.loadAndSwitchState(new DialogueEditorState(), true);
+				return;
+			}
 			case 'Dialogue Portrait Editor':
+			{
 				LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), true);
+				return;
+			}
 			case 'Stage Editor': // Alan is here, we need your pull request with stage editor for StageSpriteData.hx.
+			{
 				LoadingState.loadAndSwitchState(new StageEditorState(), true);
+				return;
+			}
 			case 'Chart Editor':
 			{
 				PlayState.SONG = Song.loadFromJson('test', 'test');
 				LoadingState.loadAndSwitchState(new ChartingState(), true);
+
+				return;
 			}
+		}
+
+		if (!OptionData.loadingScreen)
+		{
+			FlxG.sound.music.volume = 0;
+
+			FreeplayMenuState.destroyFreeplayVocals();
 		}
 	}
 

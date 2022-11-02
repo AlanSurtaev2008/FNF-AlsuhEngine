@@ -28,10 +28,10 @@ class Number extends FlxSprite
 		setGraphicSize(Std.int(width * (suffix.contains('pixel') ? PlayState.daPixelZoom : 0.5)));
 		updateHitbox();
 
-		acceleration.y = FlxG.random.int(200, 300);
+		acceleration.y = FlxG.random.int(200, 300) * PlayStateChangeables.playbackRate * PlayStateChangeables.playbackRate;
 
-		velocity.y -= FlxG.random.int(140, 160);
-		velocity.x = FlxG.random.float(-5, 5);
+		velocity.y -= FlxG.random.int(140, 160) * PlayStateChangeables.playbackRate;
+		velocity.x = FlxG.random.float(-5, 5) * PlayStateChangeables.playbackRate;
 
 		goToVisible();
 

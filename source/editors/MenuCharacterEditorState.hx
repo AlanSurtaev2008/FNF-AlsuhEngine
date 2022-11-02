@@ -192,7 +192,6 @@ class MenuCharacterEditorState extends MusicBeatUIState
 	var confirmInputText:FlxUIInputText;
 	var animationIndicesInputText:FlxUIInputText;
 	var animationAltIndicesInputText:FlxUIInputText;
-	var confirmDescText:FlxText;
 	var scaleStepper:FlxUINumericStepper;
 	var flipXCheckbox:FlxUICheckBox;
 	var isGfCheckbox:FlxUICheckBox;
@@ -256,7 +255,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 
 		fpsConfirmStepper = new FlxUINumericStepper(190, fpsAltStepper.y + 40, 1, 24, 1, 120, 2);
 
-		confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Start Press animation on the .XML:');
+		var confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Start Press animation on the .XML:');
 		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
 		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
 		tab_group.add(new FlxText(10, idleAltInputText.y - 26, 0, 'Alternative idle animation on the .XML:'));

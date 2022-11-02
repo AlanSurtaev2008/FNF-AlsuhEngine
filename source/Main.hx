@@ -96,9 +96,11 @@ class Main extends Sprite
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
 
-		#if !debug
-		initialState = TitleState;
+		#if !cpp
+		framerate = 60;
 		#end
+
+		Debug.onInitProgram();
 
 		OptionData.loadDefaultKeys();
 
@@ -133,6 +135,8 @@ class Main extends Sprite
 			memoryCounter.visible = OptionData.memoryCounter;
 		}
 		#end
+
+		Debug.onGameStart();
 		
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);

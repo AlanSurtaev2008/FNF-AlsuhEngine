@@ -44,7 +44,8 @@ class Paths
 		'stages',
 		'weeks',
 		'fonts',
-		'scripts'
+		'scripts',
+		'achievements'
 	];
 	#end
 
@@ -171,6 +172,7 @@ class Paths
 		return getPath(file, type, library);
 	}
 
+	@:deprecated("`Paths.file()` is deprecated, use 'Paths.getFile()' instead")
 	public static function file(file:String, type:AssetType = TEXT, ?library:String):String
 	{
 		return getFile(file, type, library);
@@ -181,6 +183,7 @@ class Paths
 		return getPath('data/$key.txt', TEXT, library);
 	}
 
+	@:deprecated("`Paths.txt()` is deprecated, use 'Paths.getTxt()' instead")
 	public static function txt(key:String, ?library:String):String
 	{
 		return getTxt(key, library);
@@ -191,6 +194,7 @@ class Paths
 		return getPath('data/$key.xml', TEXT, library);
 	}
 
+	@:deprecated("`Paths.xml()` is deprecated, use 'Paths.getXml()' instead")
 	public static function xml(key:String, ?library:String):String
 	{
 		return getXml(key, library);
@@ -201,6 +205,7 @@ class Paths
 		return getPath('data/$key.json', TEXT, library);
 	}
 
+	@:deprecated("`Paths.json()` is deprecated, use 'Paths.getJson()' instead")
 	public static function json(key:String, ?library:String):String
 	{
 		return getJson(key, library);
@@ -211,6 +216,7 @@ class Paths
 		return getPath('$key.lua', TEXT, library);
 	}
 
+	@:deprecated("`Paths.lua()` is deprecated, use 'Paths.getLua()' instead")
 	public static function lua(key:String, ?library:String):String
 	{
 		return getLua(key, library);
@@ -221,6 +227,7 @@ class Paths
 		return returnSound('sounds', key, library);
 	}
 
+	@:deprecated("`Paths.sound()` is deprecated, use 'Paths.getSound()' instead")
 	public static function sound(key:String, ?library:String):Sound
 	{
 		return getSound(key, library);
@@ -231,6 +238,7 @@ class Paths
 		return getSound(key + FlxG.random.int(min, max), library);
 	}
 
+	@:deprecated("`Paths.soundRandom()` is deprecated, use 'Paths.getSoundRandom()' instead")
 	public static function soundRandom(key:String, min:Int, max:Int, ?library:String):Sound
 	{
 		return getSoundRandom(key, min, max, library);
@@ -239,6 +247,12 @@ class Paths
 	public static function getMusic(key:String, ?library:String):Sound
 	{
 		return returnSound('music', key, library);
+	}
+
+	@:deprecated("`Paths.music()` is deprecated, use 'Paths.getMusic()' instead")
+	public static function music(key:String, ?library:String):Sound
+	{
+		return getMusic(key, library);
 	}
 
 	public static function getInst(song:String, ?difficulty:String = '', ?string:Bool = false):Any
@@ -273,6 +287,7 @@ class Paths
 		return returnSound('songs', song.toLowerCase() + '/Inst');
 	}
 
+	@:deprecated("`Paths.inst()` is deprecated, use 'Paths.getInst()' instead")
 	public static function inst(song:String, ?difficulty:String = '', ?string:Bool = false):Any
 	{
 		return getInst(song, difficulty, string);
@@ -310,6 +325,7 @@ class Paths
 		return returnSound('songs', song.toLowerCase() + '/Voices');
 	}
 
+	@:deprecated("`Paths.voices()` is deprecated, use 'Paths.getVoices()' instead")
 	public static function voices(song:String, ?difficulty:String = '', ?string:Bool = false):Any
 	{
 		return getVoices(song, difficulty, string);
@@ -320,6 +336,7 @@ class Paths
 		return returnGraphic(key, library);
 	}
 
+	@:deprecated("`Paths.image()` is deprecated, use 'Paths.getImage()' instead")
 	public static function image(key:String, ?library:String):FlxGraphic
 	{
 		return getImage(key, library);
@@ -339,6 +356,7 @@ class Paths
 		return shit;
 	}
 
+	@:deprecated("`Paths.video()` is deprecated, use 'Paths.getVideo()' instead")
 	public static function video(key:String, ?library:String):String
 	{
 		return getVideo(key, library);
@@ -349,6 +367,7 @@ class Paths
 		return returnSound('videos', key, library);
 	}
 
+	@:deprecated("`Paths.webmSound()` is deprecated, use 'Paths.getWebmSound()' instead")
 	public static function webmSound(key:String, ?library:String):Sound
 	{
 		return getWebmSound('videos', library);
@@ -368,6 +387,7 @@ class Paths
 		return shit;
 	}
 
+	@:deprecated("`Paths.webm()` is deprecated, use 'Paths.getWebm()' instead")
 	public static function webm(key:String, ?library:String):String
 	{
 		return getWebm(key, library);
@@ -421,6 +441,12 @@ class Paths
 		#end
 
 		return getPath('fonts/$key', FONT, library);
+	}
+
+	@:deprecated("`Paths.webm()` is deprecated, use 'Paths.getWebm()' instead")
+	public static function font(key:String, ?library:String):String
+	{
+		return getFont(key, library);
 	}
 
 	public static function getSparrowAtlas(key:String, ?library:String):FlxAtlasFrames
@@ -551,14 +577,12 @@ class Paths
 	public static function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false):Bool
 	{
 		#if MODS_ALLOWED
-		if (FileSystem.exists(mods(currentModDirectory + '/' + key)) || FileSystem.exists(mods(key)))
-		{
+		if (FileSystem.exists(mods(currentModDirectory + '/' + key)) || FileSystem.exists(mods(key))) {
 			return true;
 		}
 		#end
 		
-		if (OpenFlAssets.exists(Paths.getPath(key, type)))
-		{
+		if (OpenFlAssets.exists(Paths.getPath(key, type))) {
 			return true;
 		}
 

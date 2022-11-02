@@ -180,7 +180,7 @@ class Character extends FlxSprite
 					updateHitbox();
 				}
 
-				char_name = json.char_name;
+				char_name = (json.char_name != null && json.char_name.length > 0) ? json.char_name : 'Unknown';
 
 				positionArray = json.position;
 				cameraPosition = json.camera_position;
@@ -309,7 +309,7 @@ class Character extends FlxSprite
 					holdTimer += elapsed;
 				}
 
-				if (holdTimer >= Conductor.stepCrochet * 0.0011 * singDuration)
+				if (holdTimer >= Conductor.stepCrochet * (0.0011 / (FlxG.sound.music != null ? FlxG.sound.music.pitch : 1)) * singDuration)
 				{
 					dance();
 					holdTimer = 0;

@@ -89,7 +89,7 @@ class DialogueCharacter extends FlxSprite
 
 	public function reloadCharacterJson(character:String):Void
 	{
-		var characterPath:String = 'portraits/' + character + '.json';
+		var characterPath:String = 'images/dialogue/' + character + '.json';
 		var rawJson = null;
 
 		#if MODS_ALLOWED
@@ -100,7 +100,7 @@ class DialogueCharacter extends FlxSprite
 		}
 
 		if (!FileSystem.exists(path)) {
-			path = Paths.getPreloadPath('portraits/' + DEFAULT_CHARACTER + '.json');
+			path = Paths.getPreloadPath('images/dialogue/' + DEFAULT_CHARACTER + '.json');
 		}
 
 		rawJson = File.getContent(path);
