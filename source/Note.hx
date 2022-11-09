@@ -284,8 +284,7 @@ class Note extends FlxSprite
 				updateHitbox();
 			}
 		}
-		else if (!isSustainNote)
-		{
+		else if (!isSustainNote) {
 			earlyHitMult = 1;
 		}
 
@@ -306,8 +305,7 @@ class Note extends FlxSprite
 		{
 			skin = mustPress ? PlayState.SONG.arrowSkin : PlayState.SONG.arrowSkin2;
 	
-			if (skin == null || skin.length < 1)
-			{
+			if (skin == null || skin.length < 1) {
 				skin = 'NOTE_assets';
 			}
 		}
@@ -366,8 +364,7 @@ class Note extends FlxSprite
 
 		updateHitbox();
 
-		if (animName != null)
-		{
+		if (animName != null) {
 			animation.play(animName, true);
 		}
 
@@ -401,8 +398,7 @@ class Note extends FlxSprite
 			animation.add(colArray[noteData] + 'holdend', [pixelInt[noteData] + maxNote]);
 			animation.add(colArray[noteData] + 'hold', [pixelInt[noteData]]);
 		}
-		else
-		{
+		else {
 			animation.add(colArray[noteData] + 'Scroll', [pixelInt[noteData] + maxNote]);
 		}
 	}
@@ -426,21 +422,22 @@ class Note extends FlxSprite
 		{
 			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
 				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
-				canBeHit = true;
-			else
 			{
+				canBeHit = true;
+			}
+			else {
 				canBeHit = false;
 			}
 
-			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
+			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit) {
 				tooLate = true;
+			}
 		}
 		else
 		{
 			canBeHit = false;
 
-			if (strumTime <= Conductor.songPosition)
-			{
+			if (strumTime <= Conductor.songPosition) {
 				wasGoodHit = true;
 			}
 		}

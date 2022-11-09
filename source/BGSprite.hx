@@ -42,8 +42,7 @@ class BGSprite extends FlxSprite
 
 	public function dance(?forceplay:Bool = false):Void
 	{
-		if (idleAnim != null)
-		{
+		if (idleAnim != null) {
 			animation.play(idleAnim, forceplay);
 		}
 	}

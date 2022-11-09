@@ -153,7 +153,7 @@ class CharacterEditorState extends MusicBeatUIState
 			\nT - Reset Current Offset
 			\nHold Shift to Move 10x faster\n".split('\n');
 
-		for (i in 0...tipTextArray.length-1)
+		for (i in 0...tipTextArray.length - 1)
 		{
 			var tipText:FlxText = new FlxText(FlxG.width - 320, FlxG.height - 15 - 16 * (tipTextArray.length - i), 300, tipTextArray[i], 12);
 			tipText.cameras = [camHUD];
@@ -211,7 +211,7 @@ class CharacterEditorState extends MusicBeatUIState
 
 	function reloadBGs():Void
 	{
-		var i:Int = bgLayer.members.length-1;
+		var i:Int = bgLayer.members.length - 1;
 
 		while (i >= 0) 
 		{
@@ -549,7 +549,8 @@ class CharacterEditorState extends MusicBeatUIState
 
 			if (indices != null && indices.length > 0) {
 				char.animation.addByIndices(newAnim.anim, newAnim.name, newAnim.indices, "", newAnim.fps, newAnim.loop);
-			} else {
+			}
+			else {
 				char.animation.addByPrefix(newAnim.anim, newAnim.name, newAnim.fps, newAnim.loop);
 			}
 			
@@ -741,9 +742,11 @@ class CharacterEditorState extends MusicBeatUIState
 
 		if (Paths.fileExists('images/' + char.imageFile + '/Animation.json', TEXT)) {
 			char.frames = AtlasFrameMaker.construct(char.imageFile);
-		} else if (Paths.fileExists('images/' + char.imageFile + '.txt', TEXT)) {
+		}
+		else if (Paths.fileExists('images/' + char.imageFile + '.txt', TEXT)) {
 			char.frames = Paths.getPackerAtlas(char.imageFile);
-		} else {
+		}
+		else {
 			char.frames = Paths.getSparrowAtlas(char.imageFile);
 		}
 
@@ -759,17 +762,20 @@ class CharacterEditorState extends MusicBeatUIState
 	
 				if (animIndices != null && animIndices.length > 0) {
 					char.animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
-				} else {
+				}
+				else {
 					char.animation.addByPrefix(animAnim, animName, animFps, animLoop);
 				}
 			}
-		} else {
+		}
+		else {
 			char.quickAnimAdd('idle', 'BF idle dance');
 		}
 		
 		if (lastAnim != '') {
 			char.playAnim(lastAnim, true);
-		} else {
+		}
+		else {
 			char.dance();
 		}
 
@@ -879,7 +885,8 @@ class CharacterEditorState extends MusicBeatUIState
 
 		if (!char.isPlayer) {
 			x += 150 + char.cameraPosition[0];
-		} else {
+		}
+		else {
 			x -= 100 + char.cameraPosition[0];
 		}
 
@@ -961,7 +968,8 @@ class CharacterEditorState extends MusicBeatUIState
 
 			if (animIndices != null && animIndices.length > 0) {
 				ghostChar.animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
-			} else {
+			}
+			else {
 				ghostChar.animation.addByPrefix(animAnim, animName, animFps, animLoop);
 			}
 
@@ -1286,7 +1294,7 @@ class CharacterEditorState extends MusicBeatUIState
 	{
 		if (prefix.toLowerCase().endsWith('v')) // probably copy paste attempt
 		{
-			prefix = prefix.substring(0, prefix.length-1);
+			prefix = prefix.substring(0, prefix.length - 1);
 		}
 
 		var text:String = prefix + Clipboard.text.replace('\n', '');

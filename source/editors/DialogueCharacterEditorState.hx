@@ -651,7 +651,8 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 				{
 					if (i % 2 == 1) {
 						mainGroup.y += speed * elapsed * negaMult[i];
-					} else {
+					}
+					else {
 						mainGroup.x += speed * elapsed * negaMult[i];
 					}
 				}
@@ -671,7 +672,8 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 					{
 						if (i % 2 == 1) {
 							animShit.loop_offsets[1] += offsetAdd * negaMult[i];
-						} else {
+						}
+						else {
 							animShit.loop_offsets[0] += offsetAdd * negaMult[i];
 						}
 
@@ -685,7 +687,8 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 					{
 						if (i % 2 == 1) {
 							animShit.idle_offsets[1] += offsetAdd * negaMult[i];
-						} else {
+						}
+						else {
 							animShit.idle_offsets[0] += offsetAdd * negaMult[i];
 						}
 

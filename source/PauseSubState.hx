@@ -169,12 +169,14 @@ class PauseSubState extends BaseSubState
 			levelDifficulty.y += 5;
 			blueballedTxt.y += 5;
 
-			if (PlayStateChangeables.practiceMode) {
+			if (PlayStateChangeables.practiceMode)
+			{
 				practiceText.alpha = 1;
 				practiceText.y += 5;
 			}
 
-			if (PlayState.chartingMode) {
+			if (PlayState.chartingMode)
+			{
 				chartingText.alpha = 1;
 				chartingText.y += 5;
 			}
@@ -199,8 +201,7 @@ class PauseSubState extends BaseSubState
 					FlxTween.tween(practiceText, {alpha: 1, y: practiceText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
 			}
 
-			if (PlayState.chartingMode)
-			{
+			if (PlayState.chartingMode) {
 				FlxTween.tween(chartingText, {alpha: 1, y: chartingText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
 			}
 		}
@@ -325,8 +326,7 @@ class PauseSubState extends BaseSubState
 				{
 					holdTime += elapsed;
 
-					if (holdTime > 0.5)
-					{
+					if (holdTime > 0.5) {
 						curTime += 45000 * elapsed * (controls.UI_LEFT ? -1 : 1);
 					}
 
@@ -340,7 +340,7 @@ class PauseSubState extends BaseSubState
 			}
 		}
 
-		if (controls.ACCEPT && !OptionData.controllerMode)
+		if ((controls.ACCEPT || FlxG.mouse.justPressed) && !OptionData.controllerMode)
 		{
 			if (menuItems == difficultyChoices)
 			{
@@ -444,30 +444,24 @@ class PauseSubState extends BaseSubState
 							FlxG.switchState(new FreeplayMenuState());
 						case 'replay':
 						{
-							if (FlxG.save.data.botPlay != null)
-							{
+							if (FlxG.save.data.botPlay != null) {
 								PlayStateChangeables.botPlay = FlxG.save.data.botPlay;
 							}
-							else
-							{
+							else {
 								PlayStateChangeables.botPlay = false;
 							}
 
-							if (FlxG.save.data.scrollSpeed != null)
-							{
+							if (FlxG.save.data.scrollSpeed != null) {
 								PlayStateChangeables.scrollSpeed = FlxG.save.data.scrollSpeed;
 							}
-							else
-							{
+							else {
 								PlayStateChangeables.scrollSpeed = 1.0;
 							}
 		
-							if (FlxG.save.data.downScroll != null)
-							{
+							if (FlxG.save.data.downScroll != null) {
 								OptionData.downScroll = FlxG.save.data.downScroll;
 							}
-							else
-							{
+							else {
 								OptionData.downScroll = false;
 							}
 
@@ -493,8 +487,7 @@ class PauseSubState extends BaseSubState
 			Transition.skipNextTransOut = true;
 			FlxG.resetState();
 		}
-		else
-		{
+		else {
 			FlxG.resetState();
 		}
 	}

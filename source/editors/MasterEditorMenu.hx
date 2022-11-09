@@ -106,28 +106,27 @@ class MasterEditorMenu extends TransitionableState
 		#if MODS_ALLOWED
 		if (directories.length > 1)
 		{
-			if (controls.UI_UP_P)
+			if (controls.UI_LEFT_P)
 			{
 				changeDirectory(-1);
 
 				holdTimeMod = 0;
 			}
 
-			if (controls.UI_DOWN_P)
+			if (controls.UI_RIGHT_P)
 			{
 				changeDirectory(1);
 
 				holdTimeMod = 0;
 			}
 
-			if (controls.UI_DOWN || controls.UI_UP)
+			if (controls.UI_LEFT || controls.UI_RIGHT)
 			{
 				var checkLastHold:Int = Math.floor((holdTimeMod - 0.5) * 10);
 				holdTimeMod += elapsed;
 				var checkNewHold:Int = Math.floor((holdTimeMod - 0.5) * 10);
 
-				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-				{
+				if (holdTimeMod > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeDirectory((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 				}
 			}
@@ -156,8 +155,7 @@ class MasterEditorMenu extends TransitionableState
 				holdTime += elapsed;
 				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-				{
+				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 				}
 			}
@@ -168,8 +166,7 @@ class MasterEditorMenu extends TransitionableState
 			}
 		}
 
-		if (controls.ACCEPT)
-		{
+		if (controls.ACCEPT || FlxG.mouse.justPressed) {
 			goToState(editorsArray[curSelected]);
 		}
 	}
@@ -249,8 +246,7 @@ class MasterEditorMenu extends TransitionableState
 
 			item.alpha = 0.6;
 
-			if (item.targetY == 0)
-			{
+			if (item.targetY == 0) {
 				item.alpha = 1;
 			}
 		}

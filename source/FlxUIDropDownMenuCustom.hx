@@ -258,12 +258,10 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 
 		for (i in 0...list.length)
 		{
-			if (list[i] != null)
-			{
+			if (list[i] != null) {
 				vButtons.push(list[i].visible);
 			}
-			else
-			{
+			else {
 				vButtons.push(false);
 			}
 		}
@@ -273,8 +271,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 
 		for (i in 0...list.length)
 		{
-			if (list[i] != null)
-			{
+			if (list[i] != null) {
 				list[i].visible = vButtons[i];
 			}
 		}
@@ -313,8 +310,8 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 
 				if (list != null)
 				{
-					if (i <= list.length - 1)
-					{ // If buttons exist, try to re-use them
+					if (i <= list.length - 1) // If buttons exist, try to re-use them
+					{
 						var btn:FlxUIButton = list[i];
 						if (btn != null)
 						{
@@ -329,21 +326,22 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 					list = [];
 				}
 
-				if (!recycled)
-				{ // If we couldn't recycle a button, make a fresh one
+				if (!recycled) // If we couldn't recycle a button, make a fresh one
+				{
 					var t:FlxUIButton = makeListButton(i, data.label, data.name);
 					list.push(t);
 					add(t);
+
 					t.visible = false;
 				}
+
 				i++;
 			}
 
-			// Remove excess buttons:
-			if (list.length > DataList.length)
-			{ // we have more entries in the original set
-				for (j in DataList.length...list.length)
-				{ // start counting from end of list
+			if (list.length > DataList.length) // Remove excess buttons: // we have more entries in the original set
+			{
+				for (j in DataList.length...list.length) // start counting from end of list
+				{
 					var b:FlxUIButton = list.pop(); // remove last button on list
 					b.visible = false;
 					b.active = false;
@@ -401,8 +399,8 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 	public function changeLabelByIndex(i:Int, NewLabel:String):Void
 	{
 		var btn:FlxUIButton = getBtnByIndex(i);
-		if (btn != null && btn.label != null)
-		{
+
+		if (btn != null && btn.label != null) {
 			btn.label.text = NewLabel;
 		}
 	}
@@ -411,16 +409,14 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 	{
 		var btn:FlxUIButton = getBtnById(name);
 
-		if (btn != null && btn.label != null)
-		{
+		if (btn != null && btn.label != null) {
 			btn.label.text = NewLabel;
 		}
 	}
 
 	public function getBtnByIndex(i:Int):FlxUIButton
 	{
-		if (i >= 0 && i < list.length)
-		{
+		if (i >= 0 && i < list.length) {
 			return list[i];
 		}
 
@@ -431,8 +427,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 	{
 		for (btn in list)
 		{
-			if (btn.name == name)
-			{
+			if (btn.name == name) {
 				return btn;
 			}
 		}
@@ -460,7 +455,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 				else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN)
 				{
 					currentScroll++;
-					if (currentScroll >= list.length) currentScroll = list.length-1;
+					if (currentScroll >= list.length) currentScroll = list.length - 1;
 
 					updateButtonPositions();
 				}

@@ -131,10 +131,10 @@ class VideoHandler
 	
 	public function togglePause():Void
 	{
-		if (paused)
-		{
+		if (paused) {
 			resume();
-		} else {
+		}
+		else {
 			pause();
 		}
 	}
@@ -146,8 +146,7 @@ class VideoHandler
 	
 	public function onStop():Void
 	{
-		if (!ignoreShit)
-		{
+		if (!ignoreShit) {
 			stopped = true;
 		}
 	}
@@ -167,8 +166,7 @@ class VideoHandler
 	
 	public function onEnd(event:NetStatusEvent):Void
 	{
-		if (event.info.code == "NetStream.Play.Complete")
-		{
+		if (event.info.code == "NetStream.Play.Complete") {
 			ended = true;
 		}
 	}

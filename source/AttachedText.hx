@@ -29,6 +29,11 @@ class AttachedText extends Alphabet
 	{
 		super.update(elapsed);
 
+		snapToUpdateVariables();
+	}
+
+	public function snapToUpdateVariables():Void
+	{
 		if (sprTracker != null)
 		{
 			setPosition(sprTracker.x + offsetX, sprTracker.y + offsetY);

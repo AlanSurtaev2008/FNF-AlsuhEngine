@@ -163,7 +163,8 @@ class ControlsSubState extends BaseSubState
 				optionText.y -= 55;
 				optionText.startPosition.y -= 55;
 			}
-			else {
+			else
+			{
 				optionText.x = 200;
 				optionText.startPosition.x = 200;
 			}
@@ -222,8 +223,7 @@ class ControlsSubState extends BaseSubState
 				FlxG.state.closeSubState();
 				FlxG.state.openSubState(new OptionsSubState());
 			}
-			else
-			{
+			else {
 				close();
 			}
 		}
@@ -261,7 +261,8 @@ class ControlsSubState extends BaseSubState
 
 					if (curAlt) {
 						grpInputsAlt.members[getInputTextNum()].visible = true;
-					} else {
+					}
+					else {
 						grpInputs.members[getInputTextNum()].visible = true;
 					}
 
@@ -300,8 +301,22 @@ class ControlsSubState extends BaseSubState
 					}
 				}
 
-				if ((controls.UI_LEFT_P || controls.UI_RIGHT_P) && optionShit[curSelected][0] != defaultKey) {
-					changeAlt();
+				if (optionShit[curSelected][0] != defaultKey)
+				{
+					if (controls.UI_LEFT_P || controls.UI_RIGHT_P)
+					{
+						changeAlt();
+						holdTimeHos = 0;
+					}
+
+					if (controls.UI_LEFT || controls.UI_RIGHT)
+					{
+						holdTimeHos += elapsed;
+		
+						if (holdTimeHos > 0.5 && Math.floor((holdTimeHos - 0.5) * 10) - Math.floor((holdTimeHos - 0.5) * 10) > 0) {
+							changeAlt();
+						}
+					}
 				}
 
 				if (controls.RESET && optionShit[curSelected][0] != defaultKey)
@@ -312,7 +327,7 @@ class ControlsSubState extends BaseSubState
 					changeSelection();
 				}
 
-				if (controls.ACCEPT && nextAccept <= 0)
+				if ((controls.ACCEPT || FlxG.mouse.justPressed) && nextAccept <= 0)
 				{
 					if (optionShit[curSelected][0] == defaultKey)
 					{
@@ -325,8 +340,7 @@ class ControlsSubState extends BaseSubState
 								reset();
 							});
 						}
-						else
-						{
+						else {
 							reset();
 						}
 
@@ -350,7 +364,8 @@ class ControlsSubState extends BaseSubState
 						{
 							if (curAlt) {
 								grpInputsAlt.members[getInputTextNum()].visible = false;
-							} else {
+							}
+							else {
 								grpInputs.members[getInputTextNum()].visible = false;
 							}
 
@@ -432,8 +447,7 @@ class ControlsSubState extends BaseSubState
 					{
 						input.alpha = 0.6;
 
-						if (input.sprTracker == item && curAlt)
-						{
+						if (input.sprTracker == item && curAlt) {
 							input.alpha = 1;
 						}
 					}
@@ -442,8 +456,7 @@ class ControlsSubState extends BaseSubState
 					{
 						input.alpha = 0.6;
 
-						if (input.sprTracker == item && !curAlt)
-						{
+						if (input.sprTracker == item && !curAlt) {
 							input.alpha = 1;
 						}
 					}
@@ -462,8 +475,7 @@ class ControlsSubState extends BaseSubState
 		{
 			input.alpha = 0.6;
 
-			if (input.sprTracker == grpOptions.members[curSelected] && curAlt)
-			{
+			if (input.sprTracker == grpOptions.members[curSelected] && curAlt) {
 				input.alpha = 1;
 			}
 		}
@@ -472,8 +484,7 @@ class ControlsSubState extends BaseSubState
 		{
 			input.alpha = 0.6;
 
-			if (input.sprTracker == grpOptions.members[curSelected] && !curAlt)
-			{
+			if (input.sprTracker == grpOptions.members[curSelected] && !curAlt) {
 				input.alpha = 1;
 			}
 		}
@@ -483,8 +494,7 @@ class ControlsSubState extends BaseSubState
 
 	private function unselectableCheck(num:Int, ?checkDefaultKey:Bool = false):Bool
 	{
-		if (optionShit[num][0] == defaultKey) 
-		{
+		if (optionShit[num][0] == defaultKey) {
 			return checkDefaultKey;
 		}
 
@@ -495,14 +505,16 @@ class ControlsSubState extends BaseSubState
 	{
 		var keys:Array<FlxKey> = OptionData.keyBinds.get(optionShit[num][1]);
 
-		var text1 = new AttachedText(CoolUtil.getKeyName(keys[0]), 400, -55);
+		var text1:AttachedText = new AttachedText(CoolUtil.getKeyName(keys[0]), 400, -55);
 		text1.setPosition(optionText.x + 400, optionText.y - 55);
 		text1.sprTracker = optionText;
+		text1.snapToUpdateVariables();
 		grpInputs.add(text1);
 
-		var text2 = new AttachedText(CoolUtil.getKeyName(keys[1]), 650, -55);
+		var text2:AttachedText = new AttachedText(CoolUtil.getKeyName(keys[1]), 650, -55);
 		text2.setPosition(optionText.x + 650, optionText.y - 55);
 		text2.sprTracker = optionText;
+		text2.snapToUpdateVariables();
 		grpInputsAlt.add(text2);
 	}
 
@@ -528,8 +540,7 @@ class ControlsSubState extends BaseSubState
 
 		for (i in 0...grpOptions.length)
 		{
-			if (!unselectableCheck(i, true))
-			{
+			if (!unselectableCheck(i, true)) {
 				addBindTexts(grpOptions.members[i], i);
 			}
 		}
@@ -553,8 +564,7 @@ class ControlsSubState extends BaseSubState
 					{
 						input.alpha = 0.6;
 
-						if (input.sprTracker == item && curAlt)
-						{
+						if (input.sprTracker == item && curAlt) {
 							input.alpha = 1;
 						}
 					}
@@ -563,8 +573,7 @@ class ControlsSubState extends BaseSubState
 					{
 						input.alpha = 0.6;
 
-						if (input.sprTracker == item && !curAlt)
-						{
+						if (input.sprTracker == item && !curAlt) {
 							input.alpha = 1;
 						}
 					}

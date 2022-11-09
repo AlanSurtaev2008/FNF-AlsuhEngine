@@ -7,6 +7,10 @@ import Song;
 import Section;
 import Conductor;
 
+#if desktop
+import Discord.DiscordClient;
+#end
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
@@ -228,6 +232,13 @@ class ChartingState extends MusicBeatUIState
 			_song.gfVersion = _song.player3;
 		}
 
+		vortex = FlxG.save.data.chart_vortex;
+		ignoreWarnings = FlxG.save.data.ignoreWarnings;
+
+		#if desktop
+		DiscordClient.changePresence("Chart Editor", _song.songName); // Updating Discord Rich Presence
+		#end
+
 		curSec = lastSection;
 
 		var bg:FlxSprite = new FlxSprite();
@@ -250,13 +261,17 @@ class ChartingState extends MusicBeatUIState
 		eventIcon.setGraphicSize(30, 30);
 		add(eventIcon);
 
-		leftIcon = new HealthIcon('bf');
+		var healthIconP1:String = loadHealthIconFromCharacter(_song.player1);
+
+		leftIcon = new HealthIcon(healthIconP1);
 		leftIcon.scrollFactor.set(1, 1);
 		leftIcon.setGraphicSize(0, 45);
 		leftIcon.setPosition(GRID_SIZE + 10, -100);
 		add(leftIcon);
 
-		rightIcon = new HealthIcon('dad');
+		var healthIconP2:String = loadHealthIconFromCharacter(_song.player2);
+
+		rightIcon = new HealthIcon(healthIconP2);
 		rightIcon.scrollFactor.set(1, 1);
 		rightIcon.setGraphicSize(0, 45);
 		rightIcon.setPosition(GRID_SIZE * 5.2, -100);
@@ -680,7 +695,8 @@ class ChartingState extends MusicBeatUIState
 	
 						if (note != null && note[1] > -1) {
 							_song.notes[sec].sectionNotes.remove(note);
-						} else {
+						}
+						else {
 							count++;
 						}
 					}
@@ -835,7 +851,8 @@ class ChartingState extends MusicBeatUIState
 	
 		if (check_changeBPM.checked) {
 			stepperSectionBPM.value = _song.notes[curSec].bpm;
-		} else {
+		}
+		else {
 			stepperSectionBPM.value = Conductor.bpm;
 		}
 	
@@ -913,7 +930,8 @@ class ChartingState extends MusicBeatUIState
 					{
 						if(note[4] != null) {
 							copiedNote = [newStrumTime, note[1], note[2], note[3], note[4]];
-						} else {
+						}
+						else {
 							copiedNote = [newStrumTime, note[1], note[2], note[3]];
 						}
 						_song.notes[curSec].sectionNotes.push(copiedNote);
@@ -1031,7 +1049,8 @@ class ChartingState extends MusicBeatUIState
 
 				if (boob > 3){
 					boob -= 4;
-				} else {
+				}
+				else {
 					boob += 4;
 				}
 
@@ -1976,7 +1995,7 @@ class ChartingState extends MusicBeatUIState
 				updateZoom();
 			}
 
-			if (FlxG.keys.justPressed.X && curZoom < zoomList.length-1)
+			if (FlxG.keys.justPressed.X && curZoom < zoomList.length - 1)
 			{
 				curZoom++;
 				updateZoom();
@@ -2094,7 +2113,8 @@ class ChartingState extends MusicBeatUIState
 
 				if (FlxG.keys.pressed.W) {
 					FlxG.sound.music.time -= daTime;
-				} else {
+				}
+				else {
 					FlxG.sound.music.time += daTime;
 				}
 
@@ -2263,7 +2283,8 @@ class ChartingState extends MusicBeatUIState
 			{
 				if (curSec <= 0) {
 					changeSection(_song.notes.length - 1);
-				} else {
+				}
+				else {
 					changeSection(curSec - shiftThing);
 				}
 			}
@@ -2474,7 +2495,8 @@ class ChartingState extends MusicBeatUIState
 
 		if (sectionStartTime(1) > FlxG.sound.music.length) {
 			lastSecBeatsNext = 0;
-		} else {
+		}
+		else {
 			getSectionBeats(curSec + 1);
 		}
 	}
@@ -2629,7 +2651,8 @@ class ChartingState extends MusicBeatUIState
 
 				if (sample > 0) {
 					if (sample > lmax) lmax = sample;
-				} else if (sample < 0) {
+				}
+				else if (sample < 0) {
 					if (sample < lmin) lmin = sample;
 				}
 
@@ -2643,7 +2666,8 @@ class ChartingState extends MusicBeatUIState
 
 					if (sample > 0) {
 						if (sample > rmax) rmax = sample;
-					} else if (sample < 0) {
+					}
+					else if (sample < 0) {
 						if (sample < rmin) rmin = sample;
 					}
 				}
@@ -2895,7 +2919,8 @@ class ChartingState extends MusicBeatUIState
 
 					if (currentType <= 0) {
 						noteTypeDropDown.selectedLabel = '';
-					} else {
+					}
+					else {
 						noteTypeDropDown.selectedLabel = currentType + '. ' + curSelectedNote[3];
 					}
 				}
@@ -3004,7 +3029,7 @@ class ChartingState extends MusicBeatUIState
 
 		var beats:Float = getSectionBeats(1);
 
-		if (curSec < _song.notes.length-1)
+		if (curSec < _song.notes.length - 1)
 		{
 			for (i in _song.notes[curSec + 1].sectionNotes)
 			{
@@ -3081,7 +3106,8 @@ class ChartingState extends MusicBeatUIState
 		{
 			if (daNoteInfo > 3) {
 				note.x -= GRID_SIZE * 4;
-			} else if (daSus != null) {
+			}
+			else if (daSus != null) {
 				note.x += GRID_SIZE * 4;
 			}
 		}

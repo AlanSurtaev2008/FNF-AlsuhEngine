@@ -71,27 +71,32 @@ class SpriteAnimationLibrary
 		return new SpriteMovieClip(getSymbol(symbol));
 	}
 
-	public function getAnimationNames(prefix:String = ""):Array<String> {
+	public function getAnimationNames(prefix:String = ""):Array<String>
+	{
 		var out = new Array<String>();
 
-		for (name in _symbolData.keys()) {
+		for (name in _symbolData.keys())
+		{
 			if (name != BITMAP_SYMBOL_NAME && name.indexOf(prefix) == 0) {
 				out.push(name);
 			}
 		}
 
-		// but... why?
-		out.sort(function(a1, a2):Int {
+		out.sort(function(a1, a2):Int // but... why?
+		{
 			a1 = a1.toLowerCase();
 			a2 = a2.toLowerCase();
 			if (a1 < a2) {
 				return -1;
-			} else if (a1 > a2) {
+			}
+			else if (a1 > a2) {
 				return 1;
-			} else {
+			}
+			else {
 				return 0;
 			}
 		});
+
 		return out;
 	}
 
@@ -114,7 +119,8 @@ class SpriteAnimationLibrary
 			var symbol:SpriteSymbol = new SpriteSymbol(getSymbolData(name), this, _texture);
 			symbol.smoothing = smoothing;
 			return symbol;
-		} else {
+		}
+		else {
 			return pool.pop();
 		}
 	}
@@ -142,7 +148,8 @@ class SpriteAnimationLibrary
 
 		if (metaData != null && metaData.framerate != null && metaData.framerate > 0) {
 			frameRate = (metaData.framerate);
-		} else {
+		}
+		else {
 			frameRate = 24;
 		}
 

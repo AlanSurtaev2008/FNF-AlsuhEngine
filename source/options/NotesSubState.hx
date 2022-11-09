@@ -178,7 +178,7 @@ class NotesSubState extends MusicBeatSubState
 		{
 			if (changingNote)
 			{
-				if (controls.BACK || controls.ACCEPT)
+				if (controls.BACK || (controls.ACCEPT || FlxG.mouse.justPressed))
 				{
 					changingNote = false;
 					changeSelection();
@@ -258,8 +258,7 @@ class NotesSubState extends MusicBeatSubState
 						holdTime += elapsed;
 						var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 		
-						if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-						{
+						if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 							changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 						}
 					}
@@ -275,7 +274,7 @@ class NotesSubState extends MusicBeatSubState
 					FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 					changeType(-1);
-					holdTime = 0;
+					holdTimeType = 0;
 				}
 
 				if (controls.UI_RIGHT_P)
@@ -283,17 +282,16 @@ class NotesSubState extends MusicBeatSubState
 					FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 					changeType(1);
-					holdTime = 0;
+					holdTimeType = 0;
 				}
 
 				if (controls.UI_LEFT || controls.UI_RIGHT)
 				{
-					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
-					holdTime += elapsed;
-					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+					var checkLastHold:Int = Math.floor((holdTimeType - 0.5) * 10);
+					holdTimeType += elapsed;
+					var checkNewHold:Int = Math.floor((holdTimeType - 0.5) * 10);
 
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 						FlxG.sound.play(Paths.getSound('scrollMenu'));
 						changeType((checkNewHold - checkLastHold) * (controls.UI_LEFT ? -1 : 1));
 					}
@@ -308,7 +306,7 @@ class NotesSubState extends MusicBeatSubState
 					FlxG.sound.play(Paths.getSound('scrollMenu'));
 				}
 		
-				if (controls.ACCEPT && nextAccept <= 0)
+				if ((controls.ACCEPT || FlxG.mouse.justPressed) && nextAccept <= 0)
 				{
 					if (OptionData.flashingLights)
 					{
@@ -488,7 +486,8 @@ class NotesSubState extends MusicBeatSubState
 
 		if (roundedValue < -max) {
 			curValue = -max;
-		} else if (roundedValue > max) {
+		}
+		else if (roundedValue > max) {
 			curValue = max;
 		}
 

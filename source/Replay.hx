@@ -114,8 +114,7 @@ class Replay
 			var repl:ReplayJSON = cast Json.parse(File.getContent(Sys.getCwd() + "assets\\replays\\" + path));
 			replay = repl;
 		}
-		catch (e:Dynamic)
-		{
+		catch (e:Dynamic) {
 			// noting
 		}
 		#end

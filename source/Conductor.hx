@@ -57,13 +57,13 @@ class Conductor
 		return pisspoop ? data[data.length - 1].image : data[data.length - 1];
 	}
 
-	public static function getCrotchetAtTime(time:Float)
+	public static function getCrotchetAtTime(time:Float):Float
 	{
 		var lastChange = getBPMFromSeconds(time);
-		return lastChange.stepCrochet*4;
+		return lastChange.stepCrochet * 4;
 	}
 
-	public static function getBPMFromSeconds(time:Float)
+	public static function getBPMFromSeconds(time:Float):BPMChangeEvent
 	{
 		var lastChange:BPMChangeEvent = {
 			stepTime: 0,
@@ -82,7 +82,7 @@ class Conductor
 		return lastChange;
 	}
 
-	public static function getBPMFromStep(step:Float)
+	public static function getBPMFromStep(step:Float):BPMChangeEvent
 	{
 		var lastChange:BPMChangeEvent = {
 			stepTime: 0,
@@ -116,14 +116,14 @@ class Conductor
 		return lastChange.stepTime + (time - lastChange.songTime) / lastChange.stepCrochet;
 	}
 
-	public static function getStepRounded(time:Float)
+	public static function getStepRounded(time:Float):Float
 	{
 		var lastChange = getBPMFromSeconds(time);
 
 		return lastChange.stepTime + Math.floor(time - lastChange.songTime) / lastChange.stepCrochet;
 	}
 
-	public static function getBeat(time:Float)
+	public static function getBeat(time:Float):Float
 	{
 		return getStep(time) / 4;
 	}
@@ -133,7 +133,7 @@ class Conductor
 		return Math.floor(getStepRounded(time) / 4);
 	}
 
-	public static function mapBPMChanges(song:SwagSong)
+	public static function mapBPMChanges(song:SwagSong):Void
 	{
 		bpmChangeMap = [];
 
@@ -163,14 +163,14 @@ class Conductor
 		}
 	}
 
-	static function getSectionBeats(song:SwagSong, section:Int)
+	static function getSectionBeats(song:SwagSong, section:Int):Float
 	{
 		var val:Null<Float> = song.notes[section] != null ? song.notes[section].sectionBeats : null;
 
 		return val != null ? val : 4;
 	}
 
-	public static function calculateCrochet(bpm:Float)
+	public static function calculateCrochet(bpm:Float):Float
 	{
 		return (60 / bpm) * 1000;
 	}

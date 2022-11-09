@@ -133,16 +133,12 @@ class AchievementsMenuState extends TransitionableState
 				holdTime += elapsed;
 				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-				{
+				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 				}
 			}
 
-			if (FlxG.mouse.wheel != 0)
-			{
-				FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
-
+			if (FlxG.mouse.wheel != 0) {
 				changeSelection(-shiftMult * FlxG.mouse.wheel);
 			}
 		}

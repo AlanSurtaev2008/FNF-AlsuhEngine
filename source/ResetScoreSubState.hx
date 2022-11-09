@@ -107,13 +107,14 @@ class ResetScoreSubState extends BaseSubState
 			FlxG.sound.play(Paths.getSound('cancelMenu'), 1);
 			close();
 		}
-		else if (controls.ACCEPT)
+		else if (controls.ACCEPT || FlxG.mouse.justPressed)
 		{
 			if (onYes)
 			{
 				if (mode == 'freeplay') {
 					Highscore.resetSong(CoolUtil.formatSong(songID, difficulty));
-				} else {
+				}
+				else {
 					Highscore.resetWeek(CoolUtil.formatSong(songID, difficulty));
 				}
 			}

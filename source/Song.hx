@@ -46,15 +46,8 @@ class Song
 			songJson.songID = Paths.formatToSongPath(songJson.song);
 		}
 
-		if (songJson.songName == null)
-		{
-			var killMe:Array<String> = songJson.song.trim().split('-');
-			
-			for (i in 0...killMe.length) {
-				killMe[i] = '' + killMe[i].charAt(0).toUpperCase().trim() + killMe[i].substr(1).toLowerCase().trim();
-			}
-
-			songJson.songName = killMe.join(' ');
+		if (songJson.songName == null) {
+			songJson.songName = CoolUtil.formatToName(songJson.song);
 		}
 
 		if (songJson.arrowSkin == null) {

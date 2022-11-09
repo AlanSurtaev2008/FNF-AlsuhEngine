@@ -217,7 +217,8 @@ class DialogueEditorState extends MusicBeatUIState
 			{
 				if (isAngry) {
 					anim = 'center-angry';
-				} else {
+				}
+				else {
 					anim = 'center';
 				}
 			}
@@ -258,7 +259,8 @@ class DialogueEditorState extends MusicBeatUIState
 
 		if (character.animation.curAnim != null && character.jsonFile.animations != null) {
 			animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
-		} else {
+		}
+		else {
 			animText.text = 'ERROR! NO ANIMATIONS FOUND';
 		}
 	}
@@ -270,29 +272,31 @@ class DialogueEditorState extends MusicBeatUIState
 	function reloadText(skipDialogue:Bool):Void
 	{
 		var textToType:String = lineInputText.text;
-		if(textToType == null || textToType.length < 1) textToType = ' ';
+		if (textToType == null || textToType.length < 1) textToType = ' ';
 
 		daText.text = textToType;
 		daText.resetDialogue();
 
-		if(skipDialogue) 
+		if (skipDialogue) {
 			daText.finishText();
-		else if(daText.delay > 0)
+		}
+		else if (daText.delay > 0)
 		{
-			if(character.jsonFile.animations.length > curAnim && character.jsonFile.animations[curAnim] != null) {
+			if (character.jsonFile.animations.length > curAnim && character.jsonFile.animations[curAnim] != null) {
 				character.playAnim(character.jsonFile.animations[curAnim].anim);
 			}
+
 			characterAnimSpeed();
 		}
 
 		daText.y = DialogueBoxPsych.DEFAULT_TEXT_Y;
 
 		#if desktop
-		// Updating Discord Rich Presence
 		var rpcText:String = lineInputText.text;
-		if(rpcText == null || rpcText.length < 1) rpcText = '(Empty)';
-		if(rpcText.length < 3) rpcText += '   '; //Fixes a bug on RPC that triggers an error when the text is too short
-		DiscordClient.changePresence("Dialogue Editor", rpcText);
+		if (rpcText == null || rpcText.length < 1) rpcText = '(Empty)';
+		if (rpcText.length < 3) rpcText += '   '; // Fixes a bug on RPC that triggers an error when the text is too short
+
+		DiscordClient.changePresence("Dialogue Editor", rpcText); // Updating Discord Rich Presence
 		#end
 	}
 
@@ -314,8 +318,7 @@ class DialogueEditorState extends MusicBeatUIState
 						character.playAnim(character.jsonFile.animations[curAnim].anim, daText.finishedText);
 						animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
 					}
-					else
-					{
+					else {
 						animText.text = 'ERROR! NO ANIMATIONS FOUND';
 					}
 
@@ -332,7 +335,8 @@ class DialogueEditorState extends MusicBeatUIState
 				dialogueFile.dialogue[curSelected].text = lineInputText.text;
 				
 				daText.text = lineInputText.text;
-				if(daText.text == null) daText.text = '';
+				if (daText.text == null) daText.text = '';
+
 				reloadText(true);
 			}
 			else if (sender == soundInputText)
@@ -341,7 +345,7 @@ class DialogueEditorState extends MusicBeatUIState
 				dialogueFile.dialogue[curSelected].sound = soundInputText.text;
 
 				daText.sound = soundInputText.text;
-				if(daText.sound == null) daText.sound = '';
+				if (daText.sound == null) daText.sound = '';
 			}
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender == speedStepper))
@@ -375,13 +379,11 @@ class DialogueEditorState extends MusicBeatUIState
 		{
 			if (daText.finishedText)
 			{
-				if (character.animationIsLoop() && character.animation.curAnim.finished)
-				{
+				if (character.animationIsLoop() && character.animation.curAnim.finished) {
 					character.playAnim(character.animation.curAnim.name, true);
 				}
 			}
-			else if (character.animation.curAnim.finished)
-			{
+			else if (character.animation.curAnim.finished) {
 				character.animation.curAnim.restart();
 			}
 		}
@@ -405,8 +407,7 @@ class DialogueEditorState extends MusicBeatUIState
 						inputText.text += '\\n';
 						inputText.caretIndex += 2;
 					}
-					else
-					{
+					else {
 						inputText.hasFocus = false;
 					}
 				}
@@ -421,13 +422,11 @@ class DialogueEditorState extends MusicBeatUIState
 			FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 			FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
 
-			if (FlxG.keys.justPressed.SPACE)
-			{
+			if (FlxG.keys.justPressed.SPACE) {
 				reloadText(false);
 			}
 
-			if (FlxG.keys.justPressed.ESCAPE)
-			{
+			if (FlxG.keys.justPressed.ESCAPE) {
 				FlxG.switchState(new MasterEditorMenu());
 			}
 
@@ -526,8 +525,7 @@ class DialogueEditorState extends MusicBeatUIState
 			character.playAnim(character.jsonFile.animations[curAnim].anim, daText.finishedText);
 			animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + leLength + ') - Press W or S to scroll';
 		}
-		else
-		{
+		else {
 			animText.text = 'ERROR! NO ANIMATIONS FOUND';
 		}
 

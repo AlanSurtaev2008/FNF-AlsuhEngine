@@ -417,8 +417,7 @@ class WeekEditorState extends MusicBeatUIState
 
 		txtTracklist.text = '';
 
-		for (i in 0...stringThing.length)
-		{
+		for (i in 0...stringThing.length) {
 			txtTracklist.text += stringThing[i] + '\n';
 		}
 
@@ -554,13 +553,11 @@ class WeekEditorState extends MusicBeatUIState
 					{
 						weekFile.songs[i].songID = splittedText[i];
 
-						if (weekFile.songs[i].character == null)
-						{
+						if (weekFile.songs[i].character == null) {
 							weekFile.songs[i].character = 'dad';
 						}
 
-						if (weekFile.songs[i].color == null)
-						{
+						if (weekFile.songs[i].color == null) {
 							weekFile.songs[i].color = [146, 113, 253];
 						}
 					}
@@ -625,8 +622,7 @@ class WeekEditorState extends MusicBeatUIState
 	{
 		super.update(elapsed);
 
-		if (FlxG.sound.music != null)
-		{
+		if (FlxG.sound.music != null) {
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
 
@@ -662,8 +658,7 @@ class WeekEditorState extends MusicBeatUIState
 			FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 			FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
 
-			if (FlxG.keys.justPressed.ESCAPE)
-			{
+			if (FlxG.keys.justPressed.ESCAPE) {
 				FlxG.switchState(new MasterEditorMenu());
 			}
 		}
@@ -680,14 +675,12 @@ class WeekEditorState extends MusicBeatUIState
 		{
 			var leChar:MenuCharacter = grpWeekCharacters.members[i];
 
-			if (leChar.isDanced && !leChar.heyed)
-			{
+			if (leChar.isDanced && !leChar.heyed) {
 				leChar.dance();
 			}
 			else
 			{
-				if (curBeat % 2 == 0 && !leChar.heyed)
-				{
+				if (curBeat % 2 == 0 && !leChar.heyed) {
 					leChar.dance();
 				}
 			}
@@ -990,8 +983,7 @@ class WeekEditorFreeplayState extends MusicBeatUIState
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
 		{
-			if (sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB)
-			{
+			if (sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB) {
 				updateBG();
 			}
 		}
@@ -1039,7 +1031,8 @@ class WeekEditorFreeplayState extends MusicBeatUIState
 					{
 						if (toPush > 255) {
 							toPush = 255;
-						} else if (toPush < 0) {
+						}
+						else if (toPush < 0) {
 							toPush *= -1;
 						}
 
@@ -1094,13 +1087,11 @@ class WeekEditorFreeplayState extends MusicBeatUIState
 
 		var pasteDiffs:FlxButton = new FlxButton(150, copyDiffs.y + 25, "Paste Diffs", function()
 		{
-			if (difficultiesCopy != null)
-			{
+			if (difficultiesCopy != null) {
 				weekFile.songs[curSelected].difficulties = difficultiesCopy;
 			}
 
-			if (defaultDifficultyCopy != null)
-			{
+			if (defaultDifficultyCopy != null) {
 				weekFile.songs[curSelected].defaultDifficulty = defaultDifficultyCopy;
 			}
 
@@ -1133,8 +1124,7 @@ class WeekEditorFreeplayState extends MusicBeatUIState
 				difficultiesSuffixesInputText.text = diffSuffixes;
 			}
 	
-			if (weekFile.songs[curSelected].defaultDifficulty != null)
-			{
+			if (weekFile.songs[curSelected].defaultDifficulty != null) {
 				defaultDiffInputText.text = weekFile.songs[curSelected].defaultDifficulty;
 			}
 		});
@@ -1185,8 +1175,7 @@ class WeekEditorFreeplayState extends MusicBeatUIState
 
 			item.alpha = 0.6;
 
-			if (item.targetY == 0)
-			{
+			if (item.targetY == 0) {
 				item.alpha = 1;
 			}
 		}
@@ -1195,8 +1184,7 @@ class WeekEditorFreeplayState extends MusicBeatUIState
 		{
 			icon.alpha = 0.6;
 
-			if (icon.ID == curSelected)
-			{
+			if (icon.ID == curSelected) {
 				icon.alpha = 1;
 			}
 		}
@@ -1325,8 +1313,7 @@ class WeekEditorFreeplayState extends MusicBeatUIState
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1), true);
 					}
 				}

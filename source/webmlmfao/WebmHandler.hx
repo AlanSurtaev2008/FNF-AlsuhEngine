@@ -104,10 +104,10 @@ class WebmHandler
 	
 	public function togglePause():Void
 	{
-		if (paused)
-		{
+		if (paused) {
 			resume();
-		} else {
+		}
+		else {
 			pause();
 		}
 	}

@@ -228,6 +228,7 @@ class GameplayChangersSubState extends BaseSubState
 					checkbox.offsetX -= 32;
 					checkbox.offsetY = -70;
 					checkbox.ID = i;
+					checkbox.snapToUpdateVariables();
 					checkboxGroup.add(checkbox);
 				}
 				case 'int' | 'float' | 'percent' | 'string':
@@ -236,6 +237,7 @@ class GameplayChangersSubState extends BaseSubState
 					valueText.sprTracker = optionText;
 					valueText.copyAlpha = true;
 					valueText.ID = i;
+					valueText.snapToUpdateVariables();
 					grpTexts.add(valueText);
 
 					optionsArray[i].setChild(valueText);
@@ -307,8 +309,7 @@ class GameplayChangersSubState extends BaseSubState
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 					}
 				}
@@ -321,7 +322,7 @@ class GameplayChangersSubState extends BaseSubState
 				}
 			}
 
-			if (controls.ACCEPT && nextAccept <= 0)
+			if ((controls.ACCEPT || FlxG.mouse.justPressed) && nextAccept <= 0)
 			{
 				if (curOption == defaultValue)
 				{
@@ -637,8 +638,7 @@ class GameplayChangersSubState extends BaseSubState
 
 			item.alpha = 0.6;
 
-			if (item.targetY == 0) 
-			{
+			if (item.targetY == 0)  {
 				item.alpha = 1;
 			}
 		}
@@ -647,8 +647,7 @@ class GameplayChangersSubState extends BaseSubState
 		{
 			checkbox.alpha = 0.6;
 	
-			if (checkbox.ID == curSelected)
-			{
+			if (checkbox.ID == curSelected) {
 				checkbox.alpha = 1;
 			}
 		}
@@ -657,8 +656,7 @@ class GameplayChangersSubState extends BaseSubState
 		{
 			text.alpha = 0.6;
 	
-			if (text.ID == curSelected)
-			{
+			if (text.ID == curSelected) {
 				text.alpha = 1;
 			}
 		}
@@ -670,8 +668,7 @@ class GameplayChangersSubState extends BaseSubState
 
 	function reloadCheckboxes():Void
 	{
-		for (checkbox in checkboxGroup)
-		{
+		for (checkbox in checkboxGroup) {
 			checkbox.daValue = (optionsArray[checkbox.ID].getValue() == true);
 		}
 	}
@@ -819,8 +816,7 @@ class GameplayOption
 			displayFormat = "%vX";
 			maxValue = 3;
 
-			if (getValue() > 3)
-			{
+			if (getValue() > 3) {
 				setValue(3);
 			}
 		}

@@ -321,7 +321,8 @@ class NoteOffsetState extends MusicBeatState
 				{
 					if (menu == 'offset') {
 						barPercent = Math.max(delayMin, Math.min(OptionData.noteOffset - 1, delayMax));
-					} else if (menu == 'dance') {
+					}
+					else if (menu == 'dance') {
 						barPercent = Math.max(delayMin, Math.min(OptionData.danceOffset - 1, delayMax));
 					}
 		
@@ -331,7 +332,8 @@ class NoteOffsetState extends MusicBeatState
 				{
 					if (menu == 'offset') {
 						barPercent = Math.max(delayMin, Math.min(OptionData.noteOffset + 1, delayMax));
-					} else if (menu == 'dance') {
+					}
+					else if (menu == 'dance') {
 						barPercent = Math.max(delayMin, Math.min(OptionData.danceOffset + 1, delayMax));
 					}
 		
@@ -362,7 +364,8 @@ class NoteOffsetState extends MusicBeatState
 
 					if (menu == 'dance') {
 						barPercent = 2;
-					} else {
+					}
+					else {
 						barPercent = 0;
 					}
 
@@ -371,7 +374,7 @@ class NoteOffsetState extends MusicBeatState
 			}
 		}
 
-		if (controls.ACCEPT)
+		if ((controls.ACCEPT || FlxG.mouse.justPressed))
 		{
 			var menusArrayShit:Array<String> = ['combo', 'offset', 'dance'];
 

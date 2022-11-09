@@ -53,6 +53,17 @@ class CoolUtil
 		return (song + '-' + diff).toLowerCase();
 	}
 
+	public static function formatToName(name:String):String
+	{
+		var killMe:Array<String> = name.trim().split('-');
+			
+		for (i in 0...killMe.length) {
+			killMe[i] = '' + killMe[i].charAt(0).toUpperCase().trim() + killMe[i].substr(1).toLowerCase().trim();
+		}
+
+		return killMe.join(' ');
+	}
+
 	public static function getKeyName(key:FlxKey):String
 	{
 		switch (key)

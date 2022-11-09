@@ -60,8 +60,7 @@ class ReplaysMenuState extends TransitionableState
 				replaysArray[i] = rep.replay.songName + ' - ' + CoolUtil.getDifficultyName(rep.replay.songDiff) + ' ' + rep.replay.timestamp;
 			}
 		}
-		else
-		{
+		else {
 			replaysArray.push('No replays...');
 		}
 
@@ -121,7 +120,7 @@ class ReplaysMenuState extends TransitionableState
 			}
 		}
 
-		if (controls.ACCEPT)
+		if (controls.ACCEPT || FlxG.mouse.justPressed)
 		{
 			if (replaysArray[curSelected] != "No replays...")
 			{
@@ -170,8 +169,7 @@ class ReplaysMenuState extends TransitionableState
 
 			item.alpha = 0.6;
 
-			if (item.targetY == 0)
-			{
+			if (item.targetY == 0) {
 				item.alpha = 1;
 			}
 		}

@@ -77,9 +77,9 @@ class CutsceneHandler extends FlxBasic
 		}
 	}
 
-	public function push(spr:FlxSprite):Void
+	public function push(spr:FlxSprite):Int
 	{
-		objects.push(spr);
+		return objects.push(spr);
 	}
 
 	public function timer(time:Float, func:Void->Void):Void

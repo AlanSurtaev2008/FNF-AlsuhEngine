@@ -166,19 +166,17 @@ class OptionsMenuState extends TransitionableState
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 					}
 				}
 
-				if (FlxG.mouse.wheel != 0)
-				{
+				if (FlxG.mouse.wheel != 0) {
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
 			}
 
-			if (controls.ACCEPT)
+			if (controls.ACCEPT || FlxG.mouse.justPressed)
 			{
 				if (OptionData.flashingLights)
 				{
@@ -194,8 +192,7 @@ class OptionsMenuState extends TransitionableState
 	
 					FlxG.sound.play(Paths.getSound('confirmMenu'));
 				}
-				else
-				{
+				else {
 					openSelectedSubstate(options[curSelected]);
 				}
 			}
@@ -419,8 +416,7 @@ class OptionsSubState extends BaseSubState
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 					}
 				}
@@ -431,7 +427,7 @@ class OptionsSubState extends BaseSubState
 				}
 			}
 
-			if (controls.ACCEPT)
+			if (controls.ACCEPT || FlxG.mouse.justPressed)
 			{
 				if (OptionData.flashingLights)
 				{
@@ -447,8 +443,7 @@ class OptionsSubState extends BaseSubState
 	
 					FlxG.sound.play(Paths.getSound('confirmMenu'));
 				}
-				else
-				{
+				else {
 					openSelectedSubstate(options[curSelected]);
 				}
 			}

@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 
 using StringTools;
 
@@ -28,7 +29,7 @@ class HealthIcon extends FlxSprite
 	{
 		if (char != this.character)
 		{
-			var name:String = 'icons/icon-' + char;
+			var name:String = Paths.fileExists('images/icons/' + char + '.png', IMAGE) ? 'icons/' + char : 'icons/icon-' + char;
 
 			if (Paths.fileExists('images/' + name + '.png', IMAGE))
 			{
@@ -36,12 +37,14 @@ class HealthIcon extends FlxSprite
 
 				if (loadGraphic(file).width >= 450)
 				{
-					loadGraphic((file), true, 150, 150);
+					loadGraphic((file), true, 150, 150); // Then load it fr
+
 					animation.add(char, [0, 1, 2], 0, false, this.isPlayer);
 				}
 				else if (loadGraphic((file)).width <= 300)
 				{
-					loadGraphic((file), true, 150, 150);
+					loadGraphic((file), true, 150, 150); // Then load it fr
+
 					animation.add(char, [0, 1], 0, false, this.isPlayer);
 				}
 
@@ -49,19 +52,23 @@ class HealthIcon extends FlxSprite
 
 				this.character = char;
 			}
-			else
-			{
+			else {
 				changeIcon("face");
 			}
-		}
 
-		antialiasing = char.endsWith('-pixel') ? false : OptionData.globalAntialiasing;
+			antialiasing = char.endsWith('-pixel') ? false : OptionData.globalAntialiasing;
+		}
 	}
 
 	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
+		snapToPosition();
+	}
+
+	public function snapToPosition():Void
+	{
 		if (sprTracker != null) {
 			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 		}

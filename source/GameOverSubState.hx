@@ -15,7 +15,7 @@ using StringTools;
 
 class GameOverSubState extends MusicBeatSubState
 {
-	public static var instance:GameOverSubState;
+	public static var instance:GameOverSubState = null;
 
 	public var boyfriend:Boyfriend;
 
@@ -204,30 +204,24 @@ class GameOverSubState extends MusicBeatSubState
 								FlxG.switchState(new FreeplayMenuState());
 							case 'replay':
 							{
-								if (FlxG.save.data.botPlay != null)
-								{
+								if (FlxG.save.data.botPlay != null) {
 									PlayStateChangeables.botPlay = FlxG.save.data.botPlay;
 								}
-								else
-								{
+								else {
 									PlayStateChangeables.botPlay = false;
 								}
 
-								if (FlxG.save.data.scrollSpeed != null)
-								{
+								if (FlxG.save.data.scrollSpeed != null) {
 									PlayStateChangeables.scrollSpeed = FlxG.save.data.scrollSpeed;
 								}
-								else
-								{
+								else {
 									PlayStateChangeables.scrollSpeed = 1.0;
 								}
 			
-								if (FlxG.save.data.downScroll != null)
-								{
+								if (FlxG.save.data.downScroll != null) {
 									OptionData.downScroll = FlxG.save.data.downScroll;
 								}
-								else
-								{
+								else {
 									OptionData.downScroll = false;
 								}
 	

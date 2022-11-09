@@ -39,6 +39,11 @@ class CheckboxThingie extends FlxSprite
 	{
 		super.update(elapsed);
 
+		snapToUpdateVariables();
+	}
+
+	public function snapToUpdateVariables():Void
+	{
 		if (sprTracker != null)
 		{
 			setPosition(sprTracker.x - 130 + offsetX, sprTracker.y + 30 + offsetY);

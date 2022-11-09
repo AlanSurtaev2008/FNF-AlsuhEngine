@@ -12,8 +12,8 @@ class OutdatedState extends TransitionableState
 {
 	public static var leftState:Bool = false;
 
-	public static var newVersion:String = 'lol';
-	public static var curChanges:String = "dk";
+	public static var newVersion:String = MainMenuState.gameVersion;
+	public static var curChanges:String = "dik";
 
 	var bg:FlxSprite;
 	var txt:FlxText;
@@ -30,7 +30,7 @@ class OutdatedState extends TransitionableState
 
 		txt = new FlxText(0, 0, FlxG.width, "Your used version " + MainMenuState.engineVersion.trim() + "\nof Alsuh Engine is outdated."
 			+ "\nUse the latest version " + newVersion.trim()
-			+ "." + (curChanges != '- dk' ? "\n\nWhat new?\n\n" + curChanges : '') + "\n\nPress ENTER to download latest version\nor ESCAPE to ignorite this message.", 32);
+			+ "." + (curChanges != '- dik' ? "\n\nWhat new?\n\n" + curChanges : '') + "\n\nPress ENTER to download latest version\nor ESCAPE to ignorite this message.", 32);
 		txt.setFormat(Paths.getFont('vcr.ttf'), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		txt.scrollFactor.set();
 		txt.screenCenter();
@@ -61,7 +61,7 @@ class OutdatedState extends TransitionableState
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
 		}
 
-		if (controls.ACCEPT) {
+		if (controls.ACCEPT || FlxG.mouse.justPressed) {
 			CoolUtil.browserLoad('https://github.com/AlanSurtaev2008/FNF-AlsuhEngine/releases/latest');
 		}
 	}

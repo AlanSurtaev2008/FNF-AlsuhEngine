@@ -97,10 +97,10 @@ class EditorLua
 			if(killMe.length > 1) {
 				var coverMeInPiss:Dynamic = Reflect.getProperty(EditorPlayState.instance, killMe[0]);
 
-				for (i in 1...killMe.length-1) {
+				for (i in 1...killMe.length - 1) {
 					coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
 				}
-				return Reflect.getProperty(coverMeInPiss, killMe[killMe.length-1]);
+				return Reflect.getProperty(coverMeInPiss, killMe[killMe.length - 1]);
 			}
 			return Reflect.getProperty(EditorPlayState.instance, variable);
 		});
@@ -109,10 +109,10 @@ class EditorLua
 			if(killMe.length > 1) {
 				var coverMeInPiss:Dynamic = Reflect.getProperty(EditorPlayState.instance, killMe[0]);
 
-				for (i in 1...killMe.length-1) {
+				for (i in 1...killMe.length - 1) {
 					coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
 				}
-				return Reflect.setProperty(coverMeInPiss, killMe[killMe.length-1], value);
+				return Reflect.setProperty(coverMeInPiss, killMe[killMe.length - 1], value);
 			}
 			return Reflect.setProperty(EditorPlayState.instance, variable, value);
 		});

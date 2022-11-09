@@ -217,13 +217,13 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		confirmInputText = new FlxUIInputText(10, idleAltInputText.y + 35, 100, characterFile.confirm_anim, 8);
 		blockPressWhileTypingOn.push(confirmInputText);
 
-		var indicesStr:String = characterFile.indices.toString();
+		var indicesStr:String = characterFile.indices.join(', ');
 
 		animationIndicesInputText = new FlxUIInputText(10, confirmInputText.y + 35, 100,
 			indicesStr.substr(1, indicesStr.length - 2), 8);
 		blockPressWhileTypingOn.push(animationIndicesInputText);
 
-		var indicesStr:String = characterFile.indicesAlt.toString();
+		var indicesStr:String = characterFile.indicesAlt.join(', ');
 
 		animationAltIndicesInputText = new FlxUIInputText(10, animationIndicesInputText.y + 35, 100,
 			indicesStr.substr(1, indicesStr.length - 2), 8);
@@ -236,19 +236,19 @@ class MenuCharacterEditorState extends MusicBeatUIState
 			characterFile.flipX = flipXCheckbox.checked;
 		};
 
-		isGfCheckbox = new FlxUICheckBox(100, confirmInputText.y + 95, null, null, "Is GF?", 100);
-		isGfCheckbox.callback = function()
-		{
-			grpWeekCharacters.members[curTypeSelected].isDanced = isGfCheckbox.checked;
-			characterFile.isGF = isGfCheckbox.checked;
-		};
-
 		var reloadImageButton:FlxButton = new FlxButton(180, confirmInputText.y + 95, "Reload Char", function()
 		{
 			reloadSelectedCharacter();
 		});
 		
 		scaleStepper = new FlxUINumericStepper(190, imageInputText.y, 1, 1, 0.1, 30, 2);
+
+		isGfCheckbox = new FlxUICheckBox(190, scaleStepper.y + 32, null, null, "Is GF?", 100);
+		isGfCheckbox.callback = function()
+		{
+			grpWeekCharacters.members[curTypeSelected].isDanced = isGfCheckbox.checked;
+			characterFile.isGF = isGfCheckbox.checked;
+		};
 
 		fpsStepper = new FlxUINumericStepper(190, scaleStepper.y + 100, 1, 24, 1, 120, 2);
 		fpsAltStepper = new FlxUINumericStepper(190, fpsStepper.y + 40, 1, 24, 1, 120, 2);
@@ -258,15 +258,15 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		var confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Start Press animation on the .XML:');
 		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
 		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
-		tab_group.add(new FlxText(10, idleAltInputText.y - 26, 0, 'Alternative idle animation on the .XML:'));
+		tab_group.add(new FlxText(10, idleAltInputText.y - 28, 0, 'Alternative idle\nanimation on the .XML:'));
 		tab_group.add(new FlxText(scaleStepper.x, scaleStepper.y - 18, 0, 'Scale:'));
 		tab_group.add(new FlxText(10, animationIndicesInputText.y - 18, 0, 'Animation Indices:'));
 		tab_group.add(new FlxText(10, animationAltIndicesInputText.y - 18, 0, 'Alternative Animation Indices:'));
 		tab_group.add(new FlxText(fpsStepper.x, fpsStepper.y - 18, 0, 'Anim FPS:'));
 		tab_group.add(new FlxText(fpsAltStepper.x - 5, fpsAltStepper.y - 18, 0, 'Alt Anim FPS:'));
 		tab_group.add(new FlxText(fpsConfirmStepper.x - 15, fpsConfirmStepper.y - 18, 0, 'Confirm Anim FPS:'));
-		tab_group.add(flipXCheckbox);
 		tab_group.add(isGfCheckbox);
+		tab_group.add(flipXCheckbox);
 		tab_group.add(reloadImageButton);
 		tab_group.add(confirmDescText);
 		tab_group.add(imageInputText);
@@ -325,18 +325,15 @@ class MenuCharacterEditorState extends MusicBeatUIState
 
 		if (char.isDanced)
 		{
-			if (characterFile.indicesAlt != null && characterFile.indicesAlt.length > 0 && characterFile.idle_animAlt != null)
-			{
+			if (characterFile.indicesAlt != null && characterFile.indicesAlt.length > 0 && characterFile.idle_animAlt != null) {
 				char.animation.addByIndices('danceRight', characterFile.idle_animAlt, characterFile.indicesAlt, '', characterFile.fps, false);
 			}
 
-			if (characterFile.indices != null && characterFile.indices.length > 0)
-			{
+			if (characterFile.indices != null && characterFile.indices.length > 0) {
 				char.animation.addByIndices('danceLeft', characterFile.idle_anim, characterFile.indices, '', characterFile.fps, false);
 			}
 		}
-		else
-		{
+		else {
 			char.animation.addByPrefix('idle', characterFile.idle_anim, characterFile.fps, false);
 		}
 
@@ -357,20 +354,16 @@ class MenuCharacterEditorState extends MusicBeatUIState
 	{
 		if (id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText))
 		{
-			if (sender == imageInputText)
-			{
+			if (sender == imageInputText) {
 				characterFile.image = imageInputText.text;
 			}
-			else if (sender == idleInputText)
-			{
+			else if (sender == idleInputText) {
 				characterFile.idle_anim = idleInputText.text;
 			}
-			else if (sender == idleAltInputText)
-			{
+			else if (sender == idleAltInputText) {
 				characterFile.idle_animAlt = idleAltInputText.text;
 			}
-			else if (sender == confirmInputText)
-			{
+			else if (sender == confirmInputText) {
 				characterFile.confirm_anim = confirmInputText.text;
 			}
 			else if (sender == animationIndicesInputText)
@@ -382,10 +375,11 @@ class MenuCharacterEditorState extends MusicBeatUIState
 				{
 					for (i in 0...indicesStr.length)
 					{
+						indicesStr[i] = indicesStr[i].trim();
+
 						var index:Int = Std.parseInt(indicesStr[i]);
 
-						if (indicesStr[i] != null && indicesStr[i] != '' && !Math.isNaN(index) && index > -1)
-						{
+						if (indicesStr[i] != null && indicesStr[i] != '' && !Math.isNaN(index) && index > -1) {
 							indices.push(index);
 						}
 					}
@@ -402,10 +396,11 @@ class MenuCharacterEditorState extends MusicBeatUIState
 				{
 					for (i in 0...indicesStr.length)
 					{
+						indicesStr[i] = indicesStr[i].trim();
+
 						var index:Int = Std.parseInt(indicesStr[i]);
 
-						if (indicesStr[i] != null && indicesStr[i] != '' && !Math.isNaN(index) && index > -1)
-						{
+						if (indicesStr[i] != null && indicesStr[i] != '' && !Math.isNaN(index) && index > -1) {
 							indices.push(index);
 						}
 					}
@@ -443,8 +438,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 	{
 		super.update(elapsed);
 
-		if (FlxG.sound.music != null)
-		{
+		if (FlxG.sound.music != null) {
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
 
@@ -472,8 +466,8 @@ class MenuCharacterEditorState extends MusicBeatUIState
 			FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 			FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
 
-			if (FlxG.keys.justPressed.ESCAPE)
-			{
+			if (FlxG.keys.justPressed.ESCAPE) {
+				FlxG.sound.music.volume = 0;
 				FlxG.switchState(new MasterEditorMenu());
 			}
 
@@ -604,13 +598,13 @@ class MenuCharacterEditorState extends MusicBeatUIState
 
 					if (characterFile.indices != null && characterFile.indices.length > 0)
 					{
-						var indicesStr:String = characterFile.indices.toString();
+						var indicesStr:String = characterFile.indices.join(', ');
 						animationIndicesInputText.text = indicesStr.substr(1, indicesStr.length - 2);
 					}
 
 					if (characterFile.indicesAlt != null && characterFile.indicesAlt.length > 0)
 					{
-						var indicesStr:String = characterFile.indicesAlt.toString();
+						var indicesStr:String = characterFile.indicesAlt.join(', ');
 						animationAltIndicesInputText.text = indicesStr.substr(1, indicesStr.length - 2);
 					}
 

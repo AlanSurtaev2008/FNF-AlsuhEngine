@@ -20,7 +20,7 @@ class OptionData
 	public static var controllerMode:Bool = false;
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
-	public static var cpuStrumsType:String = 'Glow';
+	public static var opponentStrumsType:String = 'Glow';
 	public static var hitsoundType:String = 'Kade';
 	public static var hitsoundVolume:Float = 0;
 	public static var noReset:Bool = false;
@@ -80,7 +80,7 @@ class OptionData
 		FlxG.save.data.controllerMode = controllerMode;
 		FlxG.save.data.downScroll = downScroll;
 		FlxG.save.data.middleScroll = middleScroll;
-		FlxG.save.data.cpuStrumsType = cpuStrumsType;
+		FlxG.save.data.opponentStrumsType = opponentStrumsType;
 		FlxG.save.data.ratingOffset = ratingOffset;
 		FlxG.save.data.sickWindow = sickWindow;
 		FlxG.save.data.goodWindow = goodWindow;
@@ -134,37 +134,34 @@ class OptionData
 
 		if (FlxG.save.data.fullScreen != null) {
 			fullScreen = FlxG.save.data.fullScreen;
-			FlxG.fullscreen = fullScreen;
-		} else {
-			FlxG.fullscreen = fullScreen;
 		}
+
+		FlxG.fullscreen = fullScreen;
 
 		if (FlxG.save.data.lowQuality != null) {
 			lowQuality = FlxG.save.data.lowQuality;
 		}
+
 		if (FlxG.save.data.globalAntialiasing != null) {
 			globalAntialiasing = FlxG.save.data.globalAntialiasing;
 		}
 		if (FlxG.save.data.shaders != null) {
 			shaders = FlxG.save.data.shaders;
 		}
+
 		if (FlxG.save.data.framerate != null) {
 			framerate = FlxG.save.data.framerate;
-			if (framerate > FlxG.drawFramerate) {
-				FlxG.updateFramerate = framerate;
-				FlxG.drawFramerate = framerate;
-			} else {
-				FlxG.drawFramerate = framerate;
-				FlxG.updateFramerate = framerate;
-			}
-		} else {
-			if (framerate > FlxG.drawFramerate) {
-				FlxG.updateFramerate = framerate;
-				FlxG.drawFramerate = framerate;
-			} else {
-				FlxG.drawFramerate = framerate;
-				FlxG.updateFramerate = framerate;
-			}
+		}
+
+		if (framerate > FlxG.drawFramerate)
+		{
+			FlxG.updateFramerate = framerate;
+			FlxG.drawFramerate = framerate;
+		}
+		else
+		{
+			FlxG.drawFramerate = framerate;
+			FlxG.updateFramerate = framerate;
 		}
 
 		if (FlxG.save.data.ghostTapping != null) {
@@ -179,17 +176,28 @@ class OptionData
 		if (FlxG.save.data.middleScroll != null) {
 			middleScroll = FlxG.save.data.middleScroll;
 		}
-		if (FlxG.save.data.cpuStrumsType != null) {
-			if (FlxG.save.data.cpuStrumsType == 'Light Up') {
-				FlxG.save.data.cpuStrumsType = 'Glow';
-			}
 
-			if (FlxG.save.data.cpuStrumsType == 'Normal') {
-				FlxG.save.data.cpuStrumsType = 'Static';
-			}
+		if (FlxG.save.data.cpuStrumsType != null)
+		{
+			FlxG.save.data.opponentStrumsType = FlxG.save.data.cpuStrumsType;
+			FlxG.save.data.cpuStrumsType = null;
 
-			cpuStrumsType = FlxG.save.data.cpuStrumsType;
+			savePrefs();
 		}
+
+		if (FlxG.save.data.opponentStrumsType != null)
+		{
+			if (FlxG.save.data.opponentStrumsType == 'Light Up') {
+				FlxG.save.data.opponentStrumsType = 'Glow';
+			}
+
+			if (FlxG.save.data.opponentStrumsType == 'Normal') {
+				FlxG.save.data.opponentStrumsType = 'Static';
+			}
+
+			opponentStrumsType = FlxG.save.data.opponentStrumsType;
+		}
+
 		if (FlxG.save.data.ratingOffset != null) {
 			ratingOffset = FlxG.save.data.ratingOffset;
 		}
@@ -277,23 +285,29 @@ class OptionData
 		if (FlxG.save.data.controllerMode != null) {
 			controllerMode = FlxG.save.data.controllerMode;
 		}
-		if (FlxG.save.data.fpsCounter != null) {
+
+		if (FlxG.save.data.fpsCounter != null)
+		{
 			fpsCounter = FlxG.save.data.fpsCounter;
 
 			if (Main.fpsCounter != null) {
 				Main.fpsCounter.visible = fpsCounter;
 			}
 		}
+
 		if (FlxG.save.data.rainFPS != null) {
 			rainFPS = FlxG.save.data.rainFPS;
 		}
-		if (FlxG.save.data.memoryCounter != null) {
+
+		if (FlxG.save.data.memoryCounter != null)
+		{
 			memoryCounter = FlxG.save.data.memoryCounter;
 
 			if (Main.memoryCounter != null) {
 				Main.memoryCounter.visible = memoryCounter;
 			}
 		}
+
 		if (FlxG.save.data.rainMemory != null) {
 			rainMemory = FlxG.save.data.rainMemory;
 		}
@@ -304,10 +318,9 @@ class OptionData
 
 		if (FlxG.save.data.autoPause != null) {
 			autoPause = FlxG.save.data.autoPause;
-			FlxG.autoPause = autoPause;
-		} else {
-			FlxG.autoPause = autoPause;
 		}
+
+		FlxG.autoPause = autoPause;
 
 		if (FlxG.save.data.loadingScreen != null) {
 			loadingScreen = FlxG.save.data.loadingScreen;
@@ -324,13 +337,11 @@ class OptionData
 			arrowHSV = FlxG.save.data.arrowHSV;
 		}
 
-		if (FlxG.save.data.volume != null)
-		{
+		if (FlxG.save.data.volume != null) {
 			FlxG.sound.volume = FlxG.save.data.volume;
 		}
 
-		if (FlxG.save.data.mute != null)
-		{
+		if (FlxG.save.data.mute != null) {
 			FlxG.sound.muted = FlxG.save.data.mute;
 		}
 	}

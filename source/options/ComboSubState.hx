@@ -90,8 +90,7 @@ class ComboSubState extends BaseSubState
 
 		var seperatedScore:Array<Int> = [];
 
-		for (i in 0...3)
-		{
+		for (i in 0...3) {
 			seperatedScore.push(FlxG.random.int(0, 9));
 		}
 
@@ -197,8 +196,7 @@ class ComboSubState extends BaseSubState
 			}
 		}
 
-		if (FlxG.mouse.justReleased)
-		{
+		if (FlxG.mouse.justReleased) {
 			holdingObjectType = null;
 		}
 
@@ -218,8 +216,7 @@ class ComboSubState extends BaseSubState
 
 		if (controls.RESET)
 		{
-			for (i in 0...OptionData.comboOffset.length)
-			{
+			for (i in 0...OptionData.comboOffset.length) {
 				OptionData.comboOffset[i] = 0;
 			}
 
@@ -251,8 +248,7 @@ class ComboSubState extends BaseSubState
 			text.borderSize = 2;
 			dumbTexts.add(text);
 
-			if (i > 1)
-			{
+			if (i > 1) {
 				text.y += 24;
 			}
 		}

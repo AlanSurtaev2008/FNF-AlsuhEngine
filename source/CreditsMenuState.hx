@@ -159,6 +159,7 @@ class CreditsMenuState extends TransitionableState
 					icon.sprTracker = creditText;
 					icon.copyVisible = true;
 					icon.ID = i;
+					icon.snapToUpdateVariables();
 					grpIcons.add(icon);
 				}
 
@@ -226,19 +227,17 @@ class CreditsMenuState extends TransitionableState
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 	
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 					}
 				}
 	
-				if (FlxG.mouse.wheel != 0)
-				{
+				if (FlxG.mouse.wheel != 0) {
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
 			}
 
-			if (controls.ACCEPT && nextAccept <= 0 && (curCredit[3] == null || curCredit[3].length > 4))
+			if ((controls.ACCEPT || FlxG.mouse.justPressed) && nextAccept <= 0 && (curCredit[3] == null || curCredit[3].length > 4))
 			{
 				if (OptionData.flashingLights)
 				{
@@ -252,8 +251,7 @@ class CreditsMenuState extends TransitionableState
 
 					FlxG.sound.play(Paths.getSound('confirmMenu'));
 				}
-				else
-				{
+				else {
 					CoolUtil.browserLoad(curCredit[3]);
 				}
 			}
@@ -270,8 +268,7 @@ class CreditsMenuState extends TransitionableState
 					item.screenCenter(X);
 					item.x = CoolUtil.coolLerp(lastX, item.x - 70, 0.2);
 				}
-				else
-				{
+				else {
 					item.x = CoolUtil.coolLerp(item.x, 200 + -40 * Math.abs(item.targetY), 0.2);
 				}
 			}
@@ -288,7 +285,8 @@ class CreditsMenuState extends TransitionableState
 	{
 		super.openSubState(SubState);
 
-		if (!startShit) {
+		if (!startShit)
+		{
 			if (colorTween != null) {
 				colorTween.active = false;
 			}
@@ -311,7 +309,8 @@ class CreditsMenuState extends TransitionableState
 			persistentUpdate = true;
 			startShit = false;
 		}
-		else {
+		else
+		{
 			if (colorTween != null) {
 				colorTween.active = true;
 			}
@@ -373,8 +372,7 @@ class CreditsMenuState extends TransitionableState
 					{
 						icon.alpha = 0.6;
 
-						if (icon.sprTracker == item)
-						{
+						if (icon.sprTracker == item) {
 							icon.alpha = 1;
 						}
 					}

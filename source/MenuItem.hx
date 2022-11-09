@@ -42,7 +42,8 @@ class MenuItem extends FlxSprite
 
 		if (flashingInt % fakeFramerate >= Math.floor(fakeFramerate / 2)) {
 			color = 0xFF33FFFF;
-		} else if (OptionData.flashingLights) {
+		}
+		else if (OptionData.flashingLights) {
 			color = FlxColor.WHITE;
 		}
 	}

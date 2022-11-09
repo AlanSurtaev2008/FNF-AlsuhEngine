@@ -221,18 +221,17 @@ class Character extends FlxSprite
 							animation.addByPrefix(animAnim, animName, animFps, animLoop);
 						}
 
-						if (anim.offsets != null && anim.offsets.length > 1)
-						{
+						if (anim.offsets != null && anim.offsets.length > 1) {
 							addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
 						}
 					}
 				}
-				else
-				{
+				else {
 					quickAnimAdd('idle', 'BF idle dance');
 				}
 			}
 		}
+
 		originalFlipX = flipX;
 
 		if (animOffsets.exists('singLEFTmiss') || animOffsets.exists('singDOWNmiss') || animOffsets.exists('singUPmiss') || animOffsets.exists('singRIGHTmiss')) hasMissAnimations = true;
@@ -240,8 +239,7 @@ class Character extends FlxSprite
 		recalculateDanceIdle();
 		dance();
 
-		if (isPlayer)
-		{
+		if (isPlayer) {
 			flipX = !flipX;
 		}
 
@@ -304,8 +302,7 @@ class Character extends FlxSprite
 
 			if (!isPlayer)
 			{
-				if (animation.curAnim.name.startsWith('sing'))
-				{
+				if (animation.curAnim.name.startsWith('sing')) {
 					holdTimer += elapsed;
 				}
 
@@ -359,28 +356,23 @@ class Character extends FlxSprite
 
 		var daOffset = animOffsets.get(AnimName);
 
-		if (animOffsets.exists(AnimName))
-		{
+		if (animOffsets.exists(AnimName)) {
 			offset.set(daOffset[0], daOffset[1]);
 		}
-		else
-		{
+		else {
 			offset.set(0, 0);
 		}
 
 		if (curCharacter.startsWith('gf'))
 		{
-			if (AnimName == 'singLEFT')
-			{
+			if (AnimName == 'singLEFT') {
 				danced = true;
 			}
-			else if (AnimName == 'singRIGHT')
-			{
+			else if (AnimName == 'singRIGHT') {
 				danced = false;
 			}
 
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
-			{
+			if (AnimName == 'singUP' || AnimName == 'singDOWN') {
 				danced = !danced;
 			}
 		}
@@ -392,8 +384,7 @@ class Character extends FlxSprite
 
 		for (section in noteData)
 		{
-			for (songNotes in section.sectionNotes)
-			{
+			for (songNotes in section.sectionNotes) {
 				animationNotes.push(songNotes);
 			}
 		}
@@ -416,8 +407,7 @@ class Character extends FlxSprite
 		var lastDanceIdle:Bool = danceIdle;
 		danceIdle = (animation.getByName('danceLeft' + idleSuffix) != null && animation.getByName('danceRight' + idleSuffix) != null);
 
-		if (settingCharacterUp)
-		{
+		if (settingCharacterUp) {
 			danceEveryNumBeats = (danceIdle ? 1 : OptionData.danceOffset);
 		}
 		else if (lastDanceIdle != danceIdle)

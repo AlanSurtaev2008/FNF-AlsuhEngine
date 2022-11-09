@@ -1,12 +1,12 @@
 package;
 
-import flixel.FlxSubState;
 #if desktop
 import Discord.DiscordClient;
 #end
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxEase;
@@ -121,6 +121,7 @@ class FreeplayMenuState extends TransitionableState
 			var icon:HealthIcon = new HealthIcon(leSong.songCharacter);
 			icon.sprTracker = songText;
 			icon.ID = i;
+			icon.snapToPosition();
 			grpIcons.add(icon);
 
 			if (curSelected < 0) curSelected = i;
@@ -267,8 +268,7 @@ class FreeplayMenuState extends TransitionableState
 				holdTime += elapsed;
 				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-				{
+				if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult), true);
 				}
 			}
@@ -303,8 +303,7 @@ class FreeplayMenuState extends TransitionableState
 				holdTimeHos += elapsed;
 				var checkNewHold:Int = Math.floor((holdTimeHos - 0.5) * 10);
 
-				if (holdTimeHos > 0.5 && checkNewHold - checkLastHold > 0)
-				{
+				if (holdTimeHos > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeDifficulty((checkNewHold - checkLastHold) * (controls.UI_LEFT ? -1 : 1));
 				}
 			}
@@ -346,7 +345,7 @@ class FreeplayMenuState extends TransitionableState
 				#end
 			}
 		}
-		else if (controls.ACCEPT)
+		else if (controls.ACCEPT || FlxG.mouse.justPressed)
 		{
 			persistentUpdate = false;
 
@@ -403,7 +402,8 @@ class FreeplayMenuState extends TransitionableState
 	{
 		super.openSubState(SubState);
 
-		if (!startShit) {
+		if (!startShit)
+		{
 			if (colorTween != null) {
 				colorTween.active = false;
 			}
@@ -426,7 +426,8 @@ class FreeplayMenuState extends TransitionableState
 			persistentUpdate = true;
 			startShit = false;
 		}
-		else {
+		else
+		{
 			if (colorTween != null) {
 				colorTween.active = true;
 			}
@@ -458,8 +459,7 @@ class FreeplayMenuState extends TransitionableState
 
 			item.alpha = 0.6;
 
-			if (item.targetY == 0)
-			{
+			if (item.targetY == 0) {
 				item.alpha = 1;
 			}
 		}
@@ -468,8 +468,7 @@ class FreeplayMenuState extends TransitionableState
 		{
 			icon.alpha = 0.6;
 
-			if (icon.ID == curSelected)
-			{
+			if (icon.ID == curSelected) {
 				icon.alpha = 1;
 			}
 		}

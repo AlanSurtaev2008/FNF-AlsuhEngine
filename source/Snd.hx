@@ -1,3 +1,4 @@
+#if switch
 import faxe.Faxe;
 
 import SndTV;
@@ -1286,3 +1287,4 @@ class Snd {
 		return cast fbank;
 	}
 }
+#end

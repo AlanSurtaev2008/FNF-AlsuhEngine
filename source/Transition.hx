@@ -89,7 +89,8 @@ class Transition extends BaseSubState
 	{
 		if (isTransIn) {
 			transBlack.y = transGradient.y + transGradient.height;
-		} else {
+		}
+		else {
 			transBlack.y = transGradient.y - transBlack.height;
 		}
 
@@ -97,7 +98,8 @@ class Transition extends BaseSubState
 
 		if (isTransIn) {
 			transBlack.y = transGradient.y + transGradient.height;
-		} else {
+		}
+		else {
 			transBlack.y = transGradient.y - transBlack.height;
 		}
 	}

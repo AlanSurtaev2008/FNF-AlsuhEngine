@@ -154,8 +154,7 @@ class MenuCharacter extends FlxSprite
 			else
 				animation.play('danceLeft');
 		}
-		else
-		{
+		else {
 			animation.play('idle');
 		}
 	}

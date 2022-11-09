@@ -55,8 +55,9 @@ class PlayerSettings
 		{
 			var gamepad = FlxG.gamepads.getByID(0);
 	
-			if (gamepad == null)
+			if (gamepad == null) {
 				throw 'Unexpected null gamepad. id:0';
+			}
 
 			player1.controls.addDefaultGamepad(0);
 		}
@@ -71,8 +72,9 @@ class PlayerSettings
 
 			var gamepad = FlxG.gamepads.getByID(1);
 
-			if (gamepad == null)
+			if (gamepad == null) {
 				throw 'Unexpected null gamepad. id:0';
+			}
 
 			player2.controls.addDefaultGamepad(1);
 		}

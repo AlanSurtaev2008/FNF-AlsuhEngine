@@ -26,7 +26,7 @@ using StringTools;
 
 class EditorPlayState extends MusicBeatState
 {
-	public static var instance:EditorPlayState;
+	public static var instance:EditorPlayState = null;
 
 	var generatedMusic:Bool = false;
 	var vocals:FlxSound;
@@ -53,7 +53,7 @@ class EditorPlayState extends MusicBeatState
 
 	public var strumLine:FlxSprite;
 
-	public var cpuStrums:FlxTypedGroup<StrumNote>;
+	public var opponentStrums:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
@@ -101,8 +101,8 @@ class EditorPlayState extends MusicBeatState
 		strumLine.visible = false;
 		add(strumLine);
 
-		cpuStrums = new FlxTypedGroup<StrumNote>();
-		add(cpuStrums);
+		opponentStrums = new FlxTypedGroup<StrumNote>();
+		add(opponentStrums);
 
 		playerStrums = new FlxTypedGroup<StrumNote>();
 		add(playerStrums);
@@ -190,7 +190,7 @@ class EditorPlayState extends MusicBeatState
 
 		notes.forEachAlive(function(note:Note) 
 		{
-			if (OptionData.cpuStrumsType != 'Disabled' || note.mustPress)
+			if (OptionData.opponentStrumsType != 'Disabled' || note.mustPress)
 			{
 				note.copyAlpha = false;
 				note.alpha = note.multAlpha;
@@ -298,8 +298,7 @@ class EditorPlayState extends MusicBeatState
 					}
 				}
 
-				if (!noteTypeMap.exists(swagNote.noteType))
-				{
+				if (!noteTypeMap.exists(swagNote.noteType)) {
 					noteTypeMap.set(swagNote.noteType, true);
 				}
 			}
@@ -323,9 +322,10 @@ class EditorPlayState extends MusicBeatState
 
 			if (player == 0)
 			{
-				if (OptionData.cpuStrumsType == 'Disabled') {
+				if (OptionData.opponentStrumsType == 'Disabled') {
 					targetAlpha = 0;
-				} else if (OptionData.middleScroll) {
+				}
+				else if (OptionData.middleScroll) {
 					targetAlpha = 0.35;
 				}
 			}
@@ -346,7 +346,7 @@ class EditorPlayState extends MusicBeatState
 						}
 					}
 
-					cpuStrums.add(babyArrow);
+					opponentStrums.add(babyArrow);
 				}
 				case 1:
 				{
@@ -424,7 +424,7 @@ class EditorPlayState extends MusicBeatState
 		{
 			notes.forEachAlive(function(daNote:Note)
 			{
-				var strumGroup:FlxTypedGroup<StrumNote> = daNote.mustPress ? playerStrums : cpuStrums;
+				var strumGroup:FlxTypedGroup<StrumNote> = daNote.mustPress ? playerStrums : opponentStrums;
 
 				var strumX:Float = strumGroup.members[daNote.noteData].x;
 				var strumY:Float = strumGroup.members[daNote.noteData].y;
@@ -443,7 +443,8 @@ class EditorPlayState extends MusicBeatState
 
 				if (strumScroll) {
 					daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * PlayState.SONG.speed * daNote.multSpeed);
-				} else {
+				}
+				else {
 					daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * PlayState.SONG.speed * daNote.multSpeed);
 				}
 
@@ -531,7 +532,8 @@ class EditorPlayState extends MusicBeatState
 	
 					if (PlayState.isPixelStage) {
 						daNote.y += 8 + (6 - daNote.originalHeightForCalcs) * PlayState.daPixelZoom;
-					} else {
+					}
+					else {
 						daNote.y -= 19;
 					}
 				}
@@ -867,7 +869,7 @@ class EditorPlayState extends MusicBeatState
 			vocals.volume = 1;
 		}
 
-		if (OptionData.cpuStrumsType == 'Glow' || (OptionData.cpuStrumsType == 'Glow no Sustains' && !daNote.isSustainNote))
+		if (OptionData.opponentStrumsType == 'Glow' || (OptionData.opponentStrumsType == 'Glow no Sustains' && !daNote.isSustainNote))
 		{
 			var time:Float = 0.15;
 
@@ -965,7 +967,7 @@ class EditorPlayState extends MusicBeatState
 			if (!note.noteSplashHitByOpponent)
 				strum = playerStrums.members[note.noteData];
 			else
-				strum = cpuStrums.members[note.noteData];
+				strum = opponentStrums.members[note.noteData];
 
 			if (strum != null) {
 				spawnNoteSplash(strum.x, strum.y, note.noteData, note);
@@ -1009,8 +1011,9 @@ class EditorPlayState extends MusicBeatState
 		var spr:StrumNote = null;
 
 		if (isDad) {
-			spr = cpuStrums.members[id];
-		} else {
+			spr = opponentStrums.members[id];
+		}
+		else {
 			spr = playerStrums.members[id];
 		}
 

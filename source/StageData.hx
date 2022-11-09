@@ -126,7 +126,8 @@ class StageData
 
 		if (stageFile == null) { // preventing crashes
 			forceNextDirectory = '';
-		} else {
+		}
+		else {
 			forceNextDirectory = stageFile.directory;
 		}
 	}
@@ -141,13 +142,15 @@ class StageData
 
 		if (FileSystem.exists(modPath)) {
 			rawJson = File.getContent(modPath);
-		} else if (FileSystem.exists(path)) {
+		}
+		else if (FileSystem.exists(path)) {
 			rawJson = File.getContent(path);
 		}
 		#else
 		if (Assets.exists(path)) {
 			rawJson = Assets.getText(path);
-		} #end else {
+		} #end
+		else {
 			return null;
 		}
 

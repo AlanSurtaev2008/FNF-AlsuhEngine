@@ -48,7 +48,7 @@ class MainMenuState extends TransitionableState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.6';
+	public static var engineVersion:String = '1.6.1';
 	public static var gameVersion:String = '0.2.8';
 
 	var debugKeys:Array<FlxKey>;
@@ -229,8 +229,7 @@ class MainMenuState extends TransitionableState
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 	
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 						FlxG.sound.play(Paths.getSound('scrollMenu'));
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 					}
@@ -244,7 +243,7 @@ class MainMenuState extends TransitionableState
 				}
 			}
 
-			if (controls.ACCEPT)
+			if (controls.ACCEPT || FlxG.mouse.justPressed)
 			{
 				if (menuItems[curSelected] == 'donate') {
 					CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');

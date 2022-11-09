@@ -129,7 +129,7 @@ class PreferencesSubState extends MusicBeatSubState
 		var option:Option = new Option('Opponent Notes:',
 			true,
 			'What should the opponent (CPU) notes?',
-			'cpuStrumsType',
+			'opponentStrumsType',
 			'string',
 			'Glow',
 			['Glow', 'Glow no Sustains', 'Glow, while Sus', 'Static', 'Disabled']);
@@ -138,7 +138,8 @@ class PreferencesSubState extends MusicBeatSubState
 		{
 			if (option.getValue() == 'Disabled') {
 				option.isPause = isPause;
-			} else {
+			}
+			else {
 				option.options = ['Glow', 'Glow no Sustains', 'Glow, while Sus', 'Static'];
 				option.luaAllowed = true;
 			}
@@ -639,6 +640,7 @@ class PreferencesSubState extends MusicBeatSubState
 						var checkbox:CheckboxThingie = new CheckboxThingie(optionText.x - 105, optionText.y, leOption.getValue() == true);
 						checkbox.sprTracker = optionText;
 						checkbox.ID = i;
+						checkbox.snapToUpdateVariables();
 						checkboxGroup.add(checkbox);
 					}
 					case 'int' | 'float' | 'percent' | 'string':
@@ -646,13 +648,15 @@ class PreferencesSubState extends MusicBeatSubState
 						var valueText:AttachedText = new AttachedText('' + leOption.getValue(), optionText.width + 80);
 						valueText.sprTracker = optionText;
 						valueText.ID = i;
+						valueText.snapToUpdateVariables();
 						grpTexts.add(valueText);
 		
 						leOption.setChild(valueText);
 					}
 				}
 
-				if (leOption.type != 'bool') {
+				if (leOption.type != 'bool')
+				{
 					optionText.x = 180;
 					optionText.distancePerItem.x = 180;
 				}
@@ -696,8 +700,7 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		super.update(elapsed);
 
-		if (FlxG.sound.music != null && !isPause)
-		{
+		if (FlxG.sound.music != null && !isPause) {
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
 
@@ -714,8 +717,7 @@ class PreferencesSubState extends MusicBeatSubState
 				FlxG.state.closeSubState();
 				FlxG.state.openSubState(new OptionsSubState());
 			}
-			else
-			{
+			else {
 				close();
 			}
 		}
@@ -742,19 +744,17 @@ class PreferencesSubState extends MusicBeatSubState
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 	
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 					}
 				}
 	
-				if (FlxG.mouse.wheel != 0)
-				{
+				if (FlxG.mouse.wheel != 0) {
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
 			}
 
-			if (controls.ACCEPT && nextAccept <= 0)
+			if ((controls.ACCEPT || FlxG.mouse.justPressed) && nextAccept <= 0)
 			{
 				if (curOption == defaultValue)
 				{
@@ -793,8 +793,7 @@ class PreferencesSubState extends MusicBeatSubState
 	
 							FlxG.sound.play(Paths.getSound('confirmMenu'));
 						}
-						else
-						{
+						else {
 							changeBool(curOption);
 						}
 					}
@@ -812,8 +811,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 							FlxG.sound.play(Paths.getSound('confirmMenu'));
 						}
-						else
-						{
+						else {
 							curOption.change();
 						}
 					}
@@ -841,8 +839,7 @@ class PreferencesSubState extends MusicBeatSubState
 					{
 						var add:Dynamic = null;
 
-						if (curOption.type != 'string')
-						{
+						if (curOption.type != 'string') {
 							add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
 						}
 
@@ -921,13 +918,11 @@ class PreferencesSubState extends MusicBeatSubState
 					}
 				}
 
-				if (curOption.type != 'string')
-				{
+				if (curOption.type != 'string') {
 					holdTimeValue += elapsed;
 				}
 			}
-			else if (controls.UI_LEFT_R || controls.UI_RIGHT_R)
-			{
+			else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
 				clearHold();
 			}
 		}
@@ -939,8 +934,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 	function clearHold():Void
 	{
-		if (holdTimeValue > 0.5)
-		{
+		if (holdTimeValue > 0.5) {
 			FlxG.sound.play(Paths.getSound('scrollMenu'));
 		}
 
@@ -961,8 +955,7 @@ class PreferencesSubState extends MusicBeatSubState
 
 				if (leOption.type != 'bool')
 				{
-					if (leOption.type == 'string')
-					{
+					if (leOption.type == 'string') {
 						leOption.curOption = leOption.options.indexOf(leOption.getValue());
 					}
 
@@ -1049,7 +1042,8 @@ class PreferencesSubState extends MusicBeatSubState
 		{
 			if (OptionData.hitsoundType == 'Kade') {
 				FlxG.sound.play(Paths.getSound('SNAP', 'shared'), OptionData.hitsoundVolume);
-			} else if (OptionData.hitsoundType == 'Psych') {
+			}
+			else if (OptionData.hitsoundType == 'Psych') {
 				FlxG.sound.play(Paths.getSound('hitsound', 'shared'), OptionData.hitsoundVolume);
 			}
 		}
@@ -1124,8 +1118,7 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		if (isPause)
 		{
-			for (rating in PlayState.instance.grpRatings)
-			{
+			for (rating in PlayState.instance.grpRatings) {
 				rating.goToVisible();
 			}
 		}
@@ -1135,8 +1128,7 @@ class PreferencesSubState extends MusicBeatSubState
 	{
 		if (isPause)
 		{
-			for (number in PlayState.instance.grpNumbers)
-			{
+			for (number in PlayState.instance.grpNumbers) {
 				number.goToVisible();
 			}
 		}
@@ -1155,7 +1147,8 @@ class PreferencesSubState extends MusicBeatSubState
 
 		if (OptionData.pauseMusic == 'None') {
 			FlxG.sound.music.volume = 0;
-		} else {
+		}
+		else {
 			FlxG.sound.playMusic(Paths.getMusic(Paths.formatToSongPath(OptionData.pauseMusic), 'shared'));
 		}
 
@@ -1228,8 +1221,7 @@ class PreferencesSubState extends MusicBeatSubState
 					{
 						checkbox.alpha = 0.6;
 
-						if (checkbox.sprTracker == item)
-						{
+						if (checkbox.sprTracker == item) {
 							checkbox.alpha = 1;
 						}
 					}
@@ -1238,8 +1230,7 @@ class PreferencesSubState extends MusicBeatSubState
 					{
 						text.alpha = 0.6;
 
-						if (text.sprTracker == item)
-						{
+						if (text.sprTracker == item) {
 							text.alpha = 1;
 						}
 					}
@@ -1282,6 +1273,7 @@ class PreferencesSubState extends MusicBeatSubState
 		boyfriend.updateHitbox();
 		boyfriend.dance();
 		insert(members.indexOf(grpOptions), boyfriend);
+
 		boyfriend.visible = wasVisible;
 	}	
 

@@ -308,8 +308,7 @@ class StoryMenuState extends MusicBeatState
 					holdTimeHos += elapsed;
 					var checkNewHold:Int = Math.floor((holdTimeHos - 0.5) * 10);
 	
-					if (holdTimeHos > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTimeHos > 0.5 && checkNewHold - checkLastHold > 0) {
 						changeDifficulty((checkNewHold - checkLastHold) * (controls.UI_LEFT ? -1 : 1));
 					}
 				}
@@ -327,7 +326,7 @@ class StoryMenuState extends MusicBeatState
 				openSubState(new ResetScoreSubState('story', curWeek.weekName, curWeek.weekID, CoolUtil.getDifficultyName(curDifficultyString,
 					curWeek.difficulties), curDifficultyString));
 			}
-			else if (controls.ACCEPT)
+			else if (controls.ACCEPT || FlxG.mouse.justPressed)
 			{
 				var diffic:String = CoolUtil.getDifficultySuffix(curDifficultyString, curWeek.difficulties);
 
@@ -535,12 +534,10 @@ class StoryMenuState extends MusicBeatState
 
 		var assetName:String = curWeek.weekBackground;
 
-		if (assetName == null || assetName.length < 1)
-		{
+		if (assetName == null || assetName.length < 1) {
 			bgSprite.visible = false;
 		}
-		else
-		{
+		else {
 			bgSprite.loadGraphic(Paths.getImage('storymenu/menubackgrounds/menu_' + assetName));
 		}
 	}

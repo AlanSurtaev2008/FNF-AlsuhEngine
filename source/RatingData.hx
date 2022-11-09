@@ -30,7 +30,7 @@ class RatingData
 			return Reflect.field(OptionData, name + 'Window');
 		}
 
-		return 0;
+		return null;
 	}
 
 	public function increase(blah:Int = 1):Void

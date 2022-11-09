@@ -165,7 +165,7 @@ class LoadingState extends TransitionableState
 		funkay.setGraphicSize(Std.int(wacky + 0.9 * (funkay.width - wacky)));
 		funkay.updateHitbox();
 
-		if (controls.ACCEPT)
+		if (controls.ACCEPT || FlxG.mouse.justPressed)
 		{
 			funkay.setGraphicSize(Std.int(funkay.width + 60));
 			funkay.updateHitbox();
@@ -287,8 +287,7 @@ class LoadingState extends TransitionableState
 				rootPath = path;
 				path += "/library.json";
 			}
-			else
-			{
+			else {
 				rootPath = Path.directory(path);
 			}
 			@:privateAccess
@@ -305,8 +304,7 @@ class LoadingState extends TransitionableState
 
 			var library = AssetLibrary.fromManifest(manifest);
 
-			if (library == null)
-			{
+			if (library == null) {
 				promise.error("Cannot open library \"" + id + "\"");
 			}
 			else
@@ -358,19 +356,22 @@ class MultiCallback
 				fired.push(id);
 				numRemaining--;
 				
-				if (logId != null)
+				if (logId != null) {
 					log('fired $id, $numRemaining remaining');
+				}
 				
 				if (numRemaining == 0)
 				{
-					if (logId != null)
+					if (logId != null) {
 						log('all callbacks fired');
+					}
 
 					callback();
 				}
 			}
-			else
+			else {
 				log('already fired $id');
+			}
 		}
 
 		unfired[id] = func;

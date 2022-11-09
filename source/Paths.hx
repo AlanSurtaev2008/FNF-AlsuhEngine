@@ -122,8 +122,7 @@ class Paths
 
 	public static function getPath(file:String, type:AssetType, ?library:Null<String> = null):String
 	{
-		if (library != null)
-		{
+		if (library != null) {
 			return getLibraryPath(file, library);
 		}
 
@@ -135,16 +134,14 @@ class Paths
 			{
 				levelPath = getLibraryPathForce(file, currentLevel);
 
-				if (OpenFlAssets.exists(levelPath, type))
-				{
+				if (OpenFlAssets.exists(levelPath, type)) {
 					return levelPath;
 				}
 			}
 
 			levelPath = getLibraryPathForce(file, "shared");
 
-			if (OpenFlAssets.exists(levelPath, type))
-			{
+			if (OpenFlAssets.exists(levelPath, type)) {
 				return levelPath;
 			}
 		}
@@ -534,8 +531,7 @@ class Paths
 
 		if (FileSystem.exists(file))
 		{
-			if (!currentTrackedSounds.exists(file))
-			{
+			if (!currentTrackedSounds.exists(file)) {
 				currentTrackedSounds.set(file, Sound.fromFile(file));
 			}
 
@@ -549,15 +545,13 @@ class Paths
 		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
 
 		if (!currentTrackedSounds.exists(gottenPath))
-		#if MODS_ALLOWED
 		{
+			#if MODS_ALLOWED
 			currentTrackedSounds.set(gottenPath, Sound.fromFile('./' + gottenPath));
-		}
-		#else
-		{
+			#else
 			currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound((path == 'songs' ? 'songs:' : '') + getPath('$path/$key.$SOUND_EXT', SOUND, library)));
+			#end
 		}
-		#end
 
 		localTrackedAssets.push(gottenPath);
 
@@ -698,8 +692,7 @@ class Paths
 								if (global) globalMods.push(dat[0]);
 							}
 						}
-						catch (e:Dynamic)
-						{
+						catch (e:Dynamic) {
 							trace(e);
 						}
 					}
@@ -721,8 +714,7 @@ class Paths
 			{
 				var path = haxe.io.Path.join([modsFolder, folder]);
 
-				if (sys.FileSystem.isDirectory(path) && !ignoreModFolders.contains(folder) && !list.contains(folder))
-				{
+				if (sys.FileSystem.isDirectory(path) && !ignoreModFolders.contains(folder) && !list.contains(folder)) {
 					list.push(folder);
 				}
 			}

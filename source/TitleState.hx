@@ -48,7 +48,7 @@ typedef TitleData =
 
 class TitleState extends MusicBeatState
 {
-	public static var instance:TitleState;
+	public static var instance:TitleState = null;
 
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
@@ -111,7 +111,7 @@ class TitleState extends MusicBeatState
 			var http = new haxe.Http("https://raw.githubusercontent.com/AlanSurtaev2008/FNF-AlsuhEngine/main/version.downloadMe");
 			var returnedData:Array<String> = [];
 	
-			http.onData = function(data:String)
+			http.onData = function(data:String):Void
 			{
 				returnedData[0] = data.substring(0, data.indexOf(';'));
 				returnedData[1] = data.substring(data.indexOf('-'), data.length);
@@ -120,8 +120,7 @@ class TitleState extends MusicBeatState
 				OutdatedState.curChanges = returnedData[1];
 			}
 	
-			http.onError = function(error)
-			{
+			http.onError = function(error:String):Void {
 				trace('error: $error');
 			}
 	
@@ -130,8 +129,7 @@ class TitleState extends MusicBeatState
 
 		if (initialized)
 		{
-			new FlxTimer().start(1, function(tmr:FlxTimer)
-			{
+			new FlxTimer().start(1, function(tmr:FlxTimer) {
 				startIntro();
 			});
 		}
@@ -148,8 +146,7 @@ class TitleState extends MusicBeatState
 		#if desktop
 		DiscordClient.initialize();
 
-		Application.current.onExit.add(function(exitCode:Int)
-		{
+		Application.current.onExit.add(function(exitCode:Int):Void {
 			DiscordClient.shutdown();
 		});
 		#end
@@ -174,7 +171,8 @@ class TitleState extends MusicBeatState
 
 		if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.length > 0 && titleJSON.backgroundSprite != 'none') {
 			bg.loadGraphic(Paths.getImage('title/' + titleJSON.backgroundSprite));
-		} else {
+		}
+		else {
 			bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		}
 
@@ -248,7 +246,8 @@ class TitleState extends MusicBeatState
 
 		if (initialized) {
 			skipIntro();
-		} else {
+		}
+		else {
 			initialized = true;
 		}
 	}
@@ -260,8 +259,7 @@ class TitleState extends MusicBeatState
 		var firstArray:Array<String> = fullText.split('\n');
 		var swagGoodArray:Array<Array<String>> = [];
 
-		for (i in firstArray)
-		{
+		for (i in firstArray) {
 			swagGoodArray.push(i.split('--'));
 		}
 
@@ -323,7 +321,8 @@ class TitleState extends MusicBeatState
 				{
 					if (FlxG.random.bool(25)) {
 						CoolUtil.browserLoad('https://youtu.be/dQw4w9WgXcQ'); // lololololololol
-					} else {
+					}
+					else {
 						Sys.exit(0);
 					}
 				}
@@ -417,8 +416,7 @@ class TitleState extends MusicBeatState
 	{
 		if (textGroup != null)
 		{
-			while (textGroup.members.length > 0)
-			{
+			while (textGroup.members.length > 0) {
 				textGroup.remove(textGroup.members[0], true);
 			}
 		}
