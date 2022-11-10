@@ -1638,8 +1638,6 @@ class PlayState extends MusicBeatState
 				#else
 				FlxG.log.warn('Platform not supported!');
 				startAndEnd();
-		
-				return;
 				#end
 			}
 			default:
@@ -1673,13 +1671,9 @@ class PlayState extends MusicBeatState
 				#else
 				FlxG.log.warn('Platform not supported!');
 				startAndEnd();
-		
-				return;
 				#end
 			}
 		}
-
-
 	}
 
 	public function startAndEnd():Void
@@ -2966,6 +2960,10 @@ class PlayState extends MusicBeatState
 
 		for (i in 0...blyad)
 		{
+			if (unspawnNotes[i].isSustainNote) {
+				notesBlyad--;
+			}
+
 			if (unspawnNotes[i].tail.length > 0)
 			{
 				notesBlyad--;
@@ -2973,7 +2971,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		Debug.logTrace(SONG.songName + ": Generated " + unspawnNotes.length + " notes. (" + susNotesBlyad + " sustainables and " + notesBlyad + " unsustainables)");
+		Debug.logTrace(SONG.songName + ": Generated " + (notesBlyad + susNotesBlyad) + " notes. (" + susNotesBlyad + " sustainables and " + notesBlyad + " unsustainables)");
 		Debug.logTrace(SONG.songName + ": Generated " + eventNotes.length + " events.");
 
 		checkEventNote();
