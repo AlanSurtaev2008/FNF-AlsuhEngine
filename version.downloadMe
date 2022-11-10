@@ -1,5 +1,5 @@
 1.6.1;
-- 'cpuStrums' now is named 'opppoentStrums'
+- 'cpuStrums' now is named 'opponentStrums'
 - Some classes are now available on other platforms.
 - Added Playback Rate/Sound Pitch as a Gameplay Modifier/Chart Editor setting
 - Added Logs
