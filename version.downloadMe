@@ -1,4 +1,5 @@
-1.6.1;
+1.6.2;
+- Fixed Sing Animations on HScript
 - Custom Ratings on hit crashing bug
 - 'cpuStrums' now is named 'opponentStrums'
 - Some classes are now available on other platforms.
