@@ -23,7 +23,7 @@ class CutsceneHandler extends FlxBasic
 	{
 		super();
 
-		timer(0, function()
+		timer(0, function():Void
 		{
 			if (music != null)
 			{

@@ -221,21 +221,21 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 		tab_group.name = "Character Type";
 
 		leftCheckbox = new FlxUICheckBox(10, 20, null, null, "Left", 100);
-		leftCheckbox.callback = function()
+		leftCheckbox.callback = function():Void
 		{
 			character.jsonFile.dialogue_pos = 'left';
 			updateCharTypeBox();
 		};
 
 		centerCheckbox = new FlxUICheckBox(leftCheckbox.x, leftCheckbox.y + 40, null, null, "Center", 100);
-		centerCheckbox.callback = function()
+		centerCheckbox.callback = function():Void
 		{
 			character.jsonFile.dialogue_pos = 'center';
 			updateCharTypeBox();
 		};
 
 		rightCheckbox = new FlxUICheckBox(centerCheckbox.x, centerCheckbox.y + 40, null, null, "Right", 100);
-		rightCheckbox.callback = function()
+		rightCheckbox.callback = function():Void
 		{
 			character.jsonFile.dialogue_pos = 'right';
 			updateCharTypeBox();
@@ -260,7 +260,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 		var tab_group = new FlxUI(null, UI_mainbox);
 		tab_group.name = "Animations";
 
-		animationDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(animation:String)
+		animationDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(animation:String):Void
 		{
 			var anim:String = animationArray[Std.parseInt(animation)];
 
@@ -290,7 +290,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 		idleInputText = new FlxUIInputText(loopInputText.x, loopInputText.y + 40, 150, '', 8);
 		blockPressWhileTypingOn.push(idleInputText);
 		
-		var addUpdateButton:FlxButton = new FlxButton(10, idleInputText.y + 30, "Add/Update", function()
+		var addUpdateButton:FlxButton = new FlxButton(10, idleInputText.y + 30, "Add/Update", function():Void
 		{
 			var theAnim:String = animationInputText.text.trim();
 
@@ -340,7 +340,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 			}
 		});
 		
-		var removeUpdateButton:FlxButton = new FlxButton(100, addUpdateButton.y, "Remove", function()
+		var removeUpdateButton:FlxButton = new FlxButton(100, addUpdateButton.y, "Remove", function():Void
 		{
 			for (i in 0...character.jsonFile.animations.length) 
 			{
@@ -423,7 +423,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 
 		var noAntialiasingCheckbox:FlxUICheckBox = new FlxUICheckBox(scaleStepper.x + 80, scaleStepper.y, null, null, "No Antialiasing", 100);
 		noAntialiasingCheckbox.checked = (character.jsonFile.no_antialiasing == true);
-		noAntialiasingCheckbox.callback = function()
+		noAntialiasingCheckbox.callback = function():Void
 		{
 			character.jsonFile.no_antialiasing = noAntialiasingCheckbox.checked;
 			character.antialiasing = !character.jsonFile.no_antialiasing;
@@ -438,17 +438,17 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 		tab_group.add(scaleStepper);
 		tab_group.add(noAntialiasingCheckbox);
 
-		var reloadImageButton:FlxButton = new FlxButton(10, scaleStepper.y + 60, "Reload Image", function()
+		var reloadImageButton:FlxButton = new FlxButton(10, scaleStepper.y + 60, "Reload Image", function():Void
 		{
 			reloadCharacter();
 		});
 
-		var loadButton:FlxButton = new FlxButton(reloadImageButton.x + 100, reloadImageButton.y, "Load Character", function()
+		var loadButton:FlxButton = new FlxButton(reloadImageButton.x + 100, reloadImageButton.y, "Load Character", function():Void
 		{
 			loadCharacter();
 		});
 
-		var saveButton:FlxButton = new FlxButton(loadButton.x, reloadImageButton.y - 25, "Save Character", function()
+		var saveButton:FlxButton = new FlxButton(loadButton.x, reloadImageButton.y - 25, "Save Character", function():Void
 		{
 			saveCharacter();
 		});
@@ -638,7 +638,6 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 				daText.resetDialogue();
 			}
 
-			// lots of Ifs lol get trolled
 			var offsetAdd:Int = FlxG.keys.pressed.SHIFT ? 10 : 1;
 			var speed:Float = FlxG.keys.pressed.SHIFT ? 1200 : 300;
 
@@ -870,7 +869,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 				{
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 
-					trace("Successfully loaded file: " + cutName);
+					Debug.logInfo("Successfully loaded file: " + cutName);
 					character.jsonFile = loadedChar;
 
 					reloadCharacter();
@@ -893,7 +892,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 		}
 		_file = null;
 		#else
-		trace("File couldn't be loaded! You aren't on Desktop, are you?");
+		Debug.logError("File couldn't be loaded! You aren't on Desktop, are you?");
 		#end
 	}
 
@@ -908,7 +907,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 
 		_file = null;
 
-		trace("Cancelled file loading.");
+		Debug.logError("Cancelled file loading.");
 	}
 
 	/**
@@ -922,7 +921,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 
 		_file = null;
 
-		trace("Problem loading file");
+		Debug.logError("Problem loading file");
 	}
 
 	function saveCharacter():Void
@@ -943,7 +942,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 		}
 	}
 
-	function onSaveComplete(_):Void
+	function onSaveComplete(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -957,7 +956,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 	/**
 		* Called when the save file dialog is cancelled.
 		*/
-	function onSaveCancel(_):Void
+	function onSaveCancel(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -969,7 +968,7 @@ class DialogueCharacterEditorState extends MusicBeatUIState
 	/**
 		* Called if there is an error while saving the gameplay recording.
 		*/
-	function onSaveError(_):Void
+	function onSaveError(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);

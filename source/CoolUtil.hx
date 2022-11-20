@@ -43,6 +43,30 @@ class CoolUtil
 		return difficulties[2][difficulties[isName ? 0 : 1].indexOf(diff)];
 	}
 
+	public static function getDifficultyFilePath(diff:String = 'normal'):String
+	{
+		var fileSuffix:String = diff;
+
+		if (fileSuffix != 'normal') {
+			fileSuffix = '-' + fileSuffix;
+		}
+		else {
+			fileSuffix = '';
+		}
+
+		return Paths.formatToSongPath(fileSuffix);
+	}
+
+	public static function boundSelection(selection:Int, max:Int):Int
+	{
+		return if (selection < 0)
+			max - 1;
+		else if (selection >= max)
+			0;
+		else
+			selection;
+	}
+
 	public static function quantize(f:Float, snap:Float):Float
 	{
 		return (Math.fround(f * snap) / snap);
@@ -55,13 +79,13 @@ class CoolUtil
 
 	public static function formatToName(name:String):String
 	{
-		var killMe:Array<String> = name.trim().split('-');
+		var splitter:Array<String> = name.trim().split('-');
 			
-		for (i in 0...killMe.length) {
-			killMe[i] = '' + killMe[i].charAt(0).toUpperCase().trim() + killMe[i].substr(1).toLowerCase().trim();
+		for (i in 0...splitter.length) {
+			splitter[i] = '' + splitter[i].charAt(0).toUpperCase().trim() + splitter[i].substr(1).toLowerCase().trim();
 		}
 
-		return killMe.join(' ');
+		return splitter.join(' ');
 	}
 
 	public static function getKeyName(key:FlxKey):String
@@ -123,6 +147,8 @@ class CoolUtil
 	@:deprecated("`CoolUtil.interpolateColor()` is deprecated, use 'FlxTween.color()' instead")
 	public static function interpolateColor(from:FlxColor, to:FlxColor, speed:Float = 0.045, multiplier:Float = 54.5):FlxColor
 	{
+		Debug.logWarn("`CoolUtil.interpolateColor()` is deprecated! use 'FlxTween.color()' instead");
+
 		return FlxColor.interpolate(from, to, boundTo(FlxG.elapsed * (speed * multiplier), 0, 1));
 	}
 
@@ -143,6 +169,8 @@ class CoolUtil
 	@:deprecated("`CoolUtil.truncateFloat()` is deprecated, use `CoolUtil.floorDecimal()` or 'FlxMath.roundDecimal()' instead")
 	public static function truncateFloat(number:Float, precision:Int):Float
 	{
+		Debug.logWarn("`CoolUtil.truncateFloat()` is deprecated! use `CoolUtil.floorDecimal()` or 'FlxMath.roundDecimal()' instead");
+
 		var num:Float = number;
 
 		if (Math.isNaN(num)) num = 0;

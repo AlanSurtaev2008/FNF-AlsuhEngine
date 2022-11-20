@@ -89,8 +89,7 @@ class StageData
 	{
 		var stage:String = '';
 
-		if (SONG.stage != null)
-		{
+		if (SONG.stage != null) {
 			stage = SONG.stage;
 		}
 		else if (SONG.songID != null)
@@ -117,8 +116,7 @@ class StageData
 					stage = 'stage';
 			}
 		}
-		else
-		{
+		else {
 			stage = 'stage';
 		}
 

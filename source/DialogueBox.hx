@@ -53,12 +53,13 @@ class DialogueBox extends FlxSpriteGroup
 		bgFade.alpha = 0;
 		add(bgFade);
 
-		new FlxTimer().start(0.83, function(tmr:FlxTimer)
+		new FlxTimer().start(0.83, function(tmr:FlxTimer):Void
 		{
 			bgFade.alpha += (1 / 5) * 0.7;
 
-			if (bgFade.alpha > 0.7)
+			if (bgFade.alpha > 0.7) {
 				bgFade.alpha = 0.7;
+			}
 		}, 5);
 		
 		portraitLeft = new FlxSprite(-20, 40);
@@ -208,7 +209,7 @@ class DialogueBox extends FlxSpriteGroup
 						}
 					}
 
-					new FlxTimer().start(0.2, function(tmr:FlxTimer)
+					new FlxTimer().start(0.2, function(tmr:FlxTimer):Void
 					{
 						box.alpha -= 1 / 5;
 						bgFade.alpha -= 1 / 5 * 0.7;
@@ -253,7 +254,7 @@ class DialogueBox extends FlxSpriteGroup
 
 		swagDialogue.resetText(dialogueList[0]);
 		swagDialogue.start(0.04, true);
-		swagDialogue.completeCallback = function()
+		swagDialogue.completeCallback = function():Void
 		{
 			handSelect.visible = true;
 			dialogueEnded = true;

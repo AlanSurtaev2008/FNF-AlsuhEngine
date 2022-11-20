@@ -68,7 +68,7 @@ class GameOverSubState extends MusicBeatSubState
 		bg = new FlxSprite();
 		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
 		bg.scrollFactor.set();
-		bg.scale.set(100, 100);
+		bg.scale.set(250, 250);
 		bg.screenCenter();
 		bg.color = colorStartFlash;
 		bg.alpha = 1 - (OptionData.flashingLights ? 0 : 0.5);
@@ -92,7 +92,7 @@ class GameOverSubState extends MusicBeatSubState
 		camFollowPos.setPosition(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2));
 		add(camFollowPos);
 
-		new FlxTimer().start(flashStart, function(tmr:FlxTimer)
+		new FlxTimer().start(flashStart, function(tmr:FlxTimer):Void
 		{
 			bg.color = colorFlash;
 			bg.alpha = 1 - (OptionData.flashingLights ? 0 : 0.5);
@@ -114,9 +114,10 @@ class GameOverSubState extends MusicBeatSubState
 			camFollowPos.setPosition(CoolUtil.coolLerp(camFollowPos.x, camFollow.x, 0.025), CoolUtil.coolLerp(camFollowPos.y, camFollow.y, 0.025));
 		}
 
-		if (controls.ACCEPT || controls.BACK)
-		{
-			endBullshit(controls.BACK);
+		var exit:Bool = controls.BACK || FlxG.mouse.justPressedRight;
+
+		if ((controls.ACCEPT || FlxG.mouse.justPressed) || exit) {
+			endBullshit(exit);
 		}
 
 		if (boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name == 'firstDeath')
@@ -138,15 +139,14 @@ class GameOverSubState extends MusicBeatSubState
 					
 					var exclude:Array<Int> = [];
 
-					FlxG.sound.play(Paths.getSound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25, exclude)), 1, false, null, true, function()
+					FlxG.sound.play(Paths.getSound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25, exclude)), 1, false, null, true, function():Void
 					{
 						if (!isEnding) {
 							FlxG.sound.music.fadeIn(4, 0.2, 1);
 						}
 					});
 				}
-				else
-				{
+				else {
 					coolStartDeath(1);
 				}
 
@@ -154,8 +154,7 @@ class GameOverSubState extends MusicBeatSubState
 			}
 		}
 
-		if (FlxG.sound.music != null && FlxG.sound.music.playing)
-		{
+		if (FlxG.sound.music != null && FlxG.sound.music.playing) {
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
 
@@ -183,9 +182,9 @@ class GameOverSubState extends MusicBeatSubState
 			FlxG.sound.music.stop();
 			FlxG.sound.play(Paths.getMusic(endSoundName));
 
-			new FlxTimer().start(0.7, function(tmr:FlxTimer)
+			new FlxTimer().start(0.7, function(tmr:FlxTimer):Void
 			{
-				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
+				FlxG.camera.fade(FlxColor.BLACK, 2, false, function():Void
 				{
 					if (toMenu)
 					{
@@ -199,9 +198,13 @@ class GameOverSubState extends MusicBeatSubState
 						switch (PlayState.gameMode)
 						{
 							case 'story':
+							{
 								FlxG.switchState(new StoryMenuState());
+							}
 							case 'freeplay':
+							{
 								FlxG.switchState(new FreeplayMenuState());
+							}
 							case 'replay':
 							{
 								if (FlxG.save.data.botPlay != null) {
@@ -228,11 +231,12 @@ class GameOverSubState extends MusicBeatSubState
 								FlxG.switchState(new options.ReplaysMenuState());
 							}
 							default:
+							{
 								FlxG.switchState(new MainMenuState());
+							}
 						}
 					}
-					else
-					{
+					else {
 						FlxG.resetState();
 					}
 				});

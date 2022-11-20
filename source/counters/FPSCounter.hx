@@ -47,7 +47,7 @@ class FPSCounter extends TextField
 		times = [];
 
 		#if flash
-		addEventListener(Event.ENTER_FRAME, function(e)
+		addEventListener(Event.ENTER_FRAME, function(e):Void
 		{
 			var time = Lib.getTimer();
 			__enterFrame(time - currentTime);

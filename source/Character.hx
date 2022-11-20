@@ -107,8 +107,7 @@ class Character extends FlxSprite
 				#if MODS_ALLOWED
 				var path:String = Paths.modFolders(characterPath);
 
-				if (!FileSystem.exists(path))
-				{
+				if (!FileSystem.exists(path)) {
 					path = Paths.getPreloadPath(characterPath);
 				}
 
@@ -116,8 +115,7 @@ class Character extends FlxSprite
 				#else
 				var path:String = Paths.getPreloadPath(characterPath);
 				if (!Assets.exists(path))
-				#end
-				{
+				#end {
 					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 				}
 
@@ -137,8 +135,7 @@ class Character extends FlxSprite
 				if (FileSystem.exists(modTxtToFind) || FileSystem.exists(txtToFind) || Assets.exists(txtToFind))
 				#else
 				if (Assets.exists(Paths.getPath('images/' + json.image + '.txt', TEXT)))
-				#end
-				{
+				#end {
 					spriteType = 'packer';
 				}
 				
@@ -149,8 +146,7 @@ class Character extends FlxSprite
 				if (FileSystem.exists(modAnimToFind) || FileSystem.exists(animToFind) || Assets.exists(animToFind))
 				#else
 				if (Assets.exists(Paths.getPath('images/' + json.image + '/Animation.json', TEXT)))
-				#end
-				{
+				#end {
 					spriteType = 'texture';
 				}
 
@@ -195,8 +191,7 @@ class Character extends FlxSprite
 					noAntialiasing = true;
 				}
 
-				if (json.healthbar_colors != null && json.healthbar_colors.length > 2)
-				{
+				if (json.healthbar_colors != null && json.healthbar_colors.length > 2) {
 					healthColorArray = json.healthbar_colors;
 				}
 

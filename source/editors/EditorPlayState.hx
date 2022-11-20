@@ -145,7 +145,7 @@ class EditorPlayState extends MusicBeatState
 			{
 				var lua:editors.EditorLua = new editors.EditorLua(luaToLoad);
 
-				new FlxTimer().start(0.1, function(tmr:FlxTimer)
+				new FlxTimer().start(0.1, function(tmr:FlxTimer):Void
 				{
 					lua.stop();
 					lua = null;
@@ -188,15 +188,14 @@ class EditorPlayState extends MusicBeatState
 		tipText.scrollFactor.set();
 		add(tipText);
 
-		notes.forEachAlive(function(note:Note) 
+		notes.forEachAlive(function(note:Note):Void
 		{
 			if (OptionData.opponentStrumsType != 'Disabled' || note.mustPress)
 			{
 				note.copyAlpha = false;
 				note.alpha = note.multAlpha;
 
-				if (OptionData.middleScroll == true && !note.mustPress)
-				{
+				if (OptionData.middleScroll == true && !note.mustPress) {
 					note.alpha *= 0.35;
 				}
 			}
@@ -227,8 +226,7 @@ class EditorPlayState extends MusicBeatState
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > 3)
-				{
+				if (songNotes[1] > 3) {
 					gottaHitNote = !section.mustHitSection;
 				}
 
@@ -268,32 +266,28 @@ class EditorPlayState extends MusicBeatState
 						sustainNote.parent = swagNote;
 						unspawnNotes.push(sustainNote);
 
-						if (sustainNote.mustPress)
-						{
+						if (sustainNote.mustPress) {
 							sustainNote.x += FlxG.width / 2; // general offset
 						}
 						else if (OptionData.middleScroll)
 						{
 							sustainNote.x += 310;
 		
-							if (daNoteData > 1) // Up and Right
-							{
+							if (daNoteData > 1) { // Up and Right
 								sustainNote.x += FlxG.width / 2 + 25;
 							}
 						}
 					}
 				}
 
-				if (swagNote.mustPress)
-				{
+				if (swagNote.mustPress) {
 					swagNote.x += FlxG.width / 2; // general offset
 				}
 				else if (OptionData.middleScroll)
 				{
 					swagNote.x += 310;
 
-					if (daNoteData > 1) // Up and Right
-					{
+					if (daNoteData > 1) { // Up and Right
 						swagNote.x += FlxG.width / 2 + 25;
 					}
 				}
@@ -422,7 +416,7 @@ class EditorPlayState extends MusicBeatState
 
 		if (generatedMusic)
 		{
-			notes.forEachAlive(function(daNote:Note)
+			notes.forEachAlive(function(daNote:Note):Void
 			{
 				var strumGroup:FlxTypedGroup<StrumNote> = daNote.mustPress ? playerStrums : opponentStrums;
 
@@ -526,7 +520,8 @@ class EditorPlayState extends MusicBeatState
 
 			if (strumScroll && daNote.isSustainNote) // Jesus fuck this took me so much mother fucking time AAAAAAAAAA
 			{
-				if (daNote.animation.curAnim.name.endsWith('end')) {
+				if (daNote.animation.curAnim.name.endsWith('end'))
+				{
 					daNote.y += 10.5 * (fakeCrochet / 400) * 1.5 * PlayState.SONG.speed + (46 * (PlayState.SONG.speed - 1));
 					daNote.y -= 46 * (1 - (fakeCrochet / 600)) * PlayState.SONG.speed;
 	
@@ -631,7 +626,7 @@ class EditorPlayState extends MusicBeatState
 					grpNumbers.add(numScore);
 				}
 
-				var numtwn = FlxTween.tween(numScore, {alpha: 0}, 0.2, {startDelay: Conductor.crochet * 0.002, onComplete: function(tween:FlxTween)
+				var numtwn = FlxTween.tween(numScore, {alpha: 0}, 0.2, {startDelay: Conductor.crochet * 0.002, onComplete: function(tween:FlxTween):Void
 				{
 					numbersTweensArray.remove(tween);
 
@@ -647,9 +642,10 @@ class EditorPlayState extends MusicBeatState
 
 			coolText.text = Std.string(seperatedScore);
 
-			var rttwn = FlxTween.tween(rating, {alpha: 0}, 0.2, {
+			var rttwn = FlxTween.tween(rating, {alpha: 0}, 0.2,
+			{
 				startDelay: Conductor.crochet * 0.001,
-				onComplete: function(tween:FlxTween)
+				onComplete: function(tween:FlxTween):Void
 				{
 					coolText.destroy();
 
@@ -682,10 +678,9 @@ class EditorPlayState extends MusicBeatState
 
 				var sortedNotesList:Array<Note> = [];
 
-				notes.forEachAlive(function(daNote:Note)
+				notes.forEachAlive(function(daNote:Note):Void
 				{
-					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.isSustainNote && daNote.noteData == key)
-					{
+					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.isSustainNote && daNote.noteData == key) {
 						sortedNotesList.push(daNote);
 					}
 				});
@@ -704,8 +699,7 @@ class EditorPlayState extends MusicBeatState
 								notes.remove(doubleNote, true);
 								doubleNote.destroy();
 							}
-							else
-							{
+							else {
 								notesStopped = true;
 							}
 						}
@@ -772,8 +766,7 @@ class EditorPlayState extends MusicBeatState
 			{
 				for (j in 0...keysArray[i].length)
 				{
-					if (key == keysArray[i][j])
-					{
+					if (key == keysArray[i][j]) {
 						return i;
 					}
 				}
@@ -804,10 +797,9 @@ class EditorPlayState extends MusicBeatState
 
 		if (generatedMusic)
 		{
-			notes.forEachAlive(function(daNote:Note)
+			notes.forEachAlive(function(daNote:Note):Void
 			{
-				if (daNote.isSustainNote && holdingArray[daNote.noteData] && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit)
-				{
+				if (daNote.isSustainNote && holdingArray[daNote.noteData] && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit) {
 					goodNoteHit(daNote);
 				}
 			});
@@ -846,7 +838,7 @@ class EditorPlayState extends MusicBeatState
 
 	function noteMiss(daNote:Note):Void
 	{
-		notes.forEachAlive(function(note:Note)
+		notes.forEachAlive(function(note:Note):Void
 		{
 			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 10)
 			{
@@ -900,8 +892,7 @@ class EditorPlayState extends MusicBeatState
 		{
 			popUpScore(note);
 
-			if (!note.isSustainNote)
-			{
+			if (!note.isSustainNote) {
 				if (combo > 9999) combo = 9999;
 			}
 		}
@@ -939,7 +930,7 @@ class EditorPlayState extends MusicBeatState
 				hitNote(note);
 			}
 
-			playerStrums.forEach(function(spr:StrumNote)
+			playerStrums.forEach(function(spr:StrumNote):Void
 			{
 				if (Math.abs(note.noteData) == spr.ID) {
 					spr.playAnim('confirm', true);
@@ -1028,8 +1019,7 @@ class EditorPlayState extends MusicBeatState
 	{
 		super.stepHit();
 
-		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
-		{
+		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20) {
 			resyncVocals();
 		}
 	}
@@ -1038,8 +1028,7 @@ class EditorPlayState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if (generatedMusic)
-		{
+		if (generatedMusic) {
 			notes.sort(FlxSort.byY, OptionData.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		}
 	}

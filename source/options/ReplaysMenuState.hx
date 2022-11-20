@@ -85,7 +85,7 @@ class ReplaysMenuState extends TransitionableState
 	{
 		super.update(elapsed);
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
 			FlxG.switchState(new OptionsMenuState());
@@ -124,26 +124,34 @@ class ReplaysMenuState extends TransitionableState
 		{
 			if (replaysArray[curSelected] != "No replays...")
 			{
-				persistentUpdate = false;
-
 				PlayState.rep = Replay.loadReplay(actualNames[curSelected]);
 
 				var diffic:String = CoolUtil.getDifficultySuffix(PlayState.rep.replay.songDiff, false, PlayState.rep.replay.difficulties);
 
-				PlayState.SONG = Song.loadFromJson(PlayState.rep.replay.songID  + diffic, PlayState.rep.replay.songID);
-				PlayState.gameMode = 'replay';
-				PlayState.isStoryMode = false;
-				PlayState.difficulties = PlayState.rep.replay.difficulties;
-				PlayState.lastDifficulty = PlayState.rep.replay.songDiff;
-				PlayState.storyDifficulty = PlayState.rep.replay.songDiff;
-				PlayState.storyWeek = PlayState.rep.replay.weekID;
-				PlayState.storyWeekName = PlayState.rep.replay.weekName;
+				if (Paths.fileExists('data/' + PlayState.rep.replay.songID + '/' + PlayState.rep.replay.songID + diffic + '.json', TEXT) == true)
+				{
+					persistentUpdate = false;
 
-				if (!OptionData.loadingScreen) {
-					FreeplayMenuState.destroyFreeplayVocals();
+					PlayState.SONG = Song.loadFromJson(PlayState.rep.replay.songID + diffic, PlayState.rep.replay.songID);
+					PlayState.gameMode = 'replay';
+					PlayState.isStoryMode = false;
+					PlayState.difficulties = PlayState.rep.replay.difficulties;
+					PlayState.lastDifficulty = PlayState.rep.replay.songDiff;
+					PlayState.storyDifficulty = PlayState.rep.replay.songDiff;
+					PlayState.storyWeek = PlayState.rep.replay.weekID;
+					PlayState.storyWeekName = PlayState.rep.replay.weekName;
+
+					Debug.logInfo('Loading song ${PlayState.SONG.songName} from week ${PlayState.storyWeekName} into Replay...');
+	
+					if (!OptionData.loadingScreen) {
+						FreeplayMenuState.destroyFreeplayVocals();
+					}
+	
+					LoadingState.loadAndSwitchState(new PlayState(), true);
 				}
-
-				LoadingState.loadAndSwitchState(new PlayState(), true);
+				else {
+					Debug.logError('File "data/' + PlayState.rep.replay.songID + '/' + PlayState.rep.replay.songID + diffic + '.json" does not exist!"');
+				}
 			}
 			else {
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
@@ -153,12 +161,7 @@ class ReplaysMenuState extends TransitionableState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = replaysArray.length - 1;
-		if (curSelected >= replaysArray.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, replaysArray.length);
 
 		var bullShit:Int = 0;
 

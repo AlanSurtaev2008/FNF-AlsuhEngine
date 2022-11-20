@@ -300,7 +300,7 @@ class Controls extends FlxActionSet
 		return _reset.check();
 
 	#if (haxe >= "4.0.0")
-	public function new(name, scheme = None)
+	public function new(name, scheme = None):Void
 	{
 		super(name);
 
@@ -339,7 +339,7 @@ class Controls extends FlxActionSet
 		setKeyboardScheme(scheme, false);
 	}
 	#else
-	public function new(name, scheme:KeyboardScheme = null)
+	public function new(name, scheme:KeyboardScheme = null):Void
 	{
 		super(name);
 

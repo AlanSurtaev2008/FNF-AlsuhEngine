@@ -303,7 +303,6 @@ class SpriteSymbol extends Sprite
 				//filters.push(blur);
 			}
 			if (data.GlowFilter != null){
-				//trace('GLOW' + data.GlowFilter);
 				//glow = new GlowFilter();
 				//glow.blurX = data.GlowFilter.blurX;
 				//glow.blurY = data.GlowFilter.blurY;

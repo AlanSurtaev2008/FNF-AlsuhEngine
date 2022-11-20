@@ -106,7 +106,7 @@ class CharacterEditorState extends MusicBeatUIState
 		cameraFollowPointer.color = FlxColor.WHITE;
 		add(cameraFollowPointer);
 
-		changeBGbutton = new FlxButton(FlxG.width - 360, 25, "", function()
+		changeBGbutton = new FlxButton(FlxG.width - 360, 25, "", function():Void
 		{
 			onPixelBG = !onPixelBG;
 			reloadBGs();
@@ -304,7 +304,7 @@ class CharacterEditorState extends MusicBeatUIState
 
 		var check_player = new FlxUICheckBox(10, 60, null, null, "Playable Character", 100);
 		check_player.checked = daAnim.startsWith('bf');
-		check_player.callback = function()
+		check_player.callback = function():Void
 		{
 			char.isPlayer = !char.isPlayer;
 			char.flipX = !char.flipX;
@@ -313,7 +313,7 @@ class CharacterEditorState extends MusicBeatUIState
 			ghostChar.flipX = char.flipX;
 		};
 
-		charDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(character:String)
+		charDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(character:String):Void
 		{
 			daAnim = characterList[Std.parseInt(character)];
 			check_player.checked = daAnim.startsWith('bf');
@@ -326,7 +326,7 @@ class CharacterEditorState extends MusicBeatUIState
 		charDropDown.selectedLabel = daAnim;
 		reloadCharacterDropDown();
 
-		var reloadCharacter:FlxButton = new FlxButton(140, 30, "Reload Char", function()
+		var reloadCharacter:FlxButton = new FlxButton(140, 30, "Reload Char", function():Void
 		{
 			loadChar(!check_player.checked);
 			reloadCharacterDropDown();
@@ -366,7 +366,7 @@ class CharacterEditorState extends MusicBeatUIState
 
 		imageInputText = new FlxUIInputText(15, 30, 200, 'characters/BOYFRIEND', 8);
 
-		var reloadImage:FlxButton = new FlxButton(imageInputText.x + 210, imageInputText.y - 3, "Reload Image", function()
+		var reloadImage:FlxButton = new FlxButton(imageInputText.x + 210, imageInputText.y - 3, "Reload Image", function():Void
 		{
 			char.imageFile = imageInputText.text;
 			reloadCharacterImage();
@@ -387,7 +387,7 @@ class CharacterEditorState extends MusicBeatUIState
 		flipXCheckBox.checked = char.flipX;
 		if (char.isPlayer) flipXCheckBox.checked = !flipXCheckBox.checked;
 
-		flipXCheckBox.callback = function()
+		flipXCheckBox.callback = function():Void
 		{
 			char.originalFlipX = !char.originalFlipX;
 			char.flipX = char.originalFlipX;
@@ -398,7 +398,7 @@ class CharacterEditorState extends MusicBeatUIState
 
 		noAntialiasingCheckBox = new FlxUICheckBox(flipXCheckBox.x, flipXCheckBox.y + 40, null, null, "No Antialiasing", 80);
 		noAntialiasingCheckBox.checked = char.noAntialiasing;
-		noAntialiasingCheckBox.callback = function()
+		noAntialiasingCheckBox.callback = function():Void
 		{
 			char.antialiasing = false;
 
@@ -415,7 +415,7 @@ class CharacterEditorState extends MusicBeatUIState
 		positionCameraXStepper = new FlxUINumericStepper(positionXStepper.x, positionXStepper.y + 40, 10, char.cameraPosition[0], -9000, 9000, 0);
 		positionCameraYStepper = new FlxUINumericStepper(positionYStepper.x, positionYStepper.y + 40, 10, char.cameraPosition[1], -9000, 9000, 0);
 
-		var saveCharacterButton:FlxButton = new FlxButton(reloadImage.x, noAntialiasingCheckBox.y + 40, "Save Character", function() {
+		var saveCharacterButton:FlxButton = new FlxButton(reloadImage.x, noAntialiasingCheckBox.y + 40, "Save Character", function():Void {
 			saveCharacter();
 		});
 
@@ -470,7 +470,7 @@ class CharacterEditorState extends MusicBeatUIState
 		animationNameFramerate = new FlxUINumericStepper(animationInputText.x + 170, animationInputText.y, 1, 24, 0, 240, 0);
 		animationLoopCheckBox = new FlxUICheckBox(animationNameInputText.x + 170, animationNameInputText.y - 1, null, null, "Should it Loop?", 100);
 
-		animationDropDown = new FlxUIDropDownMenuCustom(15, animationInputText.y - 55, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(pressed:String)
+		animationDropDown = new FlxUIDropDownMenuCustom(15, animationInputText.y - 55, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(pressed:String):Void
 		{
 			var selectedAnimation:Int = Std.parseInt(pressed);
 
@@ -484,7 +484,7 @@ class CharacterEditorState extends MusicBeatUIState
 			animationIndicesInputText.text = indicesStr.substr(1, indicesStr.length - 2);
 		});
 
-		ghostDropDown = new FlxUIDropDownMenuCustom(animationDropDown.x + 150, animationDropDown.y, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(pressed:String)
+		ghostDropDown = new FlxUIDropDownMenuCustom(animationDropDown.x + 150, animationDropDown.y, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(pressed:String):Void
 		{
 			var selectedAnimation:Int = Std.parseInt(pressed);
 			ghostChar.visible = false;
@@ -498,7 +498,7 @@ class CharacterEditorState extends MusicBeatUIState
 			}
 		});
 
-		var addUpdateButton:FlxButton = new FlxButton(70, animationIndicesInputText.y + 30, "Add/Update", function()
+		var addUpdateButton:FlxButton = new FlxButton(70, animationIndicesInputText.y + 30, "Add/Update", function():Void
 		{
 			var indices:Array<Int> = [];
 			var indicesStr:Array<String> = animationIndicesInputText.text.trim().split(',');
@@ -590,10 +590,10 @@ class CharacterEditorState extends MusicBeatUIState
 			reloadAnimationDropDown();
 			genBoyOffsets();
 
-			trace('Added/Updated animation: ' + animationInputText.text);
+			Debug.logInfo('Added/Updated animation: ' + animationInputText.text);
 		});
 
-		var removeButton:FlxButton = new FlxButton(180, animationIndicesInputText.y + 30, "Remove", function()
+		var removeButton:FlxButton = new FlxButton(180, animationIndicesInputText.y + 30, "Remove", function():Void
 		{
 			for (anim in char.animationsArray)
 			{
@@ -621,7 +621,7 @@ class CharacterEditorState extends MusicBeatUIState
 					reloadAnimationDropDown();
 					genBoyOffsets();
 
-					trace('Removed animation: ' + animationInputText.text);
+					Debug.logInfo('Removed animation: ' + animationInputText.text);
 
 					break;
 				}
@@ -1223,7 +1223,7 @@ class CharacterEditorState extends MusicBeatUIState
 
 	var _file:FileReference;
 
-	function onSaveComplete(_):Void
+	function onSaveComplete(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -1237,7 +1237,7 @@ class CharacterEditorState extends MusicBeatUIState
 	/**
 		* Called when the save file dialog is cancelled.
 		*/
-	function onSaveCancel(_):Void
+	function onSaveCancel(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -1249,7 +1249,7 @@ class CharacterEditorState extends MusicBeatUIState
 	/**
 		* Called if there is an error while saving the gameplay recording.
 		*/
-	function onSaveError(_):Void
+	function onSaveError(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);

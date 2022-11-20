@@ -116,7 +116,7 @@ class TransitionableState extends FlxState
 
 				if (nextState == FlxG.state)
 				{
-					Transition.finishCallback = function()
+					Transition.finishCallback = function():Void
 					{
 						onTransInFinished();
 
@@ -126,7 +126,7 @@ class TransitionableState extends FlxState
 				}
 				else
 				{
-					Transition.finishCallback = function()
+					Transition.finishCallback = function():Void
 					{
 						onTransInFinished();
 

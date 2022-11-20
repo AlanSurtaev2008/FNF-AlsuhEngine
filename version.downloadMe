@@ -1,4 +1,9 @@
 1.6.2;
+- Moved 'gfDanceTitle.json' file from 'assets/title' folder to 'assets/images/title' folder
+- Added precaches for Game Over sounds
+- When you are in the Story/Freeplay Menu, you can use\nthe mouse wheel to rotate and select difficulty by pressing ALT.
+- In the menu, you can click the right mouse button to exit.
+- Fixed Events/Note Types from 'assets/' on selectors in Chart Editor
 - Fixed Sing Animations on HScript
 - Custom Ratings on hit crashing bug
 - 'cpuStrums' now is named 'opponentStrums'

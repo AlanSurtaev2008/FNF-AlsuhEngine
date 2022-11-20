@@ -64,9 +64,9 @@ class LoadingState extends TransitionableState
 			Transition.nextCamera = null;
 		}
 
-		FlxG.camera.fade(FlxG.camera.bgColor, 0.5, true, function()
+		FlxG.camera.fade(FlxG.camera.bgColor, 0.5, true, function():Void
 		{
-			initSongsManifest().onComplete(function(lib)
+			initSongsManifest().onComplete(function(lib:AssetLibrary):Void
 			{
 				callbacks = new MultiCallback(onLoad);
 	
@@ -96,9 +96,9 @@ class LoadingState extends TransitionableState
 			var callback = callbacks.add("song:" + path);
 
 			#if MODS_ALLOWED
-			Sound.loadFromFile(path).onComplete(function(sound:Sound)
+			Sound.loadFromFile(path).onComplete(function(sound:Sound):Void
 			{
-				trace('loaded path: ' + path);
+				Debug.logInfo('loaded path: ' + path);
 				cachedFiles.set(path, true);
 
 				callback();
@@ -108,16 +108,16 @@ class LoadingState extends TransitionableState
 				if (PlayState.SONG != null && PlayState.SONG.needsVoices) {
 					checkLoadSong(getVocalPath());
 				}
-			}).onError(function(error:Dynamic)
+			}).onError(function(error:Dynamic):Void
 			{
-				trace('path not found: ' + path);
+				Debug.logWarn('path not found: ' + path);
 
 				callback();
 			});
 			#else
-			Assets.loadSound(path).onComplete(function(sound:Sound)
+			Assets.loadSound(path).onComplete(function(sound:Sound):Void
 			{
-				trace('loaded path: ' + path);
+				Debug.logInfo('loaded path: ' + path);
 				cachedFiles.set(path, true);
 
 				callback();
@@ -127,9 +127,9 @@ class LoadingState extends TransitionableState
 				if (PlayState.SONG != null && PlayState.SONG.needsVoices) {
 					checkLoadSong(getVocalPath());
 				}
-			}).onError(function(error:Dynamic)
+			}).onError(function(error:Dynamic):Void
 			{
-				trace('path not found: ' + path);
+				Debug.logWarn('path not found: ' + path);
 
 				callback();
 			});
@@ -139,7 +139,7 @@ class LoadingState extends TransitionableState
 
 	function checkLibrary(library:String):Void
 	{
-		trace(Assets.hasLibrary(library));
+		Debug.logInfo(Assets.hasLibrary(library));
 
 		if (Assets.getLibrary(library) == null)
 		{
@@ -149,7 +149,7 @@ class LoadingState extends TransitionableState
 			
 			var callback = callbacks.add("library:" + library);
 
-			Assets.loadLibrary(library).onComplete(function(library:AssetLibrary)
+			Assets.loadLibrary(library).onComplete(function(library:AssetLibrary):Void
 			{
 				callback();
 			});
@@ -171,7 +171,7 @@ class LoadingState extends TransitionableState
 			funkay.updateHitbox();
 
 			#if debug
-			if (callbacks != null) trace('fired: ' + callbacks.getFired() + " unfired:" + callbacks.getUnfired());
+			if (callbacks != null) Debug.logInfo('fired: ' + callbacks.getFired() + " unfired:" + callbacks.getUnfired());
 			#end
 		}
 
@@ -184,8 +184,10 @@ class LoadingState extends TransitionableState
 	
 	function onLoad():Void
 	{
-		if (stopMusic && FlxG.sound.music != null) {
+		if (stopMusic && FlxG.sound.music != null)
+		{
 			FlxG.sound.music.stop();
+			FlxG.sound.music.volume = 0;
 		}
 
 		FreeplayMenuState.destroyFreeplayVocals();
@@ -231,8 +233,10 @@ class LoadingState extends TransitionableState
 				return new LoadingState(target, stopMusic, directory);
 			}
 
-			if (stopMusic && FlxG.sound.music != null) {
+			if (stopMusic && FlxG.sound.music != null)
+			{
 				FlxG.sound.music.stop();
+				FlxG.sound.music.volume = 0;
 			}
 
 			FreeplayMenuState.destroyFreeplayVocals();
@@ -265,8 +269,7 @@ class LoadingState extends TransitionableState
 
 		var library = LimeAssets.getLibrary(id);
 
-		if (library != null)
-		{
+		if (library != null) {
 			return Future.withValue(library);
 		}
 
@@ -294,7 +297,7 @@ class LoadingState extends TransitionableState
 			path = LimeAssets.__cacheBreak(path);
 		}
 
-		AssetManifest.loadFromFile(path, rootPath).onComplete(function(manifest)
+		AssetManifest.loadFromFile(path, rootPath).onComplete(function(manifest:AssetManifest):Void
 		{
 			if (manifest == null)
 			{
@@ -314,7 +317,7 @@ class LoadingState extends TransitionableState
 				library.onChange.add(LimeAssets.onChange.dispatch);
 				promise.completeWith(Future.withValue(library));
 			}
-		}).onError(function(_)
+		}).onError(function(error:Dynamic):Void
 		{
 			promise.error("There is no asset library with an ID of \"" + id + "\"");
 		});
@@ -346,9 +349,7 @@ class MultiCallback
 		length++;
 		numRemaining++;
 
-		var func:Void->Void = null;
-
-		func = function()
+		var func:Void->Void = function():Void
 		{
 			if (unfired.exists(id))
 			{
@@ -382,7 +383,7 @@ class MultiCallback
 	inline function log(msg):Void
 	{
 		if (logId != null)
-			trace('$logId: $msg');
+			Debug.logInfo('$logId: $msg');
 	}
 	
 	public function getFired() return fired.copy();

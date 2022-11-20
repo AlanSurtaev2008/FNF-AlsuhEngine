@@ -27,8 +27,7 @@ class Highscore
 				setWeekScore(week, score);
 			}
 		}
-		else
-		{
+		else {
 			setWeekScore(week, score);
 		}
 	}
@@ -57,7 +56,8 @@ class Highscore
 	{
 		if (songScores.exists(daSong) == true)
 		{
-			if (songScores.get(daSong) < score) {
+			if (songScores.get(daSong) < score)
+			{
 				setScore(daSong, score);
 
 				if (accuracy >= 0) setAccuracy(daSong, accuracy);

@@ -217,7 +217,7 @@ class NoteOffsetState extends MusicBeatState
 
 	public override function update(elapsed:Float):Void
 	{
-		var addNum:Int = FlxG.keys.pressed.SHIFT ? 10 : 1;
+		var addNum:Int = FlxG.keys.pressed.ALT ? 10 : 1;
 
 		switch (menu)
 		{
@@ -391,7 +391,7 @@ class NoteOffsetState extends MusicBeatState
 			updateNoteDelay();
 		}
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			OptionData.savePrefs();
 
@@ -439,7 +439,7 @@ class NoteOffsetState extends MusicBeatState
 
 			if (zoomTween != null) zoomTween.cancel();
 
-			zoomTween = FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.circOut, onComplete: function(twn:FlxTween)
+			zoomTween = FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.circOut, onComplete: function(twn:FlxTween):Void
 			{
 				zoomTween = null;
 			}});
@@ -450,7 +450,7 @@ class NoteOffsetState extends MusicBeatState
 	
 			if (beatTween != null) beatTween.cancel();
 	
-			beatTween = FlxTween.tween(beatText, {alpha: 0}, 1, {ease: FlxEase.sineIn, onComplete: function(twn:FlxTween)
+			beatTween = FlxTween.tween(beatText, {alpha: 0}, 1, {ease: FlxEase.sineIn, onComplete: function(twn:FlxTween):Void
 			{
 				beatTween = null;
 			}});

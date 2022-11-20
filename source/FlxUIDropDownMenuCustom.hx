@@ -164,7 +164,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 	 * @param	UIControlCallback	Used internally by FlxUI
 	 */
 	public function new(X:Float = 0, Y:Float = 0, DataList:Array<StrNameLabel>, ?Callback:String->Void, ?Header:FlxUIDropDownHeader,
-			?DropPanel:FlxUI9SliceSprite, ?ButtonList:Array<FlxUIButton>, ?UIControlCallback:Bool->FlxUIDropDownMenuCustom->Void)
+			?DropPanel:FlxUI9SliceSprite, ?ButtonList:Array<FlxUIButton>, ?UIControlCallback:Bool->FlxUIDropDownMenuCustom->Void):Void
 	{
 		super(X, Y);
 
@@ -584,7 +584,7 @@ class FlxUIDropDownHeader extends FlxUIGroup
 	 * @param 	Text	Optional text that displays the current value
 	 * @param	Button	Optional button that toggles the dropdown list
 	 */
-	public function new(Width:Int = 120, ?Background:FlxSprite, ?Text:FlxUIText, ?Button:FlxUISpriteButton)
+	public function new(Width:Int = 120, ?Background:FlxSprite, ?Text:FlxUIText, ?Button:FlxUISpriteButton):Void
 	{
 		super();
 

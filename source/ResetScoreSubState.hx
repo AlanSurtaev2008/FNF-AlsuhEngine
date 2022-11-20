@@ -102,7 +102,7 @@ class ResetScoreSubState extends BaseSubState
 			updateOptions();
 		}
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			FlxG.sound.play(Paths.getSound('cancelMenu'), 1);
 			close();

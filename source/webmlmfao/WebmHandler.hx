@@ -15,7 +15,7 @@ class WebmHandler
 	public var io:WebmIo;
 	public var initialized:Bool = false;
 	
-	public function new() {}
+	public function new():Void {}
 	
 	public function source(?vPath:String):Void
 	{
@@ -135,7 +135,7 @@ class WebmHandler
 	
 	public function onEnd():Void
 	{
-		trace("IT ENDED!");
+		Debug.logInfo("IT ENDED!");
 		ended = true;
 	}
 	
@@ -160,9 +160,9 @@ class WebmHandler
 	}
 	#else
 	public var webm:FlxSprite;
-	public function new()
+	public function new():Void
 	{
-	trace("THIS IS ANDROID! or some shit...");
+		Debug.logInfo("THIS IS ANDROID! or some shit...");
 	}
 	#end
 }

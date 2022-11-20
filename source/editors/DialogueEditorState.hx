@@ -150,7 +150,7 @@ class DialogueEditorState extends MusicBeatUIState
 		speedStepper = new FlxUINumericStepper(10, characterInputText.y + 40, 0.005, 0.05, 0, 0.5, 3);
 
 		angryCheckbox = new FlxUICheckBox(speedStepper.x + 120, speedStepper.y, null, null, "Angry Textbox", 200);
-		angryCheckbox.callback = function()
+		angryCheckbox.callback = function():Void
 		{
 			updateTextBox();
 			dialogueFile.dialogue[curSelected].boxState = (angryCheckbox.checked ? 'angry' : 'normal');
@@ -162,12 +162,12 @@ class DialogueEditorState extends MusicBeatUIState
 		lineInputText = new FlxUIInputText(10, soundInputText.y + 35, 200, DEFAULT_TEXT, 8);
 		blockPressWhileTypingOn.push(lineInputText);
 
-		var loadButton:FlxButton = new FlxButton(20, lineInputText.y + 25, "Load Dialogue", function()
+		var loadButton:FlxButton = new FlxButton(20, lineInputText.y + 25, "Load Dialogue", function():Void
 		{
 			loadDialogue();
 		});
 
-		var saveButton:FlxButton = new FlxButton(loadButton.x + 120, loadButton.y, "Save Dialogue", function()
+		var saveButton:FlxButton = new FlxButton(loadButton.x + 120, loadButton.y, "Save Dialogue", function():Void
 		{
 			saveDialogue();
 		});
@@ -485,12 +485,7 @@ class DialogueEditorState extends MusicBeatUIState
 
 	function changeText(add:Int = 0):Void
 	{
-		curSelected += add;
-
-		if (curSelected < 0)
-			curSelected = dialogueFile.dialogue.length - 1;
-		else if (curSelected >= dialogueFile.dialogue.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + add, dialogueFile.dialogue.length);
 
 		var curDialogue:DialogueLine = dialogueFile.dialogue[curSelected];
 
@@ -585,7 +580,7 @@ class DialogueEditorState extends MusicBeatUIState
 				{
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 
-					trace("Successfully loaded file: " + cutName);
+					Debug.logInfo("Successfully loaded file: " + cutName);
 
 					dialogueFile = loadedDialog;
 
@@ -599,7 +594,7 @@ class DialogueEditorState extends MusicBeatUIState
 
 		_file = null;
 		#else
-		trace("File couldn't be loaded! You aren't on Desktop, are you?");
+		Debug.logError("File couldn't be loaded! You aren't on Desktop, are you?");
 		#end
 	}
 
@@ -614,7 +609,7 @@ class DialogueEditorState extends MusicBeatUIState
 
 		_file = null;
 
-		trace("Cancelled file loading.");
+		Debug.logInfo("Cancelled file loading.");
 	}
 
 	/**
@@ -628,7 +623,7 @@ class DialogueEditorState extends MusicBeatUIState
 
 		_file = null;
 
-		trace("Problem loading file");
+		Debug.logError("Problem loading file");
 	}
 
 	function saveDialogue():Void
@@ -646,7 +641,7 @@ class DialogueEditorState extends MusicBeatUIState
 		}
 	}
 
-	function onSaveComplete(_):Void
+	function onSaveComplete(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -660,7 +655,7 @@ class DialogueEditorState extends MusicBeatUIState
 	/**
 		* Called when the save file dialog is cancelled.
 		*/
-	function onSaveCancel(_):Void
+	function onSaveCancel(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -672,7 +667,7 @@ class DialogueEditorState extends MusicBeatUIState
 	/**
 		* Called if there is an error while saving the gameplay recording.
 		*/
-	function onSaveError(_):Void
+	function onSaveError(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);

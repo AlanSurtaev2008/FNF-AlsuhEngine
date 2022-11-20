@@ -128,7 +128,7 @@ class ComboSubState extends BaseSubState
 
 		var addNum:Int = 1;
 
-		if (FlxG.keys.pressed.SHIFT) addNum = 10;
+		if (FlxG.keys.pressed.ALT) addNum = 10;
 
 		var controlArray:Array<Bool> =
 		[
@@ -223,7 +223,7 @@ class ComboSubState extends BaseSubState
 			repositionCombo();
 		}
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
 			

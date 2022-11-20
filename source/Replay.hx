@@ -50,7 +50,7 @@ class Replay
 	public var path:String = "";
 	public var replay:ReplayJSON;
 
-	public function new(path:String)
+	public function new(path:String):Void
 	{
 		this.path = path;
 
@@ -115,7 +115,7 @@ class Replay
 			replay = repl;
 		}
 		catch (e:Dynamic) {
-			// noting
+			Debug.logError(e);
 		}
 		#end
 	}

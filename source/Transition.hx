@@ -54,8 +54,7 @@ class Transition extends BaseSubState
 			FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration,
 			{
 				ease: FlxEase.linear,
-				onComplete: function(twn:FlxTween)
-				{
+				onComplete: function(twn:FlxTween):Void {
 					close();
 				}
 			});
@@ -68,7 +67,7 @@ class Transition extends BaseSubState
 			leTween = FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration,
 			{
 				ease: FlxEase.linear,
-				onComplete: function(twn:FlxTween)
+				onComplete: function(twn:FlxTween):Void
 				{
 					if (finishCallback != null) {
 						finishCallback();

@@ -44,7 +44,7 @@ class OutdatedState extends TransitionableState
 	{
 		super.update(elapsed);
 
-		if (controls.BACK && !exitingToMenu)
+		if ((controls.BACK || FlxG.mouse.justPressedRight) && !exitingToMenu)
 		{
 			exitingToMenu = true;
 			leftState = true;

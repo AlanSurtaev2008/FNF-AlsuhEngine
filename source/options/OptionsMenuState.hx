@@ -134,7 +134,7 @@ class OptionsMenuState extends TransitionableState
 	{
 		super.update(elapsed);
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			OptionData.savePrefs();
 
@@ -185,7 +185,7 @@ class OptionsMenuState extends TransitionableState
 					FlxFlicker.flicker(selectorLeft, 1, 0.04, true);
 					FlxFlicker.flicker(selectorRight, 1, 0.04, true);
 	
-					FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.04, true, false, function(flick:FlxFlicker)
+					FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.04, true, false, function(flick:FlxFlicker):Void
 					{
 						openSelectedSubstate(options[curSelected]);
 					});
@@ -201,12 +201,7 @@ class OptionsMenuState extends TransitionableState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = options.length - 1;
-		if (curSelected >= options.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, options.length);
 
 		for (item in grpOptions.members)
 		{
@@ -376,7 +371,7 @@ class OptionsSubState extends BaseSubState
 	{
 		super.update(elapsed);
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			OptionsMenuState.curSelected = curSelected;
 
@@ -421,8 +416,7 @@ class OptionsSubState extends BaseSubState
 					}
 				}
 
-				if (FlxG.mouse.wheel != 0)
-				{
+				if (FlxG.mouse.wheel != 0) {
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
 			}
@@ -436,7 +430,7 @@ class OptionsSubState extends BaseSubState
 					FlxFlicker.flicker(selectorLeft, 1, 0.04, true);
 					FlxFlicker.flicker(selectorRight, 1, 0.04, true);
 	
-					FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.04, true, false, function(flick:FlxFlicker)
+					FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.04, true, false, function(flick:FlxFlicker):Void
 					{
 						openSelectedSubstate(options[curSelected]);
 					});
@@ -452,12 +446,7 @@ class OptionsSubState extends BaseSubState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = options.length - 1;
-		if (curSelected >= options.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, options.length);
 
 		for (item in grpOptions.members)
 		{

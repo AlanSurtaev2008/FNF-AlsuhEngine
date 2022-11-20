@@ -115,12 +115,12 @@ class FlxUIState extends TransitionableState implements IEventGetter implements 
 			try
 			{
 				liveFile = U.readAccess(U.fixSlash(_liveFilePath + _xml_id));
-				trace("liveFile = " + liveFile);
+				Debug.logInfo("liveFile = " + liveFile);
 			}
 			catch (msg:String)
 			{
 				FlxG.log.warn(msg);
-				trace(msg);
+				Debug.logError(msg);
 				liveFile = null;
 			}
 		}

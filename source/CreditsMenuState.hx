@@ -191,7 +191,7 @@ class CreditsMenuState extends TransitionableState
 	{
 		super.update(elapsed);
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			persistentUpdate = false;
 
@@ -243,7 +243,7 @@ class CreditsMenuState extends TransitionableState
 				{
 					flickering = true;
 
-					FlxFlicker.flicker(grpCredits.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
+					FlxFlicker.flicker(grpCredits.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker):Void
 					{
 						flickering = false;
 						CoolUtil.browserLoad(curCredit[3]);
@@ -301,7 +301,7 @@ class CreditsMenuState extends TransitionableState
 		{
 			colorTween = FlxTween.color(bg, 1, 0xFFFFFFFF, getCurrentBGColor(),
 			{
-				onComplete: function(twn:FlxTween) {
+				onComplete: function(twn:FlxTween):Void {
 					colorTween = null;
 				}
 			});
@@ -319,14 +319,8 @@ class CreditsMenuState extends TransitionableState
 
 	function changeSelection(change:Int = 0)
 	{
-		do
-		{
-			curSelected += change;
-
-			if (curSelected < 0)
-				curSelected = creditsStuff.length - 1;
-			if (curSelected >= creditsStuff.length)
-				curSelected = 0;
+		do {
+			curSelected = CoolUtil.boundSelection(curSelected + change, creditsStuff.length);
 		}
 		while (unselectableCheck(curSelected));
 
@@ -344,7 +338,7 @@ class CreditsMenuState extends TransitionableState
 		
 				colorTween = FlxTween.color(bg, 1, bg.color, intendedColor,
 				{
-					onComplete: function(twn:FlxTween) {
+					onComplete: function(twn:FlxTween):Void {
 						colorTween = null;
 					}
 				});

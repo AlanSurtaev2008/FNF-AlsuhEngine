@@ -1,6 +1,6 @@
-//This was made by GWebDev lol btw this uses actuate
 package webmlmfao;
 
+#if WEBM_ALLOWED
 import motion.Actuate;
 import openfl.display.Sprite;
 import openfl.events.AsyncErrorEvent;
@@ -10,11 +10,13 @@ import openfl.media.Video;
 import openfl.net.NetConnection;
 import openfl.net.NetStream;
 import flixel.FlxG;
+#end
 
 using StringTools;
 
 class VideoHandler
 {
+	#if WEBM_ALLOWED
 	public var netStream:NetStream;
 	public var video:Video;
 	public var isReady:Bool = false;
@@ -22,16 +24,15 @@ class VideoHandler
 	public var vidPath:String = "";
 	public var ignoreShit:Bool = false;
 	
-	public function new()
+	public function new():Void
 	{
 		isReady = false;
 	}
 	
 	public function source(?vPath:String):Void
 	{
-		if (vPath != null && vPath.length > 0)
-		{
-		vidPath = vPath;
+		if (vPath != null && vPath.length > 0) {
+			vidPath = vPath;
 		}
 	}
 	
@@ -58,25 +59,21 @@ class VideoHandler
 		#end
 	}
 	
-	public function client_onMetaData (metaData:Dynamic) {
-		
+	public function client_onMetaData(metaData:Dynamic)
+	{
 		video.attachNetStream (netStream);
-		
 		video.width = FlxG.width;
 		video.height = FlxG.height;
-		
 	}
-	
-	
-	public function netStream_onAsyncError (event:AsyncErrorEvent):Void {
-		
-		trace ("Error loading video");
-		
+
+	public function netStream_onAsyncError(event:AsyncErrorEvent):Void
+	{
+		Debug.logError("Error loading video");
 	}
-	
-	
-	public function netConnection_onNetStatus (event:NetStatusEvent):Void {
-		trace (event.info.code);
+
+	public function netConnection_onNetStatus(event:NetStatusEvent):Void
+	{
+		Debug.logInfo(event.info.code);
 	}
 	
 	public function play():Void
@@ -88,7 +85,7 @@ class VideoHandler
 		netStream.play(vidPath);
 		ignoreShit = false;
 		#end
-		trace(vidPath);
+		Debug.logInfo(vidPath);
 	}
 	
 	public function stop():Void
@@ -190,4 +187,5 @@ class VideoHandler
 	{
 		video.visible = true;
 	}
+	#end
 }

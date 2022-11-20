@@ -101,7 +101,7 @@ class AchievementsMenuState extends TransitionableState
 	{
 		super.update(elapsed);
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			persistentUpdate = false;
 
@@ -146,12 +146,7 @@ class AchievementsMenuState extends TransitionableState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = achievements.length - 1;
-		if (curSelected >= achievements.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, achievements.length);
 
 		var bullShit:Int = 0;
 

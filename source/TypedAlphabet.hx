@@ -12,7 +12,7 @@ class TypedAlphabet extends Alphabet
 	public var sound:String = 'dialogue';
 	public var volume:Float = 1;
 
-	public function new(x:Float, y:Float, text:String = "", ?delay:Float = 0.05, ?bold:Bool = false)
+	public function new(x:Float, y:Float, text:String = "", ?delay:Float = 0.05, ?bold:Bool = false):Void
 	{
 		super(x, y, text, bold);
 
@@ -66,8 +66,7 @@ class TypedAlphabet extends Alphabet
 
 		for (i in start...(upTo+1))
 		{
-			if(letters[i] != null) letters[i].visible = true;
-			//trace('test, showing: $i');
+			if (letters[i] != null) letters[i].visible = true;
 		}
 	}
 

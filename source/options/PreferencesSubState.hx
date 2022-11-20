@@ -314,8 +314,8 @@ class PreferencesSubState extends MusicBeatSubState
 			"What should the Time Bar display?",
 			'songPositionType',
 			'string',
-			'Multiplicative',
-			['Multiplicative', 'Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
+			'Time Left and Elapsed',
+			['Time Left and Elapsed', 'Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		option.onChange = onChangeSongPosition;
 		option.luaAllowed = true;
 		addOption(option);
@@ -704,7 +704,7 @@ class PreferencesSubState extends MusicBeatSubState
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
 
@@ -737,7 +737,7 @@ class PreferencesSubState extends MusicBeatSubState
 					changeSelection(1);
 					holdTime = 0;
 				}
-	
+
 				if (controls.UI_DOWN || controls.UI_UP)
 				{
 					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
@@ -748,8 +748,8 @@ class PreferencesSubState extends MusicBeatSubState
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 					}
 				}
-	
-				if (FlxG.mouse.wheel != 0) {
+
+				if (FlxG.mouse.wheel != 0 && !(FlxG.keys.pressed.ALT && curOption.type != 'bool')) {
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
 			}
@@ -762,7 +762,7 @@ class PreferencesSubState extends MusicBeatSubState
 					{
 						flickering = true;
 
-						FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
+						FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker):Void
 						{
 							reset();
 							FlxG.sound.play(Paths.getSound('cancelMenu'));
@@ -786,7 +786,7 @@ class PreferencesSubState extends MusicBeatSubState
 						{
 							flickering = true;
 	
-							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
+							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker):Void
 							{
 								changeBool(curOption);
 							});
@@ -803,7 +803,7 @@ class PreferencesSubState extends MusicBeatSubState
 						{
 							flickering = true;
 
-							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
+							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker):Void
 							{
 								flickering = false;
 								curOption.change();
@@ -829,72 +829,110 @@ class PreferencesSubState extends MusicBeatSubState
 				reloadCheckboxes();
 			}
 
-			if ((controls.UI_LEFT || controls.UI_RIGHT) && curOption.type != 'bool' && curOption.type != 'menu' && curOption != defaultValue && !curOption.isPause)
+			if (curOption.type != 'bool' && curOption.type != 'menu' && curOption != defaultValue && !curOption.isPause)
 			{
-				var pressed:Bool = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
-
-				if (holdTimeValue > 0.5 || pressed) 
+				if (controls.UI_LEFT || controls.UI_RIGHT)
 				{
-					if (pressed)
+					var pressed:Bool = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
+
+					if (holdTimeValue > 0.5 || pressed) 
 					{
-						var add:Dynamic = null;
-
-						if (curOption.type != 'string') {
-							add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
-						}
-
-						switch (curOption.type)
+						if (pressed)
 						{
-							case 'int' | 'float' | 'percent':
+							var add:Dynamic = null;
+
+							if (curOption.type != 'string') {
+								add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
+							}
+
+							switch (curOption.type)
 							{
-								holdValue = curOption.getValue() + add;
-
-								if (holdValue < curOption.minValue)
-									holdValue = curOption.minValue;
-								else if (holdValue > curOption.maxValue)
-									holdValue = curOption.maxValue;
-
-								switch (curOption.type)
+								case 'int' | 'float' | 'percent':
 								{
-									case 'int':
+									holdValue = curOption.getValue() + add;
+
+									if (holdValue < curOption.minValue)
+										holdValue = curOption.minValue;
+									else if (holdValue > curOption.maxValue)
+										holdValue = curOption.maxValue;
+
+									switch (curOption.type)
 									{
-										holdValue = Math.round(holdValue);
-										curOption.setValue(holdValue);
-									}
-									case 'float' | 'percent':
-									{
-										holdValue = FlxMath.roundDecimal(holdValue, curOption.decimals);
-										curOption.setValue(holdValue);
+										case 'int':
+										{
+											holdValue = Math.round(holdValue);
+											curOption.setValue(holdValue);
+										}
+										case 'float' | 'percent':
+										{
+											holdValue = FlxMath.roundDecimal(holdValue, curOption.decimals);
+											curOption.setValue(holdValue);
+										}
 									}
 								}
+								case 'string':
+								{
+									var num:Int = curOption.curOption; // lol
+
+									if (controls.UI_LEFT_P)
+										--num;
+									else
+										num++;
+
+									if (num < 0)
+										num = curOption.options.length - 1;
+									else if (num >= curOption.options.length)
+										num = 0;
+
+									curOption.curOption = num;
+									curOption.setValue(curOption.options[num]); // lol
+								}
 							}
-							case 'string':
-							{
-								var num:Int = curOption.curOption; // lol
 
-								if (controls.UI_LEFT_P)
-									--num;
-								else
-									num++;
+							updateTextFrom(curOption);
 
-								if (num < 0)
-									num = curOption.options.length - 1;
-								else if (num >= curOption.options.length)
-									num = 0;
-
-								curOption.curOption = num;
-								curOption.setValue(curOption.options[num]); // lol
-							}
+							curOption.change();
+							FlxG.sound.play(Paths.getSound('scrollMenu'));
 						}
+						else if (curOption.type != 'string')
+						{
+							holdValue += curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1);
 
-						updateTextFrom(curOption);
+							if (holdValue < curOption.minValue) 
+								holdValue = curOption.minValue;
+							else if (holdValue > curOption.maxValue)
+								holdValue = curOption.maxValue;
 
-						curOption.change();
-						FlxG.sound.play(Paths.getSound('scrollMenu'));
+							switch (curOption.type)
+							{
+								case 'int':
+								{
+									curOption.setValue(Math.round(holdValue));
+								}
+								case 'float' | 'percent':
+								{
+									curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
+								}
+							}
+
+							updateTextFrom(curOption);
+							curOption.change();
+						}
 					}
-					else if (curOption.type != 'string')
+
+					if (curOption.type != 'string') {
+						holdTimeValue += elapsed;
+					}
+				}
+				else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
+					clearHold();
+				}
+
+				if (FlxG.mouse.wheel != 0 && (FlxG.keys.pressed.ALT && curOption.type != 'bool'))
+				{
+					if (curOption.type != 'string')
 					{
-						holdValue += curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1);
+						holdValue += -(curOption.scrollSpeed / 50) * FlxG.mouse.wheel;
 
 						if (holdValue < curOption.minValue) 
 							holdValue = curOption.minValue;
@@ -912,18 +950,31 @@ class PreferencesSubState extends MusicBeatSubState
 								curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
 							}
 						}
+		
+						updateTextFrom(curOption);
+						curOption.change();
+
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
+					}
+					else if (curOption.type == 'string')
+					{
+						var num:Int = curOption.curOption; // lol
+						num += (-1 * FlxG.mouse.wheel);
+
+						if (num < 0)
+							num = curOption.options.length - 1;
+						else if (num >= curOption.options.length)
+							num = 0;
+
+						curOption.curOption = num;
+						curOption.setValue(curOption.options[num]); // lol
 
 						updateTextFrom(curOption);
 						curOption.change();
+
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 					}
 				}
-
-				if (curOption.type != 'string') {
-					holdTimeValue += elapsed;
-				}
-			}
-			else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
-				clearHold();
 			}
 		}
 
@@ -1092,7 +1143,7 @@ class PreferencesSubState extends MusicBeatSubState
 			{
 				switch (OptionData.songPositionType)
 				{
-					case 'Multiplicative':
+					case 'Time Left and Elapsed':
 						PlayState.instance.songPosName.text += ' (' + FlxStringUtil.formatTime(secondsTotalBlyad, false) + ' / ' + FlxStringUtil.formatTime(secondsTotal, false) + ')';
 					case 'Time Elapsed':
 						PlayState.instance.songPosName.text += ' (' + FlxStringUtil.formatTime(secondsTotalBlyad, false) + ')';
@@ -1189,14 +1240,8 @@ class PreferencesSubState extends MusicBeatSubState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		do
-		{
-			curSelected += change;
-
-			if (curSelected < 0)
-				curSelected = optionsArray.length - 1;
-			if (curSelected >= optionsArray.length)
-				curSelected = 0;
+		do {
+			curSelected = CoolUtil.boundSelection(curSelected + change, optionsArray.length);
 		}
 		while (unselectableCheck(curSelected));
 

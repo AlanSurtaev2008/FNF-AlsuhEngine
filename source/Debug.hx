@@ -174,7 +174,7 @@ class Debug
 	{
 		trace('Initializing Debug tools...'); // Initialize logging tools.
 
-		Log.trace = function(data:Dynamic, ?info:PosInfos) // Override Haxe's vanilla trace() calls to use the Flixel console.
+		Log.trace = function(data:Dynamic, ?info:PosInfos):Void // Override Haxe's vanilla trace() calls to use the Flixel console.
 		{
 			var paramArray:Array<Dynamic> = [data];
 
@@ -300,15 +300,11 @@ class Debug
 
 		addConsoleCommand("playSong", function(songName:String, ?difficulty:String = 'normal'):Void // Console commands let you do WHATEVER you want.
 		{
-			Debug.logInfo('CONSOLE: Opening song $songName ($difficulty) in Free Play...');
-
 			loadSong(Paths.formatToSongPath(songName), Paths.formatToSongPath(difficulty), false);
 		});
 
 		addConsoleCommand("chartSong", function(songName:String, ?difficulty:String = 'normal'):Void
 		{
-			Debug.logInfo('CONSOLE: Opening song $songName ($difficulty) in Chart Editor...');
-
 			loadSong(Paths.formatToSongPath(songName), Paths.formatToSongPath(difficulty), true);
 		});
 	}
@@ -316,16 +312,30 @@ class Debug
 	inline static function loadSong(songName:String, difficulty:String, isCharting:Bool = false):Void
 	{
 		var diffName:String = CoolUtil.formatToName(difficulty);
-		var difficulties:Array<Array<String>> = [[diffName], [difficulty], [difficulty == 'normal' ? '' : ('-' + difficulty)]];
 
-		PlayState.SONG = Song.loadFromJson(songName + CoolUtil.getDifficultySuffix(difficulty, false, difficulties), songName);
-		PlayState.gameMode = 'freeplay';
-		PlayState.isStoryMode = false;
-		PlayState.storyDifficulty = difficulty;
-		PlayState.lastDifficulty = difficulty;
-		PlayState.seenCutscene = false;
+		if (Paths.fileExists('data/' + songName + '/' + songName + (difficulty == 'normal' ? '' : ('-' + difficulty)) + '.json', TEXT))
+		{
+			var difficulties:Array<Array<String>> = [[diffName], [difficulty], [CoolUtil.getDifficultyFilePath(difficulty)]];
 
-		LoadingState.loadAndSwitchState(isCharting ? new editors.ChartingState() : new PlayState(), true);
+			PlayState.SONG = Song.loadFromJson(songName + CoolUtil.getDifficultySuffix(difficulty, false, difficulties), songName);
+			PlayState.gameMode = 'freeplay';
+			PlayState.isStoryMode = false;
+			PlayState.storyDifficulty = difficulty;
+			PlayState.lastDifficulty = difficulty;
+			PlayState.seenCutscene = false;
+	
+			if (isCharting) {
+				Debug.logInfo('CONSOLE: Opening song $songName ($diffName) in Chart Editor...');
+			}
+			else {
+				Debug.logInfo('CONSOLE: Opening song $songName ($diffName) in Free Play...');
+			}
+	
+			LoadingState.loadAndSwitchState(isCharting ? new editors.ChartingState() : new PlayState(), true);
+		}
+		else {
+			Debug.logError('CONSOLE: File "' + 'data/' + songName + '/' + songName + (difficulty == 'normal' ? '' : ('-' + difficulty)) + '.json' + '" does not exist!');
+		}
 	}
 
 	static function formatOutput(input:Dynamic, pos:haxe.PosInfos):Array<Dynamic>

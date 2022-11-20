@@ -104,7 +104,7 @@ class TitleState extends MusicBeatState
 		}
 		#end
 		
-		titleJSON = Json.parse(Paths.getTextFromFile('title/gfDanceTitle.json'));
+		titleJSON = Json.parse(Paths.getTextFromFile('images/title/gfDanceTitle.json'));
 
 		if (OptionData.checkForUpdates && !initialized)
 		{
@@ -121,7 +121,7 @@ class TitleState extends MusicBeatState
 			}
 	
 			http.onError = function(error:String):Void {
-				trace('error: $error');
+				Debug.logError('error: $error');
 			}
 	
 			http.request();
@@ -280,7 +280,7 @@ class TitleState extends MusicBeatState
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
 
-		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
+		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER || FlxG.mouse.justPressed;
 
 		#if mobile
 		for (touch in FlxG.touches.list)
@@ -317,7 +317,7 @@ class TitleState extends MusicBeatState
 			if (!transitioning && skippedIntro)
 			{
 				#if sys
-				if (controls.BACK)
+				if (controls.BACK || FlxG.mouse.justPressedRight)
 				{
 					if (FlxG.random.bool(25)) {
 						CoolUtil.browserLoad('https://youtu.be/dQw4w9WgXcQ'); // lololololololol
@@ -361,12 +361,12 @@ class TitleState extends MusicBeatState
 					{
 						if (OptionData.checkForUpdates && OutdatedState.newVersion.trim() != MainMenuState.engineVersion.trim() && !OutdatedState.leftState)
 						{
-							trace('There is a new version ' + OutdatedState.newVersion.trim() + '!');
+							Debug.logInfo('There is a new version ' + OutdatedState.newVersion.trim() + '!');
 							FlxG.switchState(new OutdatedState());
 						}
 						else
 						{
-							trace('You now have the latest version');
+							Debug.logInfo('You now have the latest version');
 							FlxG.switchState(new MainMenuState());
 						}
 					});

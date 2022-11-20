@@ -48,7 +48,7 @@ class MainMenuState extends TransitionableState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.6.1';
+	public static var engineVersion:String = '1.6.2';
 	public static var gameVersion:String = '0.2.8';
 
 	var debugKeys:Array<FlxKey>;
@@ -199,7 +199,7 @@ class MainMenuState extends TransitionableState
 
 		if (!selectedSomethin)
 		{
-			if (controls.BACK)
+			if (controls.BACK || FlxG.mouse.justPressedRight)
 			{
 				FlxG.sound.play(Paths.getSound('cancelMenu'));
 				FlxG.switchState(new TitleState());
@@ -229,7 +229,8 @@ class MainMenuState extends TransitionableState
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 	
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+					{
 						FlxG.sound.play(Paths.getSound('scrollMenu'));
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
 					}
@@ -237,7 +238,7 @@ class MainMenuState extends TransitionableState
 	
 				if (FlxG.mouse.wheel != 0)
 				{
-					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
+					FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
@@ -331,12 +332,7 @@ class MainMenuState extends TransitionableState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = menuItems.length - 1;
-		if (curSelected >= menuItems.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, menuItems.length);
 
 		grpMenuItems.forEach(function(spr:FlxSprite)
 		{

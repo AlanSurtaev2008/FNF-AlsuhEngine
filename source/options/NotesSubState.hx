@@ -202,12 +202,10 @@ class NotesSubState extends MusicBeatSubState
 						FlxG.sound.play(Paths.getSound('scrollMenu'));
 					}
 
-					if (controls.UI_LEFT_R || controls.UI_RIGHT_R)
-					{
+					if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
 						holdTimeValue = 0;
 					}
-					else if (controls.UI_LEFT || controls.UI_RIGHT)
-					{
+					else if (controls.UI_LEFT || controls.UI_RIGHT) {
 						holdTimeValue += elapsed;
 					}
 				}
@@ -220,12 +218,10 @@ class NotesSubState extends MusicBeatSubState
 						case 1 | 2: add = 50;
 					}
 			
-					if (controls.UI_LEFT)
-					{
+					if (controls.UI_LEFT) {
 						updateValue(elapsed * -add);
 					}
-					else if (controls.UI_RIGHT)
-					{
+					else if (controls.UI_RIGHT) {
 						updateValue(elapsed * add);
 					}
 				
@@ -234,6 +230,10 @@ class NotesSubState extends MusicBeatSubState
 						FlxG.sound.play(Paths.getSound('scrollMenu'));
 						holdTimeValue = 0;
 					}
+				}
+
+				if (FlxG.mouse.wheel != 0) {
+					updateValue(-1 * FlxG.mouse.wheel);
 				}
 			}
 			else
@@ -263,8 +263,7 @@ class NotesSubState extends MusicBeatSubState
 						}
 					}
 		
-					if (FlxG.mouse.wheel != 0)
-					{
+					if (FlxG.mouse.wheel != 0 && !FlxG.keys.pressed.ALT) {
 						changeSelection(-1 * FlxG.mouse.wheel);
 					}
 				}
@@ -291,10 +290,15 @@ class NotesSubState extends MusicBeatSubState
 					holdTimeType += elapsed;
 					var checkNewHold:Int = Math.floor((holdTimeType - 0.5) * 10);
 
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+					{
 						FlxG.sound.play(Paths.getSound('scrollMenu'));
 						changeType((checkNewHold - checkLastHold) * (controls.UI_LEFT ? -1 : 1));
 					}
+				}
+
+				if (FlxG.mouse.wheel != 0 && FlxG.keys.pressed.ALT) {
+					changeType(-1 * FlxG.mouse.wheel);
 				}
 
 				if (controls.RESET)
@@ -314,20 +318,19 @@ class NotesSubState extends MusicBeatSubState
 
 						FlxFlicker.flicker(grpNotes.members[curSelected], 1, 0.06, true);
 
-						FlxFlicker.flicker(grpNumbers.members[(curSelected * 3) + typeSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
+						FlxFlicker.flicker(grpNumbers.members[(curSelected * 3) + typeSelected], 1, 0.06, true, false, function(flick:FlxFlicker):Void
 						{
 							selectType();
 						});
 
 						FlxG.sound.play(Paths.getSound('confirmMenu'));
 					}
-					else
-					{
+					else {
 						selectType();
 					}
 				}
 
-				if (controls.BACK)
+				if (controls.BACK || FlxG.mouse.justPressedRight)
 				{
 					FlxG.sound.play(Paths.getSound('cancelMenu'));
 	
@@ -340,8 +343,7 @@ class NotesSubState extends MusicBeatSubState
 						FlxG.state.closeSubState();
 						FlxG.state.openSubState(new OptionsSubState());
 					}
-					else
-					{
+					else {
 						close();
 					}
 				}
@@ -385,12 +387,7 @@ class NotesSubState extends MusicBeatSubState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = OptionData.arrowHSV.length - 1;
-		if (curSelected >= OptionData.arrowHSV.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, OptionData.arrowHSV.length);
 
 		curValue = OptionData.arrowHSV[curSelected][typeSelected];
 		updateValue();
@@ -442,8 +439,7 @@ class NotesSubState extends MusicBeatSubState
 			var item = grpNumbers.members[i];
 			item.alpha = 0.6;
 	
-			if ((curSelected * 3) + typeSelected == i)
-			{
+			if ((curSelected * 3) + typeSelected == i) {
 				item.alpha = 1;
 			}
 		}

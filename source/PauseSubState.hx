@@ -340,6 +340,10 @@ class PauseSubState extends BaseSubState
 			}
 		}
 
+		if (controls.BACK || FlxG.mouse.justPressedRight) {
+			close();
+		}
+
 		if ((controls.ACCEPT || FlxG.mouse.justPressed) && !OptionData.controllerMode)
 		{
 			if (menuItems == difficultyChoices)
@@ -350,7 +354,7 @@ class PauseSubState extends BaseSubState
 
 					PlayState.SONG = Song.loadFromJson(PlayState.SONG.songID + difficulty, PlayState.SONG.songID);
 					PlayState.lastDifficulty = CoolUtil.getDifficultyID(daSelected, false, PlayState.difficulties);
-					PlayState.usedPractice = PlayState.storyDifficulty != PlayState.lastDifficulty ? true : false;
+					PlayState.usedPractice = PlayState.storyDifficulty != PlayState.lastDifficulty;
 
 					FlxG.sound.music.volume = 0;
 					FlxG.resetState();
@@ -439,9 +443,13 @@ class PauseSubState extends BaseSubState
 					switch (PlayState.gameMode)
 					{
 						case 'story':
+						{
 							FlxG.switchState(new StoryMenuState());
+						}
 						case 'freeplay':
+						{
 							FlxG.switchState(new FreeplayMenuState());
+						}
 						case 'replay':
 						{
 							if (FlxG.save.data.botPlay != null) {
@@ -468,7 +476,9 @@ class PauseSubState extends BaseSubState
 							FlxG.switchState(new options.ReplaysMenuState());
 						}
 						default:
+						{
 							FlxG.switchState(new MainMenuState());
+						}
 					}
 				}
 			}
@@ -505,12 +515,7 @@ class PauseSubState extends BaseSubState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = menuItems.length - 1;
-		if (curSelected >= menuItems.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, menuItems.length);
 
 		var bullShit:Int = 0;
 

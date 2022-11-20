@@ -40,11 +40,13 @@ typedef SwagSong =
 
 class Song
 {
-	public static function onLoadJson(songJson:SwagSong):Void
+	private static function onLoadJson(songJson:SwagSong):Void
 	{
 		if (songJson.songID == null) {
 			songJson.songID = Paths.formatToSongPath(songJson.song);
 		}
+
+		songJson.songID = Paths.formatToSongPath(songJson.songID);
 
 		if (songJson.songName == null) {
 			songJson.songName = CoolUtil.formatToName(songJson.song);
@@ -132,17 +134,26 @@ class Song
 
 		var songJson:SwagSong = parseJSONshit(rawJson);
 
-		if (jsonInput != 'events') {
-			StageData.loadDirectory(songJson);
+		if (songJson != null)
+		{
+			if (jsonInput != 'events') {
+				StageData.loadDirectory(songJson);
+			}
+	
+			onLoadJson(songJson);
+
+			return songJson;
 		}
 
-		onLoadJson(songJson);
-
-		return songJson;
+		return null;
 	}
 
 	public static function parseJSONshit(rawJson:String):SwagSong
 	{
-		return cast Json.parse(rawJson).song;
+		if (rawJson != null) {
+			return cast Json.parse(rawJson).song;
+		}
+
+		return null;
 	}
 }

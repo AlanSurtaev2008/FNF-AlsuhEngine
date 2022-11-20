@@ -202,7 +202,7 @@ class ControlsSubState extends BaseSubState
 	{
 		super.update(elapsed);
 
-		if (controls.BACK && !rebindingKey)
+		if ((controls.BACK || FlxG.mouse.justPressedRight) && !rebindingKey)
 		{
 			OptionData.saveCtrls();
 			OptionData.reloadControls();
@@ -296,7 +296,7 @@ class ControlsSubState extends BaseSubState
 						}
 					}
 		
-					if (FlxG.mouse.wheel != 0) {
+					if (FlxG.mouse.wheel != 0 && !FlxG.keys.pressed.ALT) {
 						changeSelection(-1 * FlxG.mouse.wheel);
 					}
 				}
@@ -317,6 +317,10 @@ class ControlsSubState extends BaseSubState
 							changeAlt();
 						}
 					}
+
+					if (FlxG.mouse.wheel != 0 && FlxG.keys.pressed.ALT) {
+						changeAlt();
+					}
 				}
 
 				if (controls.RESET && optionShit[curSelected][0] != defaultKey)
@@ -335,7 +339,7 @@ class ControlsSubState extends BaseSubState
 						{
 							flickering = true;
 
-							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
+							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker):Void
 							{
 								reset();
 							});
@@ -353,7 +357,7 @@ class ControlsSubState extends BaseSubState
 							flickering = true;
 
 							FlxFlicker.flicker(curAlt ? grpInputsAlt.members[getInputTextNum()] : grpInputs.members[getInputTextNum()],
-								1, 0.06, false, false, function(flick:FlxFlicker)
+								1, 0.06, false, false, function(flick:FlxFlicker):Void
 							{
 								selectInput();
 							});
@@ -417,14 +421,8 @@ class ControlsSubState extends BaseSubState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		do
-		{
-			curSelected += change;
-
-			if (curSelected < 0)
-				curSelected = optionShit.length - 1;
-			if (curSelected >= optionShit.length)
-				curSelected = 0;
+		do {
+			curSelected = CoolUtil.boundSelection(curSelected + change, optionShit.length);
 		}
 		while (unselectableCheck(curSelected));
 

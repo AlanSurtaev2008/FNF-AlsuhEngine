@@ -104,7 +104,7 @@ class TweenV {
 				parent.volume = val;
 				#if debug
 				if( isDebug )
-				trace("tv:" + val);
+				Debug.logInfo("tv:" + val);
 				#end
 			}
 			case TVVPan: 	parent.pan = val;
@@ -137,7 +137,7 @@ class SndTV {
 	}
 	
 	function onError(e) {
-		trace(e);
+		Debug.logInfo(e);
 	}
 	
 	public function count() {
@@ -162,7 +162,7 @@ class SndTV {
 			duration_ms = DEFAULT_DURATION;
 
 		#if debug
-		if ( p == null ) trace("tween2 creation failed to:"+to+" tp:"+tp);
+		if ( p == null ) Debug.logInfo("tween2 creation failed to:"+to+" tp:"+tp);
 		#end
 			
 		if ( tp==null ) tp = TEase;

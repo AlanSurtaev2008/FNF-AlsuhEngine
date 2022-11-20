@@ -44,7 +44,7 @@ class EditorLua
 	public var lua:State = null;
 	#end
 
-	public function new(script:String)
+	public function new(script:String):Void
 	{
 		#if LUA_ALLOWED
 		lua = LuaL.newstate();
@@ -54,17 +54,17 @@ class EditorLua
 		var result:Dynamic = LuaL.dofile(lua, script);
 		var resultStr:String = Lua.tostring(lua, result);
 
-		if (resultStr != null && result != 0) {
+		if (resultStr != null && result != 0)
+		{
 			lime.app.Application.current.window.alert(resultStr, 'Error on .LUA script!');
-			trace('Error on .LUA script! ' + resultStr);
+			Debug.logError('Error on .LUA script! ' + resultStr);
 			lua = null;
 
 			return;
 		}
 
-		trace('Lua file loaded succesfully:' + script);
+		Debug.logInfo('Lua file loaded succesfully:' + script);
 
-		// Lua variables
 		set('Function_Stop', Function_Stop);
 		set('Function_Continue', Function_Continue);
 		set('inChartEditor', true);
@@ -81,7 +81,8 @@ class EditorLua
 		set('screenWidth', FlxG.width);
 		set('screenHeight', FlxG.height);
 
-		for (i in 0...4) {
+		for (i in 0...4)
+		{
 			set('defaultPlayerStrumX' + i, 0);
 			set('defaultPlayerStrumY' + i, 0);
 			set('defaultOpponentStrumX' + i, 0);
@@ -91,96 +92,139 @@ class EditorLua
 		set('downscroll', OptionData.downScroll);
 		set('middlescroll', OptionData.middleScroll);
 
-		//stuff 4 noobz like you B)
-		Lua_helper.add_callback(lua, "getProperty", function(variable:String) {
-			var killMe:Array<String> = variable.split('.');
-			if(killMe.length > 1) {
-				var coverMeInPiss:Dynamic = Reflect.getProperty(EditorPlayState.instance, killMe[0]);
+		Lua_helper.add_callback(lua, "getProperty", function(variable:String):Dynamic
+		{
+			var fieldArray:Array<String> = variable.split('.');
 
-				for (i in 1...killMe.length - 1) {
-					coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
+			if (fieldArray.length > 1)
+			{
+				var fieldArrayFromInstance:Dynamic = Reflect.getProperty(EditorPlayState.instance, fieldArray[0]);
+
+				for (i in 1...fieldArray.length - 1) {
+					fieldArrayFromInstance = Reflect.getProperty(fieldArrayFromInstance, fieldArray[i]);
 				}
-				return Reflect.getProperty(coverMeInPiss, killMe[killMe.length - 1]);
+
+				return Reflect.getProperty(fieldArrayFromInstance, fieldArray[fieldArray.length - 1]);
 			}
+
 			return Reflect.getProperty(EditorPlayState.instance, variable);
 		});
-		Lua_helper.add_callback(lua, "setProperty", function(variable:String, value:Dynamic) {
-			var killMe:Array<String> = variable.split('.');
-			if(killMe.length > 1) {
-				var coverMeInPiss:Dynamic = Reflect.getProperty(EditorPlayState.instance, killMe[0]);
 
-				for (i in 1...killMe.length - 1) {
-					coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
+		Lua_helper.add_callback(lua, "setProperty", function(variable:String, value:Dynamic):Void
+		{
+			var fieldArray:Array<String> = variable.split('.');
+
+			if (fieldArray.length > 1)
+			{
+				var fieldArrayFromInstance:Dynamic = Reflect.getProperty(EditorPlayState.instance, fieldArray[0]);
+
+				for (i in 1...fieldArray.length - 1) {
+					fieldArrayFromInstance = Reflect.getProperty(fieldArrayFromInstance, fieldArray[i]);
 				}
-				return Reflect.setProperty(coverMeInPiss, killMe[killMe.length - 1], value);
+
+				return Reflect.setProperty(fieldArrayFromInstance, fieldArray[fieldArray.length - 1], value);
 			}
+
 			return Reflect.setProperty(EditorPlayState.instance, variable, value);
 		});
-		Lua_helper.add_callback(lua, "getPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic) {
-			if(Std.isOfType(Reflect.getProperty(EditorPlayState.instance, obj), FlxTypedGroup)) {
+
+		Lua_helper.add_callback(lua, "getPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic):Dynamic
+		{
+			if (Std.isOfType(Reflect.getProperty(EditorPlayState.instance, obj), FlxTypedGroup)) {
 				return Reflect.getProperty(Reflect.getProperty(EditorPlayState.instance, obj).members[index], variable);
 			}
 
 			var leArray:Dynamic = Reflect.getProperty(EditorPlayState.instance, obj)[index];
-			if(leArray != null) {
-				if(Type.typeof(variable) == ValueType.TInt) {
+
+			if (leArray != null)
+			{
+				if (Type.typeof(variable) == ValueType.TInt) {
 					return leArray[variable];
 				}
+
 				return Reflect.getProperty(leArray, variable);
 			}
+
 			return null;
 		});
-		Lua_helper.add_callback(lua, "setPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic, value:Dynamic) {
-			if(Std.isOfType(Reflect.getProperty(EditorPlayState.instance, obj), FlxTypedGroup)) {
+
+		Lua_helper.add_callback(lua, "setPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic, value:Dynamic):Void
+		{
+			if (Std.isOfType(Reflect.getProperty(EditorPlayState.instance, obj), FlxTypedGroup)) {
 				return Reflect.setProperty(Reflect.getProperty(EditorPlayState.instance, obj).members[index], variable, value);
 			}
 
 			var leArray:Dynamic = Reflect.getProperty(EditorPlayState.instance, obj)[index];
-			if(leArray != null) {
-				if(Type.typeof(variable) == ValueType.TInt) {
+
+			if (leArray != null)
+			{
+				if (Type.typeof(variable) == ValueType.TInt) {
 					return leArray[variable] = value;
 				}
+
 				return Reflect.setProperty(leArray, variable, value);
 			}
 		});
-		Lua_helper.add_callback(lua, "removeFromGroup", function(obj:String, index:Int, dontDestroy:Bool = false) {
-			if(Std.isOfType(Reflect.getProperty(EditorPlayState.instance, obj), FlxTypedGroup)) {
-				var sex = Reflect.getProperty(EditorPlayState.instance, obj).members[index];
-				if(!dontDestroy)
+
+		Lua_helper.add_callback(lua, "removeFromGroup", function(obj:String, index:Int, dontDestroy:Bool = false):Void
+		{
+			if (Std.isOfType(Reflect.getProperty(EditorPlayState.instance, obj), FlxTypedGroup))
+			{
+				var sex:FlxBasic = Reflect.getProperty(EditorPlayState.instance, obj).members[index];
+
+				if (!dontDestroy) {
 					sex.kill();
+				}
+
 				Reflect.getProperty(EditorPlayState.instance, obj).remove(sex, true);
-				if(!dontDestroy)
+
+				if (!dontDestroy) {
 					sex.destroy();
+				}
+
 				return;
 			}
+
 			Reflect.getProperty(EditorPlayState.instance, obj).remove(Reflect.getProperty(EditorPlayState.instance, obj)[index]);
 		});
 
-		Lua_helper.add_callback(lua, "getColorFromHex", function(color:String) {
-			if(!color.startsWith('0x')) color = '0xff' + color;
+		Lua_helper.add_callback(lua, "getColorFromHex", function(color:String):Int
+		{
+			if (!color.startsWith('0x')) color = '0xff' + color;
 			return Std.parseInt(color);
 		});
 
-		Lua_helper.add_callback(lua, "setGraphicSize", function(obj:String, x:Int, y:Int = 0) {
-			var poop:FlxSprite = Reflect.getProperty(EditorPlayState.instance, obj);
-			if(poop != null) {
-				poop.setGraphicSize(x, y);
-				poop.updateHitbox();
+		Lua_helper.add_callback(lua, "setGraphicSize", function(obj:String, x:Int, y:Int = 0):Void
+		{
+			var sprite:FlxSprite = Reflect.getProperty(EditorPlayState.instance, obj);
+
+			if (sprite != null)
+			{
+				sprite.setGraphicSize(x, y);
+				sprite.updateHitbox();
 				return;
 			}
 		});
-		Lua_helper.add_callback(lua, "scaleObject", function(obj:String, x:Float, y:Float) {
-			var poop:FlxSprite = Reflect.getProperty(EditorPlayState.instance, obj);
-			if(poop != null) {
-				poop.scale.set(x, y);
-				poop.updateHitbox();
+
+		Lua_helper.add_callback(lua, "scaleObject", function(obj:String, x:Float, y:Float):Void
+		{
+			var sprite:FlxSprite = Reflect.getProperty(EditorPlayState.instance, obj);
+
+			if (sprite != null)
+			{
+				sprite.scale.set(x, y);
+				sprite.updateHitbox();
 				return;
 			}
 		});
-		Lua_helper.add_callback(lua, "updateHitbox", function(obj:String) {
-			var poop:FlxSprite = Reflect.getProperty(EditorPlayState.instance, obj);
-			if(poop != null) {
-				poop.updateHitbox();
+
+		Lua_helper.add_callback(lua, "updateHitbox", function(obj:String):Void
+		{
+			var sprite:FlxSprite = Reflect.getProperty(EditorPlayState.instance, obj);
+
+			if (sprite != null)
+			{
+				sprite.updateHitbox();
 				return;
 			}
 		});
@@ -208,7 +252,8 @@ class EditorLua
 
 		if (result != null && resultIsAllowed(lua, result))
 		{
-			if(Lua.type(lua, -1) == Lua.LUA_TSTRING) {
+			if (Lua.type(lua, -1) == Lua.LUA_TSTRING)
+			{
 				var error:String = Lua.tostring(lua, -1);
 				Lua.pop(lua, 1);
 	
@@ -227,12 +272,14 @@ class EditorLua
 	}
 
 	#if LUA_ALLOWED
-	function resultIsAllowed(leLua:State, leResult:Null<Int>):Bool //Makes it ignore warnings
+	function resultIsAllowed(leLua:State, leResult:Null<Int>):Bool // Makes it ignore warnings
 	{
-		switch(Lua.type(leLua, leResult)) {
+		switch (Lua.type(leLua, leResult))
+		{
 			case Lua.LUA_TNIL | Lua.LUA_TBOOLEAN | Lua.LUA_TNUMBER | Lua.LUA_TSTRING | Lua.LUA_TTABLE:
 				return true;
 		}
+
 		return false;
 	}
 	#end

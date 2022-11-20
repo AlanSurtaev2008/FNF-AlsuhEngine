@@ -279,7 +279,8 @@ class Note extends FlxSprite
 				prevNote.updateHitbox();
 			}
 
-			if (PlayState.isPixelStage) {
+			if (PlayState.isPixelStage)
+			{
 				scale.y *= PlayState.daPixelZoom;
 				updateHitbox();
 			}
@@ -420,9 +421,7 @@ class Note extends FlxSprite
 
 		if (mustPress)
 		{
-			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
-				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
-			{
+			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult)) {
 				canBeHit = true;
 			}
 			else {

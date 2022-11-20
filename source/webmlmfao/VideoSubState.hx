@@ -35,7 +35,7 @@ class VideoSubState extends BaseSubState
 		this.onComplete = onComplete;
 	}
 	
-	public override function create()
+	public override function create():Void
 	{
 		super.create();
 
@@ -78,7 +78,8 @@ class VideoSubState extends BaseSubState
 
 		if (GlobalVideo.isWebm) {
 			GlobalVideo.get().restart();
-		} else {
+		}
+		else {
 			GlobalVideo.get().play();
 		}
 
@@ -93,7 +94,7 @@ class VideoSubState extends BaseSubState
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
-	public override function update(elapsed:Float)
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 

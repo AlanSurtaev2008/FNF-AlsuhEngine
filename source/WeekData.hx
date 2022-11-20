@@ -7,6 +7,8 @@ import sys.FileSystem;
 #end
 
 import haxe.Json;
+import Type.ValueType;
+
 import lime.utils.Assets;
 import haxe.format.JsonParser;
 import openfl.utils.Assets as OpenFlAssets;
@@ -23,7 +25,7 @@ typedef WeekFile =
 
 	var songs:Array<SongLabel>;
 
-	var difficulties:Dynamic;
+	var difficulties:Array<Array<String>>;
 	var defaultDifficulty:String;
 
 	var weekCharacters:Array<String>;
@@ -174,17 +176,14 @@ class WeekData
 			{
 				var splitName:Array<String> = stuff[i].trim().split('|');
 		
-				if (splitName[1] == '0') // Disable mod
-				{
+				if (splitName[1] == '0') { // Disable mod
 					disabledMods.push(splitName[0]);
 				}
-			
 				else // Sort mod loading order based on modsList.txt file
 				{
 					var path = haxe.io.Path.join([Paths.mods(), splitName[0]]);
 
-					if (sys.FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/'))
-					{
+					if (sys.FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/')) {
 						directories.push(path + '/');
 					}
 				}
@@ -197,8 +196,7 @@ class WeekData
 		{
 			var pathThing:String = haxe.io.Path.join([Paths.mods(), folder]) + '/';
 		
-			if (!disabledMods.contains(folder) && !directories.contains(pathThing))
-			{
+			if (!disabledMods.contains(folder) && !directories.contains(pathThing)) {
 				directories.push(pathThing);
 			}
 		}
@@ -252,8 +250,7 @@ class WeekData
 				{
 					var path:String = directory + daWeek + '.json';
 				
-					if (sys.FileSystem.exists(path))
-					{
+					if (sys.FileSystem.exists(path)) {
 						addWeek(daWeek, path, directories[i], i, originalLength);
 					}
 				}
@@ -262,8 +259,7 @@ class WeekData
 				{
 					var path = haxe.io.Path.join([directory, file]);
 			
-					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json'))
-					{
+					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json')) {
 						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
 					}
 				}
@@ -303,19 +299,16 @@ class WeekData
 		var rawJson:String = null;
 
 		#if MODS_ALLOWED
-		if (FileSystem.exists(path))
-		{
+		if (FileSystem.exists(path)) {
 			rawJson = File.getContent(path);
 		}
 		#else
-		if (OpenFlAssets.exists(path))
-		{
+		if (OpenFlAssets.exists(path)) {
 			rawJson = Assets.getText(path);
 		}
 		#end
 
-		if (rawJson != null && rawJson.length > 0)
-		{
+		if (rawJson != null && rawJson.length > 0) {
 			return cast Json.parse(rawJson);
 		}
 
@@ -324,16 +317,15 @@ class WeekData
 
 	public static function weekIsLocked(name:String):Bool
 	{
-		return (!weeksLoaded.get(name).startUnlocked && weeksLoaded.get(name).weekBefore.length > 0 &&
-			(!weekCompleted.exists(weeksLoaded.get(name).weekBefore) || !weekCompleted.get(weeksLoaded.get(name).weekBefore)));
+		var leWeek:WeekData = weeksLoaded.get(name);
+		return (!leWeek.startUnlocked && leWeek.weekBefore.length > 0 && (!weekCompleted.exists(leWeek.weekBefore) || !weekCompleted.get(leWeek.weekBefore)));
 	}
 
 	public static function setDirectoryFromWeek(?data:WeekData = null):Void
 	{
 		Paths.currentModDirectory = '';
 
-		if (data != null && data.folder != null && data.folder.length > 0)
-		{
+		if (data != null && data.folder != null && data.folder.length > 0) {
 			Paths.currentModDirectory = data.folder;
 		}
 	}
@@ -350,7 +342,7 @@ class WeekData
 
 			for (i in list)
 			{
-				var dat = i.split("|");
+				var dat:Array<String> = i.split("|");
 	
 				if (dat[1] == "1" && !foundTheTop)
 				{

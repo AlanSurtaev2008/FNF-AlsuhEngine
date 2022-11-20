@@ -97,7 +97,7 @@ class MasterEditorMenu extends TransitionableState
 	{
 		super.update(elapsed);
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			FlxG.sound.play(Paths.getSound('cancelMenu'));
 			FlxG.switchState(new MainMenuState());
@@ -160,8 +160,7 @@ class MasterEditorMenu extends TransitionableState
 				}
 			}
 
-			if (FlxG.mouse.wheel != 0)
-			{
+			if (FlxG.mouse.wheel != 0) {
 				changeSelection(-1 * FlxG.mouse.wheel);
 			}
 		}
@@ -230,12 +229,7 @@ class MasterEditorMenu extends TransitionableState
 
 	function changeSelection(change:Int = 0)
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = editorsArray.length - 1;
-		if (curSelected >= editorsArray.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, editorsArray.length);
 
 		var bullShit:Int = 0;
 

@@ -450,7 +450,7 @@ class ModsMenuState extends TransitionableState
 			noModsTxt.alpha = 1 - Math.sin((Math.PI * noModsSine) / 180);
 		}
 
-		if (canExit && controls.BACK)
+		if (canExit && (controls.BACK || FlxG.mouse.justPressedRight))
 		{
 			if (colorTween != null) {
 				colorTween.cancel();
@@ -512,7 +512,7 @@ class ModsMenuState extends TransitionableState
 
 			if (FlxG.mouse.wheel != 0)
 			{
-				FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
+				FlxG.sound.play(Paths.getSound('scrollMenu'));
 
 				changeSelection(-1 * FlxG.mouse.wheel);
 			}
@@ -542,12 +542,7 @@ class ModsMenuState extends TransitionableState
 
 		if (noMods) return;
 
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = mods.length - 1;
-		else if (curSelected >= mods.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, mods.length);
 
 		var newColor:Int = mods[curSelected].color;
 

@@ -80,7 +80,7 @@ class FreeplayMenuState extends TransitionableState
 				songItem.difficulties = song.difficulties;
 				songItem.defaultDifficulty = song.defaultDifficulty;
 				songItem.weekID = leWeek.weekID;
-				songItem.weekName = leWeek.weekID;
+				songItem.weekName = leWeek.weekName;
 				songsArray.push(songItem);
 			}
 		}
@@ -164,11 +164,11 @@ class FreeplayMenuState extends TransitionableState
 		FlxTween.tween(textBG, {y: FlxG.height - 26}, 2, {ease: FlxEase.circOut});
 		FlxTween.tween(text, {y: FlxG.height - 26 + 4}, 2, {ease: FlxEase.circOut});
 
-		if (curDifficultyString == '') {
-			curDifficultyString = songsArray[curSelected].defaultDifficulty;
-		}
-
 		curSong = songsArray[curSelected];
+
+		if (curDifficultyString == '') {
+			curDifficultyString = curSong.defaultDifficulty;
+		}
 
 		curDifficulty = Math.round(Math.max(0, curSong.difficulties[1].indexOf(curSong.defaultDifficulty)));
 
@@ -236,7 +236,7 @@ class FreeplayMenuState extends TransitionableState
 		scoreText.text = "PERSONAL BEST:" + lerpScore + ' (' + ratingSplit.join('.') + '%)';
 		positionHighscore();
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			persistentUpdate = false;
 
@@ -273,11 +273,8 @@ class FreeplayMenuState extends TransitionableState
 				}
 			}
 
-			if (FlxG.mouse.wheel != 0)
-			{
-				FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
-
-				changeSelection(-shiftMult * FlxG.mouse.wheel, false);
+			if (FlxG.mouse.wheel != 0 && !FlxG.keys.pressed.ALT) {
+				changeSelection(-shiftMult * FlxG.mouse.wheel, true);
 			}
 		}
 
@@ -306,6 +303,10 @@ class FreeplayMenuState extends TransitionableState
 				if (holdTimeHos > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeDifficulty((checkNewHold - checkLastHold) * (controls.UI_LEFT ? -1 : 1));
 				}
+			}
+
+			if (FlxG.mouse.wheel != 0 && FlxG.keys.pressed.ALT) {
+				changeDifficulty(-1 * FlxG.mouse.wheel);
 			}
 		}
 
@@ -372,10 +373,15 @@ class FreeplayMenuState extends TransitionableState
 					destroyFreeplayVocals();
 				}
 
-				LoadingState.loadAndSwitchState(new PlayState(), true);
+				if (FlxG.keys.pressed.SHIFT) {
+					LoadingState.loadAndSwitchState(new editors.ChartingState(), true);
+				}
+				else {
+					LoadingState.loadAndSwitchState(new PlayState(), true);
+				}
 			}
 			else {
-				Debug.logInfo('File "' + curSong.songID + '/' + curSong.songID + diffic + '.json' + '" does not exist!');
+				Debug.logError('File "' + curSong.songID + '/' + curSong.songID + diffic + '.json' + '" does not exist!');
 			}
 		}
 		else if (controls.RESET)
@@ -418,7 +424,7 @@ class FreeplayMenuState extends TransitionableState
 		{
 			colorTween = FlxTween.color(bg, 1, 0xFFFFFFFF, curSong.color,
 			{
-				onComplete: function(twn:FlxTween) {
+				onComplete: function(twn:FlxTween):Void {
 					colorTween = null;
 				}
 			});
@@ -441,12 +447,7 @@ class FreeplayMenuState extends TransitionableState
 
 	function changeSelection(change:Int = 0, ?playSound:Bool = true):Void
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = songsArray.length - 1;
-		if (curSelected >= songsArray.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, songsArray.length);
 
 		curSong = songsArray[curSelected];
 
@@ -487,7 +488,7 @@ class FreeplayMenuState extends TransitionableState
 		
 				colorTween = FlxTween.color(bg, 1, bg.color, intendedColor,
 				{
-					onComplete: function(twn:FlxTween) {
+					onComplete: function(twn:FlxTween):Void {
 						colorTween = null;
 					}
 				});
@@ -524,13 +525,7 @@ class FreeplayMenuState extends TransitionableState
 
 	function changeDifficulty(change:Int = 0):Void
 	{
-		curDifficulty += change;
-
-		if (curDifficulty < 0)
-			curDifficulty = curSong.difficulties[1].length - 1;
-		if (curDifficulty >= curSong.difficulties[1].length)
-			curDifficulty = 0;
-
+		curDifficulty = CoolUtil.boundSelection(curDifficulty + change, curSong.difficulties[1].length);
 		curDifficultyString = curSong.difficulties[1][curDifficulty];
 
 		#if !switch

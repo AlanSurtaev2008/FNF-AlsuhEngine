@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxSprite;
-import flixel.graphics.FlxGraphic;
 
 using StringTools;
 
@@ -35,15 +34,17 @@ class HealthIcon extends FlxSprite
 			{
 				var file:Dynamic = Paths.getImage(name);
 
-				if (loadGraphic(file).width >= 450)
+				loadGraphic(file); // Load stupidly first for getting the file size
+
+				if (width >= 450)
 				{
-					loadGraphic((file), true, 150, 150); // Then load it fr
+					loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); // Then load it fr
 
 					animation.add(char, [0, 1, 2], 0, false, this.isPlayer);
 				}
-				else if (loadGraphic((file)).width <= 300)
+				else
 				{
-					loadGraphic((file), true, 150, 150); // Then load it fr
+					loadGraphic(file, true, Math.floor(width / 2), Math.floor(height)); // Then load it fr
 
 					animation.add(char, [0, 1], 0, false, this.isPlayer);
 				}

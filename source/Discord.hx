@@ -16,7 +16,7 @@ class DiscordClient
 {
 	public function new():Void
 	{
-		trace("Discord Client starting...");
+		Debug.logInfo("Discord Client starting...");
 
 		#if desktop
 		DiscordRpc.start({
@@ -27,7 +27,7 @@ class DiscordClient
 		});
 		#end
 
-		trace("Discord Client started.");
+		Debug.logInfo("Discord Client started.");
 
 		#if desktop
 		while (true)
@@ -61,12 +61,12 @@ class DiscordClient
 
 	static function onError(_code:Int, _message:String):Void
 	{
-		trace('Error! $_code : $_message');
+		Debug.logInfo('Error! $_code : $_message');
 	}
 
 	static function onDisconnected(_code:Int, _message:String):Void
 	{
-		trace('Disconnected! $_code : $_message');
+		Debug.logInfo('Disconnected! $_code : $_message');
 	}
 
 	public static function initialize():Void
@@ -78,7 +78,7 @@ class DiscordClient
 		});
 		#end
 
-		trace("Discord Client initialized");
+		Debug.logInfo("Discord Client initialized");
 	}
 
 	public static function changePresence(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float):Void
@@ -106,7 +106,7 @@ class DiscordClient
 	#if (desktop && LUA_ALLOWED)
 	public static function addLuaCallbacks(lua:State):Void
 	{
-		Lua_helper.add_callback(lua, "changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float)
+		Lua_helper.add_callback(lua, "changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float):Void
 		{
 			changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 		});

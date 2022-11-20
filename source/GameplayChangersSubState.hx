@@ -266,7 +266,7 @@ class GameplayChangersSubState extends BaseSubState
 	{
 		super.update(elapsed);
 
-		if (controls.BACK)
+		if (controls.BACK || FlxG.mouse.justPressedRight)
 		{
 			PlayStateChangeables.saveChangeables();
 
@@ -277,8 +277,7 @@ class GameplayChangersSubState extends BaseSubState
 				FlxG.state.closeSubState();
 				FlxG.state.openSubState(new PauseSubState(true));
 			}
-			else
-			{
+			else {
 				close();
 			}
 
@@ -314,10 +313,7 @@ class GameplayChangersSubState extends BaseSubState
 					}
 				}
 
-				if (FlxG.mouse.wheel != 0)
-				{
-					FlxG.sound.play(Paths.getSound('scrollMenu'), 0.2);
-
+				if (FlxG.mouse.wheel != 0 && !(FlxG.keys.pressed.ALT && curOption.type != 'bool')) {
 					changeSelection(-1 * FlxG.mouse.wheel);
 				}
 			}
@@ -330,7 +326,7 @@ class GameplayChangersSubState extends BaseSubState
 					{
 						flickering = true;
 
-						FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
+						FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker):Void
 						{
 							reset();
 							FlxG.sound.play(Paths.getSound('cancelMenu'));
@@ -354,15 +350,14 @@ class GameplayChangersSubState extends BaseSubState
 						{
 							flickering = true;
 
-							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
+							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker):Void
 							{
 								changeBool(curOption);
 							});
 
 							FlxG.sound.play(Paths.getSound('confirmMenu'));
 						}
-						else
-						{
+						else {
 							changeBool(curOption);
 						}
 					}
@@ -372,7 +367,7 @@ class GameplayChangersSubState extends BaseSubState
 						{
 							flickering = true;
 
-							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker)
+							FlxFlicker.flicker(grpOptions.members[curSelected], 1, 0.06, true, false, function(flick:FlxFlicker):Void
 							{
 								flickering = false;
 								curOption.change();
@@ -380,81 +375,117 @@ class GameplayChangersSubState extends BaseSubState
 
 							FlxG.sound.play(Paths.getSound('confirmMenu'));
 						}
-						else
-						{
+						else {
 							curOption.change();
 						}
 					}
 				}
 			}
 
-			if ((controls.UI_LEFT || controls.UI_RIGHT) && curOption.type != 'bool' && curOption.type != 'menu' && curOption != defaultValue && !curOption.isPause)
+			if (curOption.type != 'bool' && curOption.type != 'menu' && curOption != defaultValue && !curOption.isPause)
 			{
-				var pressed:Bool = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
-
-				if (holdTimeValue > 0.5 || pressed) 
+				if (controls.UI_LEFT || controls.UI_RIGHT)
 				{
-					if (pressed)
+					var pressed:Bool = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
+
+					if (holdTimeValue > 0.5 || pressed) 
 					{
-						var add:Dynamic = null;
-
-						if (curOption.type != 'string')
+						if (pressed)
 						{
-							add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
-						}
+							var add:Dynamic = null;
 
-						switch (curOption.type)
-						{
-							case 'int' | 'float' | 'percent':
+							if (curOption.type != 'string') {
+								add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
+							}
+
+							switch (curOption.type)
 							{
-								holdValue = curOption.getValue() + add;
-
-								if (holdValue < curOption.minValue)
-									holdValue = curOption.minValue;
-								else if (holdValue > curOption.maxValue)
-									holdValue = curOption.maxValue;
-
-								switch (curOption.type)
+								case 'int' | 'float' | 'percent':
 								{
-									case 'int':
+									holdValue = curOption.getValue() + add;
+
+									if (holdValue < curOption.minValue)
+										holdValue = curOption.minValue;
+									else if (holdValue > curOption.maxValue)
+										holdValue = curOption.maxValue;
+
+									switch (curOption.type)
 									{
-										holdValue = Math.round(holdValue);
-										curOption.setValue(holdValue);
-									}
-									case 'float' | 'percent':
-									{
-										holdValue = FlxMath.roundDecimal(holdValue, curOption.decimals);
-										curOption.setValue(holdValue);
+										case 'int':
+										{
+											holdValue = Math.round(holdValue);
+											curOption.setValue(holdValue);
+										}
+										case 'float' | 'percent':
+										{
+											holdValue = FlxMath.roundDecimal(holdValue, curOption.decimals);
+											curOption.setValue(holdValue);
+										}
 									}
 								}
+								case 'string':
+								{
+									var num:Int = curOption.curOption; // lol
+
+									if (controls.UI_LEFT_P)
+										--num;
+									else
+										num++;
+
+									if (num < 0)
+										num = curOption.options.length - 1;
+									else if (num >= curOption.options.length)
+										num = 0;
+
+									curOption.curOption = num;
+									curOption.setValue(curOption.options[num]); // lol
+								}
 							}
-							case 'string':
-							{
-								var num:Int = curOption.curOption; // lol
 
-								if (controls.UI_LEFT_P)
-									--num;
-								else
-									num++;
+							updateTextFrom(curOption);
 
-								if (num < 0)
-									num = curOption.options.length - 1;
-								else if (num >= curOption.options.length)
-									num = 0;
-
-								curOption.curOption = num;
-								curOption.setValue(curOption.options[num]); // lol
-							}
+							curOption.change();
+							FlxG.sound.play(Paths.getSound('scrollMenu'));
 						}
+						else if (curOption.type != 'string')
+						{
+							holdValue += curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1);
 
-						updateTextFrom(curOption);
+							if (holdValue < curOption.minValue) 
+								holdValue = curOption.minValue;
+							else if (holdValue > curOption.maxValue)
+								holdValue = curOption.maxValue;
 
-						curOption.change();
-						FlxG.sound.play(Paths.getSound('scrollMenu'));
+							switch (curOption.type)
+							{
+								case 'int':
+								{
+									curOption.setValue(Math.round(holdValue));
+								}
+								case 'float' | 'percent':
+								{
+									curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
+								}
+							}
+
+							updateTextFrom(curOption);
+							curOption.change();
+						}
 					}
-					else if (curOption.type != 'string')
+
+					if (curOption.type != 'string') {
+						holdTimeValue += elapsed;
+					}
+				}
+				else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
+					clearHold();
+				}
+
+				if (FlxG.mouse.wheel != 0 && (FlxG.keys.pressed.ALT && curOption.type != 'bool'))
+				{
+					if (curOption.type != 'string')
 					{
-						holdValue += curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1);
+						holdValue += -(curOption.scrollSpeed / 50) * FlxG.mouse.wheel;
 
 						if (holdValue < curOption.minValue) 
 							holdValue = curOption.minValue;
@@ -472,20 +503,31 @@ class GameplayChangersSubState extends BaseSubState
 								curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
 							}
 						}
+		
+						updateTextFrom(curOption);
+						curOption.change();
+
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
+					}
+					else if (curOption.type == 'string')
+					{
+						var num:Int = curOption.curOption; // lol
+						num += (-1 * FlxG.mouse.wheel);
+
+						if (num < 0)
+							num = curOption.options.length - 1;
+						else if (num >= curOption.options.length)
+							num = 0;
+
+						curOption.curOption = num;
+						curOption.setValue(curOption.options[num]); // lol
 
 						updateTextFrom(curOption);
 						curOption.change();
+
+						FlxG.sound.play(Paths.getSound('scrollMenu'));
 					}
 				}
-
-				if (curOption.type != 'string')
-				{
-					holdTimeValue += elapsed;
-				}
-			}
-			else if (controls.UI_LEFT_R || controls.UI_RIGHT_R)
-			{
-				clearHold();
 			}
 
 			if (controls.RESET)
@@ -539,12 +581,10 @@ class GameplayChangersSubState extends BaseSubState
 
 		if (isPause)
 		{
-			if (PlayStateChangeables.practiceMode)
-			{
+			if (PlayStateChangeables.practiceMode) {
 				FlxTween.tween(practiceText, {alpha: 1, y: practiceText.y + 5}, 0.4, {ease: FlxEase.quartInOut});
 			}
-			else
-			{
+			else {
 				FlxTween.tween(practiceText, {alpha: 0, y: practiceText.y - 5}, 0.4, {ease: FlxEase.quartInOut});
 			}
 		}
@@ -573,8 +613,7 @@ class GameplayChangersSubState extends BaseSubState
 	
 			if (leOption.type != 'bool')
 			{
-				if (leOption.type == 'string')
-				{
+				if (leOption.type == 'string') {
 					leOption.curOption = leOption.options.indexOf(leOption.getValue());
 				}
 
@@ -586,8 +625,7 @@ class GameplayChangersSubState extends BaseSubState
 				leOption.displayFormat = "%vX";
 				leOption.maxValue = 3;
 	
-				if (leOption.getValue() > 3)
-				{
+				if (leOption.getValue() > 3) {
 					leOption.setValue(3);
 				}
 		
@@ -622,12 +660,7 @@ class GameplayChangersSubState extends BaseSubState
 
 	function changeSelection(change:Int = 0)
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = optionsArray.length - 1;
-		if (curSelected >= optionsArray.length)
-			curSelected = 0;
+		curSelected = CoolUtil.boundSelection(curSelected + change, optionsArray.length);
 
 		var bullShit:Int = 0;
 

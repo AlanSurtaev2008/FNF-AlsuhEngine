@@ -130,7 +130,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 
 		add(UI_mainbox);
 
-		var loadButton:FlxButton = new FlxButton(0, 480, "Load Character", function()
+		var loadButton:FlxButton = new FlxButton(0, 480, "Load Character", function():Void
 		{
 			loadCharacter();
 		});
@@ -139,7 +139,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		loadButton.x -= 60;
 		add(loadButton);
 	
-		var saveButton:FlxButton = new FlxButton(0, 480, "Save Character", function()
+		var saveButton:FlxButton = new FlxButton(0, 480, "Save Character", function():Void
 		{
 			saveCharacter();
 		});
@@ -160,21 +160,21 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		tab_group.name = "Character Type";
 
 		opponentCheckbox = new FlxUICheckBox(10, 20, null, null, "Opponent", 100);
-		opponentCheckbox.callback = function()
+		opponentCheckbox.callback = function():Void
 		{
 			curTypeSelected = 0;
 			updateCharTypeBox();
 		};
 
 		boyfriendCheckbox = new FlxUICheckBox(opponentCheckbox.x, opponentCheckbox.y + 40, null, null, "Boyfriend", 100);
-		boyfriendCheckbox.callback = function()
+		boyfriendCheckbox.callback = function():Void
 		{
 			curTypeSelected = 1;
 			updateCharTypeBox();
 		};
 
 		girlfriendCheckbox = new FlxUICheckBox(boyfriendCheckbox.x, boyfriendCheckbox.y + 40, null, null, "Girlfriend", 100);
-		girlfriendCheckbox.callback = function()
+		girlfriendCheckbox.callback = function():Void
 		{
 			curTypeSelected = 2;
 			updateCharTypeBox();
@@ -230,13 +230,13 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		blockPressWhileTypingOn.push(animationAltIndicesInputText);
 
 		flipXCheckbox = new FlxUICheckBox(10, confirmInputText.y + 95, null, null, "Flip X", 100);
-		flipXCheckbox.callback = function()
+		flipXCheckbox.callback = function():Void
 		{
 			grpWeekCharacters.members[curTypeSelected].flipX = flipXCheckbox.checked;
 			characterFile.flipX = flipXCheckbox.checked;
 		};
 
-		var reloadImageButton:FlxButton = new FlxButton(180, confirmInputText.y + 95, "Reload Char", function()
+		var reloadImageButton:FlxButton = new FlxButton(180, confirmInputText.y + 95, "Reload Char", function():Void
 		{
 			reloadSelectedCharacter();
 		});
@@ -244,7 +244,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		scaleStepper = new FlxUINumericStepper(190, imageInputText.y, 1, 1, 0.1, 30, 2);
 
 		isGfCheckbox = new FlxUICheckBox(190, scaleStepper.y + 32, null, null, "Is GF?", 100);
-		isGfCheckbox.callback = function()
+		isGfCheckbox.callback = function():Void
 		{
 			grpWeekCharacters.members[curTypeSelected].isDanced = isGfCheckbox.checked;
 			characterFile.isGF = isGfCheckbox.checked;
@@ -466,7 +466,8 @@ class MenuCharacterEditorState extends MusicBeatUIState
 			FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 			FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
 
-			if (FlxG.keys.justPressed.ESCAPE) {
+			if (FlxG.keys.justPressed.ESCAPE)
+			{
 				FlxG.sound.music.volume = 0;
 				FlxG.switchState(new MasterEditorMenu());
 			}
@@ -501,7 +502,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 			{
 				grpWeekCharacters.members[curTypeSelected].hey();
 
-				grpWeekCharacters.members[curTypeSelected].animation.finishCallback = function(name:String)
+				grpWeekCharacters.members[curTypeSelected].animation.finishCallback = function(name:String):Void
 				{
 					grpWeekCharacters.members[curTypeSelected].heyed = false;
 					grpWeekCharacters.members[curTypeSelected].animation.finishCallback = null;
@@ -575,7 +576,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 				{
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 
-					trace("Successfully loaded file: " + cutName);
+					Debug.logInfo("Successfully loaded file: " + cutName);
 
 					characterFile = loadedChar;
 
@@ -619,7 +620,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		_file = null;
 
 		#else
-		trace("File couldn't be loaded! You aren't on Desktop, are you?");
+		Debug.logError("File couldn't be loaded! You aren't on Desktop, are you?");
 		#end
 	}
 
@@ -634,7 +635,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 
 		_file = null;
 
-		trace("Cancelled file loading.");
+		Debug.logInfo("Cancelled file loading.");
 	}
 
 	/**
@@ -647,7 +648,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
 
-		trace("Problem loading file");
+		Debug.logError("Problem loading file");
 	}
 
 	function saveCharacter():Void
@@ -667,7 +668,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 		}
 	}
 
-	function onSaveComplete(_):Void
+	function onSaveComplete(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -681,7 +682,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 	/**
 		* Called when the save file dialog is cancelled.
 		*/
-	function onSaveCancel(_):Void
+	function onSaveCancel(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -693,7 +694,7 @@ class MenuCharacterEditorState extends MusicBeatUIState
 	/**
 		* Called if there is an error while saving the gameplay recording.
 		*/
-	function onSaveError(_):Void
+	function onSaveError(event:Event):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);

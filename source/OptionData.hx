@@ -43,7 +43,7 @@ class OptionData
 	public static var sustainsType:String = 'New';
 	public static var noteSplashes:Bool = true;
 	public static var danceOffset:Int = 2;
-	public static var songPositionType:String = 'Multiplicative';
+	public static var songPositionType:String = 'Time Left and Elapsed';
 	public static var scoreText:Bool = true;
 	public static var naughtyness:Bool = true;
 
@@ -182,17 +182,21 @@ class OptionData
 			FlxG.save.data.opponentStrumsType = FlxG.save.data.cpuStrumsType;
 			FlxG.save.data.cpuStrumsType = null;
 
-			savePrefs();
+			FlxG.save.flush();
 		}
 
 		if (FlxG.save.data.opponentStrumsType != null)
 		{
-			if (FlxG.save.data.opponentStrumsType == 'Light Up') {
+			if (FlxG.save.data.opponentStrumsType == 'Light Up')
+			{
 				FlxG.save.data.opponentStrumsType = 'Glow';
+				FlxG.save.flush();
 			}
 
-			if (FlxG.save.data.opponentStrumsType == 'Normal') {
+			if (FlxG.save.data.opponentStrumsType == 'Normal')
+			{
 				FlxG.save.data.opponentStrumsType = 'Static';
+				FlxG.save.flush();
 			}
 
 			opponentStrumsType = FlxG.save.data.opponentStrumsType;
@@ -249,9 +253,18 @@ class OptionData
 		if (FlxG.save.data.danceOffset != null) {
 			danceOffset = FlxG.save.data.danceOffset;
 		}
-		if (FlxG.save.data.songPositionType != null) {
+
+		if (FlxG.save.data.songPositionType != null)
+		{
+			if (FlxG.save.data.songPositionType == 'Multiplicative')
+			{
+				FlxG.save.data.songPositionType = 'Time Left and Elapsed';
+				FlxG.save.flush();
+			}
+
 			songPositionType = FlxG.save.data.songPositionType;
 		}
+
 		if (FlxG.save.data.scoreText != null) {
 			scoreText = FlxG.save.data.scoreText;
 		}
