@@ -48,7 +48,7 @@ class MainMenuState extends TransitionableState
 	var camFollowPos:FlxObject;
 	var camFollow:FlxPoint;
 
-	public static var engineVersion:String = '1.6.2';
+	public static var engineVersion:String = '1.6.2h';
 	public static var gameVersion:String = '0.2.8';
 
 	var debugKeys:Array<FlxKey>;

@@ -3992,7 +3992,7 @@ class PlayState extends MusicBeatState
 		setOnLuas('cameraX', camFollowPos.x);
 		setOnLuas('cameraY', camFollowPos.y);
 
-		setOnLuas('PlayStateChangeables.botPlay', PlayStateChangeables.botPlay);
+		setOnLuas('botPlay', PlayStateChangeables.botPlay);
 
 		callOnLuas('onUpdatePost', [elapsed]);
 	}
@@ -5188,7 +5188,7 @@ class PlayState extends MusicBeatState
 			spawnNoteSplashOnNote(daNote);
 		}
 
-		if (!daNote.healthDisabled && Reflect.hasField(daNote, 'hithealth_' + daRating.name + (daNote.isSustainNote ? '_sus' : ''))) {
+		if (!daNote.healthDisabled) {
 			health += Reflect.field(daNote, 'hithealth_' + daRating.name + (daNote.isSustainNote ? '_sus' : '')) * PlayStateChangeables.healthGain;
 		}
 
