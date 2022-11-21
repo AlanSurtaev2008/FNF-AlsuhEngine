@@ -1,4 +1,7 @@
 1.6.2h;
+- Fixed 32 bits
+- Fixed Add Health on Hit
+- Fixed botPlay on Lua script
 - Moved 'gfDanceTitle.json' file from 'assets/title' folder to 'assets/images/title' folder
 - Added precaches for Game Over sounds
 - When you are in the Story/Freeplay Menu, you can use\nthe mouse wheel to rotate and select difficulty by pressing ALT.
