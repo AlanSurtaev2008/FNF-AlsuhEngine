@@ -8,6 +8,7 @@ class TypedAlphabet extends Alphabet
 {
 	public var onFinish:Void->Void = null;
 	public var finishedText:Bool = false;
+
 	public var delay:Float = 0.05;
 	public var sound:String = 'dialogue';
 	public var volume:Float = 1;
@@ -19,7 +20,7 @@ class TypedAlphabet extends Alphabet
 		this.delay = delay;
 	}
 
-	override private function set_text(newText:String)
+	override private function set_text(newText:String):String
 	{
 		super.set_text(newText);
 
@@ -29,67 +30,73 @@ class TypedAlphabet extends Alphabet
 
 	private var _curLetter:Int = -1;
 	private var _timeToUpdate:Float = 0;
-	override function update(elapsed:Float)
+
+	override function update(elapsed:Float):Void
 	{
-		if(!finishedText)
+		super.update(elapsed);
+
+		if (!finishedText)
 		{
 			var playedSound:Bool = false;
 			_timeToUpdate += elapsed;
-			while(_timeToUpdate >= delay)
+
+			while (_timeToUpdate >= delay)
 			{
 				showCharacterUpTo(_curLetter + 1);
-				if(!playedSound && sound != '' && (delay > 0.025 || _curLetter % 2 == 0))
-				{
+
+				if (!playedSound && sound != '' && (delay > 0.025 || _curLetter % 2 == 0)) {
 					FlxG.sound.play(Paths.getSound(sound), volume);
 				}
-				playedSound = true;
 
+				playedSound = true;
 				_curLetter++;
-				if(_curLetter >= letters.length - 1)
+
+				if (_curLetter >= letters.length - 1)
 				{
 					finishedText = true;
-					if(onFinish != null) onFinish();
+					if (onFinish != null) onFinish();
 					_timeToUpdate = 0;
+
 					break;
 				}
+
 				_timeToUpdate = 0;
 			}
 		}
-
-		super.update(elapsed);
 	}
 
-	public function showCharacterUpTo(upTo:Int)
+	public function showCharacterUpTo(upTo:Int):Void
 	{
 		var start:Int = _curLetter;
-		if(start < 0) start = 0;
+		if (start < 0) start = 0;
 
-		for (i in start...(upTo+1))
-		{
+		for (i in start...(upTo + 1)) {
 			if (letters[i] != null) letters[i].visible = true;
 		}
 	}
 
-	public function resetDialogue()
+	public function resetDialogue():Void
 	{
 		_curLetter = -1;
 		finishedText = false;
+
 		_timeToUpdate = 0;
-		for (letter in letters)
-		{
+
+		for (letter in letters) {
 			letter.visible = false;
 		}
 	}
 
-	public function finishText()
+	public function finishText():Void
 	{
-		if(finishedText) return;
+		if (finishedText) return;
 
 		showCharacterUpTo(letters.length - 1);
-		if(sound != '') FlxG.sound.play(Paths.getSound(sound), volume);
+
+		if (sound != '') FlxG.sound.play(Paths.getSound(sound), volume);
 		finishedText = true;
-		
-		if(onFinish != null) onFinish();
+
+		if (onFinish != null) onFinish();
 		_timeToUpdate = 0;
 	}
 }
