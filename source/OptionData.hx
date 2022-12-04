@@ -63,68 +63,35 @@ class OptionData
 	public static var flashingLights:Bool = true;
 
 	public static var comboOffset:Array<Int> = [0, 0, 0, 0];
-
 	public static var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
+
+	private static var ignoredFields:Array<String> = ['keyBinds', 'defaultKeys'];
 
 	public static function savePrefs():Void
 	{
 		FlxG.save.bind('alsuh-engine', 'afford-set');
 
-		FlxG.save.data.fullScreen = fullScreen;
-		FlxG.save.data.lowQuality = lowQuality;
-		FlxG.save.data.globalAntialiasing = globalAntialiasing;
-		FlxG.save.data.shaders = shaders;
-		FlxG.save.data.framerate = framerate;
+		var fieldsArray:Array<String> = Reflect.fields(OptionData);
 
-		FlxG.save.data.ghostTapping = ghostTapping;
-		FlxG.save.data.controllerMode = controllerMode;
-		FlxG.save.data.downScroll = downScroll;
-		FlxG.save.data.middleScroll = middleScroll;
-		FlxG.save.data.opponentStrumsType = opponentStrumsType;
-		FlxG.save.data.ratingOffset = ratingOffset;
-		FlxG.save.data.sickWindow = sickWindow;
-		FlxG.save.data.goodWindow = goodWindow;
-		FlxG.save.data.badWindow = badWindow;
-		FlxG.save.data.shitWindow = shitWindow;
-		FlxG.save.data.comboStacking = comboStacking;
-		FlxG.save.data.safeFrames = safeFrames;
-		FlxG.save.data.noteOffset = noteOffset;
-		FlxG.save.data.camZooms = camZooms;
-		FlxG.save.data.camShakes = camShakes;
+		for (i in 0...ignoredFields.length)
+		{
+			var ignoredField:String = ignoredFields[i];
 
-		FlxG.save.data.cutscenesInType = cutscenesInType;
-		FlxG.save.data.skipCutscenes = skipCutscenes;
+			if (fieldsArray.contains(ignoredField)) {
+				fieldsArray.remove(ignoredField);
+			}
+		}
 
-		FlxG.save.data.iconZooms = iconZooms;
-		FlxG.save.data.sustainsType = sustainsType;
-		FlxG.save.data.noteSplashes = noteSplashes;
-		FlxG.save.data.danceOffset = danceOffset;
-		FlxG.save.data.songPositionType = songPositionType;
-		FlxG.save.data.scoreText = scoreText;
-		FlxG.save.data.naughtyness = naughtyness;
-		FlxG.save.data.showRatings = showRatings;
-		FlxG.save.data.showNumbers = showNumbers;
-		FlxG.save.data.noReset = noReset;
-		FlxG.save.data.healthBarAlpha = healthBarAlpha;
-		FlxG.save.data.hitsoundType = hitsoundType;
-		FlxG.save.data.hitsoundVolume = hitsoundVolume;
-		FlxG.save.data.pauseMusic = pauseMusic;
-		FlxG.save.data.checkForUpdates = checkForUpdates;
-		FlxG.save.data.fpsCounter = fpsCounter;
-		FlxG.save.data.rainFPS = rainFPS;
-		FlxG.save.data.memoryCounter = memoryCounter;
-		FlxG.save.data.rainMemory = rainMemory;
-		FlxG.save.data.watermarks = watermarks;
-		FlxG.save.data.loadingScreen = loadingScreen;
-		FlxG.save.data.autoPause = autoPause;
-		FlxG.save.data.flashingLights = flashingLights;
+		for (i in 0...fieldsArray.length)
+		{
+			var field:String = fieldsArray[i];
 
-		FlxG.save.data.arrowHSV = arrowHSV;
-		FlxG.save.data.comboOffset = comboOffset;
+			Reflect.setField(FlxG.save.data, field, Reflect.field(OptionData, field));
+			FlxG.save.flush();
+		}
 
 		FlxG.save.data.achievementsMap = Achievements.achievementsMap;
 		FlxG.save.data.henchmenDeath = Achievements.henchmenDeath;
-
 		FlxG.save.flush();
 	}
 
@@ -132,222 +99,62 @@ class OptionData
 	{
 		FlxG.save.bind('alsuh-engine', 'afford-set');
 
-		if (FlxG.save.data.fullScreen != null) {
-			fullScreen = FlxG.save.data.fullScreen;
-		}
+		var fieldsArray:Array<String> = Reflect.fields(OptionData);
 
-		FlxG.fullscreen = fullScreen;
-
-		if (FlxG.save.data.lowQuality != null) {
-			lowQuality = FlxG.save.data.lowQuality;
-		}
-
-		if (FlxG.save.data.globalAntialiasing != null) {
-			globalAntialiasing = FlxG.save.data.globalAntialiasing;
-		}
-		if (FlxG.save.data.shaders != null) {
-			shaders = FlxG.save.data.shaders;
-		}
-
-		if (FlxG.save.data.framerate != null) {
-			framerate = FlxG.save.data.framerate;
-		}
-
-		if (framerate > FlxG.drawFramerate)
+		for (i in 0...ignoredFields.length)
 		{
-			FlxG.updateFramerate = framerate;
-			FlxG.drawFramerate = framerate;
+			var ignoredField:String = ignoredFields[i];
+
+			if (fieldsArray.contains(ignoredField)) {
+				fieldsArray.remove(ignoredField);
+			}
 		}
-		else
+
+		for (i in 0...fieldsArray.length)
 		{
-			FlxG.drawFramerate = framerate;
-			FlxG.updateFramerate = framerate;
-		}
+			var field:String = fieldsArray[i];
+			var valueFromSave:Dynamic = Reflect.field(OptionData, field);
 
-		if (FlxG.save.data.ghostTapping != null) {
-			ghostTapping = FlxG.save.data.ghostTapping;
-		}
-		if (FlxG.save.data.controllerMode != null) {
-			controllerMode = FlxG.save.data.controllerMode;
-		}
-		if (FlxG.save.data.downScroll != null) {
-			downScroll = FlxG.save.data.downScroll;
-		}
-		if (FlxG.save.data.middleScroll != null) {
-			middleScroll = FlxG.save.data.middleScroll;
-		}
+			if (valueFromSave != null) {
+				Reflect.setField(OptionData, field, valueFromSave);
+			}
 
-		if (FlxG.save.data.cpuStrumsType != null)
-		{
-			FlxG.save.data.opponentStrumsType = FlxG.save.data.cpuStrumsType;
-			FlxG.save.data.cpuStrumsType = null;
-
-			FlxG.save.flush();
-		}
-
-		if (FlxG.save.data.opponentStrumsType != null)
-		{
-			if (FlxG.save.data.opponentStrumsType == 'Light Up')
+			switch (field)
 			{
-				FlxG.save.data.opponentStrumsType = 'Glow';
-				FlxG.save.flush();
+				case 'fullScreen':
+				{
+					FlxG.fullscreen = fullScreen;
+				}
+				case 'framerate':
+				{
+					if (framerate > FlxG.drawFramerate)
+					{
+						FlxG.updateFramerate = framerate;
+						FlxG.drawFramerate = framerate;
+					}
+					else
+					{
+						FlxG.drawFramerate = framerate;
+						FlxG.updateFramerate = framerate;
+					}
+				}
+				case 'fpsCounter':
+				{
+					if (Main.fpsCounter != null) {
+						Main.fpsCounter.visible = fpsCounter;
+					}
+				}
+				case 'memoryCounter':
+				{
+					if (Main.memoryCounter != null) {
+						Main.memoryCounter.visible = memoryCounter;
+					}
+				}
+				case 'autoPause':
+				{
+					FlxG.autoPause = autoPause;
+				}
 			}
-
-			if (FlxG.save.data.opponentStrumsType == 'Normal')
-			{
-				FlxG.save.data.opponentStrumsType = 'Static';
-				FlxG.save.flush();
-			}
-
-			opponentStrumsType = FlxG.save.data.opponentStrumsType;
-		}
-
-		if (FlxG.save.data.ratingOffset != null) {
-			ratingOffset = FlxG.save.data.ratingOffset;
-		}
-		if (FlxG.save.data.sickWindow != null) {
-			sickWindow = FlxG.save.data.sickWindow;
-		}
-		if (FlxG.save.data.goodWindow != null) {
-			goodWindow = FlxG.save.data.goodWindow;
-		}
-		if (FlxG.save.data.badWindow != null) {
-			badWindow = FlxG.save.data.badWindow;
-		}
-		if (FlxG.save.data.shitWindow != null) {
-			shitWindow = FlxG.save.data.shitWindow;
-		}
-		if (FlxG.save.data.comboStacking != null) {
-			comboStacking = FlxG.save.data.comboStacking;
-		}
-		if (FlxG.save.data.safeFrames != null) {
-			safeFrames = FlxG.save.data.safeFrames;
-		}
-		if (FlxG.save.data.noteOffset != null) {
-			noteOffset = FlxG.save.data.noteOffset;
-		}
-
-		if (FlxG.save.data.camZooms != null) {
-			camZooms = FlxG.save.data.camZooms;
-		}
-		if (FlxG.save.data.camShakes != null) {
-			camShakes = FlxG.save.data.camShakes;
-		}
-
-		if (FlxG.save.data.cutscenesInType != null) {
-			cutscenesInType = FlxG.save.data.cutscenesInType;
-		}
-		if (FlxG.save.data.skipCutscenes != null) {
-			skipCutscenes = FlxG.save.data.skipCutscenes;
-		}
-
-		if (FlxG.save.data.iconZooms != null) {
-			iconZooms = FlxG.save.data.iconZooms;
-		}
-		if (FlxG.save.data.noteSplashes != null) {
-			noteSplashes = FlxG.save.data.noteSplashes;
-		}
-		if (FlxG.save.data.sustainsType != null) {
-			sustainsType = FlxG.save.data.sustainsType;
-		}
-		if (FlxG.save.data.danceOffset != null) {
-			danceOffset = FlxG.save.data.danceOffset;
-		}
-
-		if (FlxG.save.data.songPositionType != null)
-		{
-			if (FlxG.save.data.songPositionType == 'Multiplicative')
-			{
-				FlxG.save.data.songPositionType = 'Time Left and Elapsed';
-				FlxG.save.flush();
-			}
-
-			songPositionType = FlxG.save.data.songPositionType;
-		}
-
-		if (FlxG.save.data.scoreText != null) {
-			scoreText = FlxG.save.data.scoreText;
-		}
-		if (FlxG.save.data.naughtyness != null) {
-			naughtyness = FlxG.save.data.naughtyness;
-		}
-		if (FlxG.save.data.showRatings != null) {
-			showRatings = FlxG.save.data.showRatings;
-		}
-		if (FlxG.save.data.showNumbers != null) {
-			showNumbers = FlxG.save.data.showNumbers;
-		}
-		if (FlxG.save.data.noReset != null) {
-			noReset = FlxG.save.data.noReset;
-		}
-		if (FlxG.save.data.healthBarAlpha != null) {
-			healthBarAlpha = FlxG.save.data.healthBarAlpha;
-		}
-		if (FlxG.save.data.hitsoundType != null) {
-			hitsoundType = FlxG.save.data.hitsoundType;
-		}
-		if (FlxG.save.data.hitsoundVolume != null) {
-			hitsoundVolume = FlxG.save.data.hitsoundVolume;
-		}
-		if (FlxG.save.data.pauseMusic != null) {
-			pauseMusic = FlxG.save.data.pauseMusic;
-		}
-		if (FlxG.save.data.checkForUpdates != null) {
-			checkForUpdates = FlxG.save.data.checkForUpdates;
-		}
-		if (FlxG.save.data.controllerMode != null) {
-			controllerMode = FlxG.save.data.controllerMode;
-		}
-
-		if (FlxG.save.data.fpsCounter != null)
-		{
-			fpsCounter = FlxG.save.data.fpsCounter;
-
-			if (Main.fpsCounter != null) {
-				Main.fpsCounter.visible = fpsCounter;
-			}
-		}
-
-		if (FlxG.save.data.rainFPS != null) {
-			rainFPS = FlxG.save.data.rainFPS;
-		}
-
-		if (FlxG.save.data.memoryCounter != null)
-		{
-			memoryCounter = FlxG.save.data.memoryCounter;
-
-			if (Main.memoryCounter != null) {
-				Main.memoryCounter.visible = memoryCounter;
-			}
-		}
-
-		if (FlxG.save.data.rainMemory != null) {
-			rainMemory = FlxG.save.data.rainMemory;
-		}
-		
-		if (FlxG.save.data.watermarks != null) {
-			watermarks = FlxG.save.data.watermarks;
-		}
-
-		if (FlxG.save.data.autoPause != null) {
-			autoPause = FlxG.save.data.autoPause;
-		}
-
-		FlxG.autoPause = autoPause;
-
-		if (FlxG.save.data.loadingScreen != null) {
-			loadingScreen = FlxG.save.data.loadingScreen;
-		}
-
-		if (FlxG.save.data.flashingLights != null) {
-			flashingLights = FlxG.save.data.flashingLights;
-		}
-
-		if (FlxG.save.data.comboOffset != null) {
-			comboOffset = FlxG.save.data.comboOffset;
-		}
-		if (FlxG.save.data.arrowHSV != null) {
-			arrowHSV = FlxG.save.data.arrowHSV;
 		}
 
 		if (FlxG.save.data.volume != null) {
